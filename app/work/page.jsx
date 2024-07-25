@@ -50,6 +50,7 @@ const projects = [
 ];
 
 const work = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [project, setProject] = useState(projects[0]);
     const handleSlideChange = (swiper) => {
         const currentIndex = swiper.activeIndex;
