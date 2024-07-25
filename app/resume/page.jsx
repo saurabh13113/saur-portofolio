@@ -1,12 +1,12 @@
 "use client";
 
-import { FaHtml5, FaCss3, FaJs, FaReact, FaFigma, FaNodeJs, FaPython } from "react-icons/fa";
-import { SiTailwindcss, SiNextdotjs } from "react-icons/si";
+import { FaJava, FaCss3, FaJs, FaReact, FaFigma, FaNodeJs, FaPython, FaGitAlt, FaRProject, FaGithub, FaCopyright } from "react-icons/fa";
+import { SiTailwindcss, SiNextdotjs, SiMysql } from "react-icons/si";
 
 // sum light info
 const about = {
     title: 'About me',
-    description: 'Yo this is who I am, make no mistake.',
+    description: 'A passionate software developer from Abu Dhabi 🇦🇪, and a student in Canada.',
 
     info: [
         {fieldName: "Name",fieldValue: "Saurabh Nair"},
@@ -22,14 +22,14 @@ const about = {
 const experience = { 
     icon: ' ',
     title: " My experience",
-    description: "This is what I did here",
+    description: "This is my experience summed up.",
     items: [
-        {company: "Techy tings etz", position: "Full Stack Dev",
-         duration: "2022-Present",},
-        {company: "Techy tings etz", position: "Full Stack Dev",
-         duration: "2022-Present",},
-        {company: "Techy tings etz", position: "Full Stack Dev",
-         duration: "2022-Present",},
+        {company: "Emirates Steel Arkan", position: "Software Integration Intern",
+         duration: "June 2024 - September 2024",},
+        {company: "Kaytoons Inc.", position: "Backend Development Intern",
+         duration: "May 2024 - September 2024",},
+        {company: "University of Toronto Mississauga", position: "Residence Facilities Assistant",
+         duration: "September 2023 - May 2025",},
     ],
 };
 
@@ -37,27 +37,32 @@ const experience = {
 const education = { 
     icon: ' ',
     title: " My education",
-    description: "This is where and what I studied",
+    description: "This is where and what I studied.",
     items: [
-        {institution: "Uoft breezy", degree: "Full Stack Dev",
+        {institution: "University of Toronto", degree: "B.Sc Computer Science + Economics",
          duration: "2022-Present",},
-        {institution: "Uoft breezy", degree: "Full Stack Dev",
-         duration: "2022-Present",},
-        {institution: "Uoft breezy", degree: "Full Stack Dev",
-         duration: "2022-Present",},
+        {institution: "Abu Dhabi Indian School", degree: "CBSE Diploma",
+         duration: "2010-2022",},
     ],
 };
 
 //sum light skills
 const skills = {
     title: "My skills",
-    description: "This is what I know bro fr",
+    description: "This is my skills that I have gained.",
     skillList: [
-        {icon: <FaHtml5/>, name: "HTML 5",},
+        {icon: <FaJava/>, name: "JAVA",},
+        {icon: <FaGithub/>, name: "GITHUB",},
+        {icon: <FaCopyright/>, name: "C Programming Language",},
         {icon: <FaJs/>, name: "JAVASCRIPT",},
         {icon: <FaPython/>, name: "PYTHON",},
         {icon: <FaFigma/>, name: "FIGMA",},
-        {icon: <FaHtml5/>, name: "HTML 5",},
+        {icon: <FaReact/>, name: "REACT",},
+        {icon: <SiTailwindcss/>, name: "TAILWIND",},
+        {icon: <SiNextdotjs/>, name: "NEXT",},
+        {icon: <SiMysql/>, name: "MYSQL",},
+        {icon: <FaGitAlt/>, name: "GIT",},
+        {icon: <FaRProject/>, name: "R",},
     ],
 };
 
