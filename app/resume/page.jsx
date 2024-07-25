@@ -25,7 +25,7 @@ const experience = {
     description: "This is my experience summed up.",
     items: [
         {company: "Emirates Steel Arkan", position: "Software Integration Intern",
-         duration: "June 2024 - September 2024",},
+         duration: "August 2024 - September 2024",},
         {company: "Kaytoons Inc.", position: "Backend Development Intern",
          duration: "May 2024 - September 2024",},
         {company: "University of Toronto Mississauga", position: "Residence Facilities Assistant",
@@ -40,7 +40,7 @@ const education = {
     description: "This is where and what I studied.",
     items: [
         {institution: "University of Toronto", degree: "B.Sc Computer Science + Economics",
-         duration: "2022-Present",},
+         duration: "2022-2026",},
         {institution: "Abu Dhabi Indian School", degree: "CBSE Diploma",
          duration: "2010-2022",},
     ],
