@@ -30,8 +30,7 @@ const contact = () => {
                                                      rounded-xl"> 
                                         <h3 className="text-4xl text-accent"> LETS WORK TOGETHER </h3>
                                         <p className="text-white/60">
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam, 
-                                            error. Provident eius harum eveniet.</p> 
+                                           Get in touch with me, I am sure we can come up with something fantastic together!</p> 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <Input type="First Name" placeholder="First Name"/>
                                             <Input type="Last Name" placeholder="Last Name"/>
