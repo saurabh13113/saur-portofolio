@@ -17,7 +17,7 @@ const Home = () => {
         <h1 className="h1">
           Hello my name is <br /> <span className="text-accent">Saurabh Nair</span> 
            </h1>
-           <p className="max-w-[500px] mb-9 text-white/80"> I excel at everything, Hire me please</p>
+           <p className="max-w-[500px] mb-9 text-white/80"> A passionate software developer from Abu Dhabi 🇦🇪, and a student in Canada at the University of Toronto. </p>
         <div className="flex flex-col xl:flex-row items-center gap-8">
           <a href="/assets/resume.pdf" download="resume.pdf">
             <Button variant="outline" size="lg" className="uppercase flex items-center gap-2">
