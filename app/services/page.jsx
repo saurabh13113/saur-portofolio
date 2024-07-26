@@ -8,20 +8,20 @@ const services = [
     {
         num: '01',
         title: 'Web Development',
-        description: 'I do this and that',
-        href: ""
+        description: 'For your multiple website needs',
+        href: "/contact"
     },
     {
         num: '02',
         title: 'Content Creation',
-        description: 'I do this and that',
-        href: ""
+        description: 'For quality designed posts, reels and themed content',
+        href: "/contact"
     },
     {
         num: '03',
         title: 'Social Media Management',
-        description: 'I do this and that',
-        href: ""
+        description: 'To grow your media following and boost engagement',
+        href: "/contact"
     },
 ];
 
