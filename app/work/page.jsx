@@ -23,7 +23,7 @@ const projects = [
 
     {num: '03', category: 'FullStack', title:'Pantry Tracker',description:'Summer Project that is a pantry management application built with Next.js, Material UI, and Firebase',
         stack: [{name:"React"},{name:"Next.js"},{name:"Material UI"},{name:"Firebase"}], image: "/assets/work/Pic11.png",
-        live:"https://github.com/saurabh13113/pantry-app", github: "https://github.com/saurabh13113/pantry-app"},
+        live:"https://pantry-app-lac.vercel.app/", github: "https://github.com/saurabh13113/pantry-app"},
 
     {num: '04', category: 'Backend', title:'Huffman Tree File Compressor',description:'University project that decompresses file sizes using Huffman trees.',
         stack: [{name:"Python"},], image: "/assets/work/Pic2.png",
