@@ -24,7 +24,7 @@ const services = [
         href: "/contact"
     },
     {
-        num: '03',
+        num: '04',
         title: 'Software Development',
         description: 'For any of your app or website development needs',
         href: "/contact"
