@@ -23,6 +23,12 @@ const services = [
         description: 'To grow your media following and boost engagement',
         href: "/contact"
     },
+    {
+        num: '03',
+        title: 'Software Development',
+        description: 'For any of your app or website development needs',
+        href: "/contact"
+    },
 ];
 
 import { motion } from 'framer-motion';
