@@ -24,8 +24,12 @@ const experience = {
     title: " My experience",
     description: "This is my experience summed up.",
     items: [
+        {company: "BAYER Canada", position: "Software Developer Intern",
+         duration: "May 2025 - August 2026",},
+        {company: "University of Toronto Mississauga", position: "Teaching Assistant",
+         duration: "September 2024 - January 2025",},
         {company: "Emirates Steel Arkan", position: "Software Integration Intern",
-         duration: "August 2024 - September 2024",},
+         duration: "May 2024 - August 2024",},
         {company: "Kaytoons Inc.", position: "Backend Development Intern",
          duration: "May 2024 - September 2024",},
         {company: "University of Toronto Mississauga", position: "Residence Facilities Assistant",
