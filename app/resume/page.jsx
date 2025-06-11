@@ -11,7 +11,7 @@ const about = {
     info: [
         {fieldName: "Name",fieldValue: "Saurabh Nair"},
         {fieldName: "Phone",fieldValue: "+1 (647) 831 6703"},
-        {fieldName: "Experience",fieldValue: "2+ Years"},
+        {fieldName: "Experience",fieldValue: "4+ Years"},
         {fieldName: "Email",fieldValue: "saurabhnair13113@gmail.com"},
         {fieldName: "Nationality",fieldValue: "Indian"},
         {fieldName: "Languages",fieldValue: "English, Hindi, French, Arabic"},
@@ -27,7 +27,7 @@ const experience = {
         {company: "BAYER Canada", position: "Software Developer Intern",
          duration: "May 2025 - August 2026",},
         {company: "University of Toronto Mississauga", position: "Teaching Assistant",
-         duration: "September 2024 - January 2025",},
+         duration: "Sep 2024 - January 2025",},
         {company: "Emirates Steel Arkan", position: "Software Integration Intern",
          duration: "May 2024 - August 2024",},
         {company: "Kaytoons Inc.", position: "Backend Development Intern",
