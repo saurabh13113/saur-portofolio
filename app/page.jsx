@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { profile, stats } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
-import BlockButton from "@/components/mc/BlockButton";
 import XpBar from "@/components/mc/XpBar";
 import StatusRow from "@/components/mc/StatusRow";
 import { socialIcon } from "@/components/mc/icons";
@@ -18,8 +17,12 @@ export default function Home() {
           <p className="max-w-[520px] mt-4 text-white/80 font-primary">{profile.tagline}</p>
 
           <div className="flex flex-col sm:flex-row items-center gap-6 mt-8">
-            <a href={profile.resumePdf} download>
-              <BlockButton>Get the Resume</BlockButton>
+            <a
+              href={profile.resumePdf}
+              download
+              className="mc-bevel tex-plank font-mc uppercase tracking-wide px-5 py-3 text-[#f4e4c1] inline-block focus:outline focus:outline-2 focus:outline-white"
+            >
+              Get the Resume
             </a>
             <div className="flex gap-2">
               {profile.socials.map((s) => {

@@ -261,7 +261,6 @@ export function filterProjects(list, cat) {
 
 export function sortedProjects(list) {
   return list
-    .map((p, i) => [p, i])
-    .sort((a, b) => (b[0].featured ? 1 : 0) - (a[0].featured ? 1 : 0) || a[1] - b[1])
-    .map(([p]) => p);
+    .slice()
+    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 }

@@ -30,6 +30,10 @@ export default function BreakOverlay() {
         transition={{ duration: 0.45, times: [0, 0.3, 0.6, 1], ease: "linear" }}
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,transparent_0,rgba(0,0,0,0.35)_70%)]" />
+        <div
+          className="absolute inset-0 mc-crack"
+          style={{ opacity: 0.85, animation: "none" }}
+        />
       </motion.div>
     </AnimatePresence>
   );

@@ -15,7 +15,7 @@ export default function BlockButton({
   return (
     <button
       type="button"
-      className={`mc-bevel tex-${tex} font-mc uppercase tracking-wide px-5 py-3 text-[#f4e4c1] select-none focus:outline focus:outline-2 focus:outline-white ${
+      className={`group relative mc-bevel tex-${tex} font-mc uppercase tracking-wide px-5 py-3 text-[#f4e4c1] select-none focus:outline focus:outline-2 focus:outline-white ${
         pressed ? "mc-bevel--pressed" : ""
       } ${className}`}
       onPointerDown={() => setPressed(true)}
@@ -27,6 +27,7 @@ export default function BlockButton({
       }}
       {...rest}
     >
+      <span className="mc-crack" aria-hidden="true" />
       {children}
     </button>
   );

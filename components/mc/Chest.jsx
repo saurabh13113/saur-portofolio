@@ -3,6 +3,7 @@ import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet";
 import { useSfx } from "@/hooks/useSfx";
+import { techIcon } from "@/components/mc/icons";
 
 export default function Chest({ project }) {
   const { play } = useSfx();
@@ -16,6 +17,7 @@ export default function Chest({ project }) {
             project.featured ? "sm:col-span-2" : ""
           }`}
         >
+          <span className="mc-crack" aria-hidden="true" />
           <div className="font-mc text-[11px] text-[#d9b98a] uppercase">{project.category}</div>
           <div className="font-mc text-lg text-[#f4e4c1] mt-1">{project.title}</div>
           <p className="text-sm text-white/75 mt-2 line-clamp-3 font-primary">{project.blurb}</p>
@@ -32,11 +34,18 @@ export default function Chest({ project }) {
         <SheetDescription className="sr-only">{project.title} project details</SheetDescription>
         <p className="mt-3 text-white/85 font-primary max-w-[70ch]">{project.description}</p>
         <div className="flex flex-wrap gap-2 mt-4">
-          {project.stack.map((s) => (
-            <span key={s} className="mc-bevel tex-obsidian px-2 py-1 text-xs font-mc text-[#a8f0c0]">
-              {s}
-            </span>
-          ))}
+          {project.stack.map((s) => {
+            const Ic = techIcon(s);
+            return (
+              <span
+                key={s}
+                className="mc-bevel tex-obsidian px-2 py-1 text-xs font-mc text-[#a8f0c0] inline-flex items-center gap-1"
+              >
+                {Ic ? <Ic aria-hidden="true" /> : null}
+                {s}
+              </span>
+            );
+          })}
         </div>
         <div className="flex flex-wrap gap-3 mt-5">
           {project.links.live ? (

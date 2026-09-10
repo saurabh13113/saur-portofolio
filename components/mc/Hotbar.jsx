@@ -12,13 +12,14 @@ export default function Hotbar() {
 
   useEffect(() => {
     const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const tag = document.activeElement?.tagName ?? "";
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
       const slot = hotbar.find((s) => String(s.slot) === e.key);
       if (!slot) return;
       play("click");
       if (slot.kind === "sound") toggle();
-      else if (slot.kind === "external") window.open(slot.href, "_blank");
+      else if (slot.kind === "external") window.open(slot.href, "_blank", "noopener");
       else router.push(slot.href);
     };
     window.addEventListener("keydown", onKey);

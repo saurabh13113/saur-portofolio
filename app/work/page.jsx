@@ -23,7 +23,7 @@ export default function Work() {
             key={c}
             type="button"
             onClick={() => setCat(c)}
-            className={`mc-bevel tex-dirt font-mc text-xs px-3 py-2 text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
+            className={`mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
               cat === c ? "outline outline-2 outline-white" : ""
             }`}
           >

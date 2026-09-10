@@ -4,6 +4,7 @@ import { experience, education, skills, profile } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
 import XpBar from "@/components/mc/XpBar";
+import { techIcon } from "@/components/mc/icons";
 
 export default function Resume() {
   return (
@@ -67,9 +68,21 @@ export default function Resume() {
               <div key={g.group}>
                 <h3 className="font-mc text-lg text-[#f4e4c1] mb-3">{g.group}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-                  {g.items.map((it) => (
-                    <XpBar key={it.name} label={it.name} value={it.level} max={100} />
-                  ))}
+                  {g.items.map((it) => {
+                    const Ic = techIcon(it.name);
+                    return (
+                      <div key={it.name} className="flex items-center gap-2">
+                        {Ic ? (
+                          <span className="text-emerald text-lg shrink-0" aria-hidden="true">
+                            <Ic />
+                          </span>
+                        ) : null}
+                        <div className="flex-1">
+                          <XpBar label={it.name} value={it.level} max={100} />
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}

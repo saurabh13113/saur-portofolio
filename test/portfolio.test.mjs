@@ -4,6 +4,7 @@ import {
   profile, stats, projects, experience, education, skills, services, hotbar,
   CATEGORIES, filterProjects, sortedProjects,
 } from "../data/portfolio.js";
+import { socialIcon, techIcon } from "../components/mc/icons.js";
 
 test("profile has required contact fields", () => {
   for (const k of ["name", "role", "email", "phone", "resumePdf"]) {
@@ -63,4 +64,19 @@ test("experience/education/skills/services are populated", () => {
   assert.ok(education.length >= 1);
   assert.ok(skills.length >= 3);
   assert.equal(services.length, 4);
+});
+
+test("every social key resolves to an icon component", () => {
+  for (const s of profile.socials) {
+    assert.equal(typeof socialIcon(s.key), "function", `no icon for social '${s.key}'`);
+  }
+});
+
+test("techIcon returns a component or null for every project stack entry (never throws)", () => {
+  for (const p of projects) {
+    for (const s of p.stack) {
+      const r = techIcon(s);
+      assert.ok(r === null || typeof r === "function", `techIcon('${s}') bad return`);
+    }
+  }
 });
