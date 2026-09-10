@@ -1,8 +1,7 @@
 "use client";
 import {
-  Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle,
+  Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription,
 } from "@/components/ui/sheet";
-import BlockButton from "@/components/mc/BlockButton";
 import { useSfx } from "@/hooks/useSfx";
 
 export default function Chest({ project }) {
@@ -30,6 +29,7 @@ export default function Chest({ project }) {
         <SheetHeader>
           <SheetTitle className="font-mc text-2xl text-[#f4e4c1]">{project.title}</SheetTitle>
         </SheetHeader>
+        <SheetDescription className="sr-only">{project.title} project details</SheetDescription>
         <p className="mt-3 text-white/85 font-primary max-w-[70ch]">{project.description}</p>
         <div className="flex flex-wrap gap-2 mt-4">
           {project.stack.map((s) => (
@@ -40,13 +40,23 @@ export default function Chest({ project }) {
         </div>
         <div className="flex flex-wrap gap-3 mt-5">
           {project.links.live ? (
-            <a href={project.links.live} target="_blank" rel="noreferrer">
-              <BlockButton>Live</BlockButton>
+            <a
+              href={project.links.live}
+              target="_blank"
+              rel="noreferrer"
+              className="mc-bevel tex-plank font-mc uppercase tracking-wide px-5 py-3 text-[#f4e4c1] inline-block focus:outline focus:outline-2 focus:outline-white"
+            >
+              Live
             </a>
           ) : null}
           {project.links.github ? (
-            <a href={project.links.github} target="_blank" rel="noreferrer">
-              <BlockButton tex="obsidian">GitHub</BlockButton>
+            <a
+              href={project.links.github}
+              target="_blank"
+              rel="noreferrer"
+              className="mc-bevel tex-obsidian font-mc uppercase tracking-wide px-5 py-3 text-[#f4e4c1] inline-block focus:outline focus:outline-2 focus:outline-white"
+            >
+              GitHub
             </a>
           ) : null}
         </div>

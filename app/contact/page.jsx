@@ -33,13 +33,17 @@ export default function Contact() {
             Send a note and I&apos;ll get back to you.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input placeholder="First name" className="mc-bevel bg-obsidian rounded-none" />
-            <Input placeholder="Last name" className="mc-bevel bg-obsidian rounded-none" />
-            <Input placeholder="Email" className="mc-bevel bg-obsidian rounded-none" />
-            <Input placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-first">First name</label>
+            <Input id="contact-first" placeholder="First name" className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-last">Last name</label>
+            <Input id="contact-last" placeholder="Last name" className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-email">Email</label>
+            <Input id="contact-email" placeholder="Email" className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-phone">Phone</label>
+            <Input id="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
           </div>
           <Select>
-            <SelectTrigger className="mc-bevel bg-obsidian rounded-none">
+            <SelectTrigger aria-label="Pick a trade" className="mc-bevel bg-obsidian rounded-none">
               <SelectValue placeholder="Pick a trade" />
             </SelectTrigger>
             <SelectContent>
@@ -53,7 +57,8 @@ export default function Contact() {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Textarea placeholder="Your message" className="h-[160px] mc-bevel bg-obsidian rounded-none" />
+          <label className="sr-only" htmlFor="contact-message">Message</label>
+          <Textarea id="contact-message" placeholder="Your message" className="h-[160px] mc-bevel bg-obsidian rounded-none" />
           <BlockButton className="max-w-44" type="submit">
             Send
           </BlockButton>
