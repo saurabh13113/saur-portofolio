@@ -21,6 +21,7 @@ module.exports = {
       },
       fontFamily: {
         primary: "var(--font-jetbrainsMono)",
+        mc: ["Monocraft", "var(--font-jetbrainsMono)", "monospace"],
       },
     extend: {
       colors: {
@@ -28,7 +29,15 @@ module.exports = {
         accent: {
           DEFAULT: '#00ff99',
           hover: '#00e187',
-        }
+        },
+        grass: { DEFAULT: "#7cb342", dark: "#5b8a3c" },
+        dirt: { DEFAULT: "#866043", dark: "#6b4a32" },
+        stone: { DEFAULT: "#7f7f7f", dark: "#565656" },
+        wood: "#9c6b3f",
+        redstone: "#d13a2b",
+        emerald: "#2ecc71",
+        obsidian: "#14121c",
+        xp: "#7cff2f",
       },
       keyframes: {
         "accordion-down": {
