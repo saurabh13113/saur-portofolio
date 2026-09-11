@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   TOOLS, EMERALD_IDS, hitsToBreak, advanceBlock, loadFoundEmeralds, saveFoundEmeralds,
+  PHYSICS, stepPhysics, isOnSurface,
 } from "../components/mc/hero-scene-logic.js";
 
 test("every tool has an id, label, glyph and a positive hitsToBreak", () => {
@@ -46,6 +47,42 @@ test("save/load round-trips through a shimmed localStorage", () => {
   saveFoundEmeralds(["cloud", "grass"]);
   assert.deepEqual(loadFoundEmeralds(), ["cloud", "grass"]);
   delete globalThis.localStorage;
+});
+
+test("stepPhysics: gravity pulls the player down when airborne", () => {
+  const state = { x: 0, y: 100, vy: 0, facing: 1 };
+  const next = stepPhysics(state, {}, [], 400);
+  assert.ok(next.y < 100, "player should fall");
+  assert.equal(next.vy, -PHYSICS.gravity);
+});
+
+test("stepPhysics: jump only launches the player when on a surface", () => {
+  const grounded = { x: 0, y: PHYSICS.groundY, vy: 0, facing: 1 };
+  const jumped = stepPhysics(grounded, { jump: true }, [], 400);
+  assert.ok(jumped.vy > 0, "jump should give upward velocity on the ground");
+
+  const airborne = { x: 0, y: 50, vy: 2, facing: 1 };
+  const stillFalling = stepPhysics(airborne, { jump: true }, [], 400);
+  assert.ok(stillFalling.vy < 2, "jump input mid-air should not re-launch the player");
+});
+
+test("stepPhysics: lands on a platform instead of falling through it", () => {
+  const platforms = [{ left: 40, right: 100, top: 80 }];
+  let state = { x: 50, y: 200, vy: 0, facing: 1 };
+  for (let i = 0; i < 50; i++) state = stepPhysics(state, {}, platforms, 400);
+  assert.equal(state.y, 80);
+  assert.equal(state.vy, 0);
+  assert.ok(isOnSurface(state.x, state.y, platforms));
+});
+
+test("stepPhysics: horizontal movement is clamped to the scene bounds", () => {
+  let state = { x: 0, y: PHYSICS.groundY, vy: 0, facing: 1 };
+  for (let i = 0; i < 500; i++) state = stepPhysics(state, { left: true }, [], 400);
+  assert.equal(state.x, 0);
+
+  state = { x: 0, y: PHYSICS.groundY, vy: 0, facing: 1 };
+  for (let i = 0; i < 500; i++) state = stepPhysics(state, { right: true }, [], 400);
+  assert.equal(state.x, 400 - PHYSICS.playerWidth);
 });
 
 test("loadFoundEmeralds filters out unknown ids", () => {

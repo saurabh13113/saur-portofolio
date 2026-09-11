@@ -141,30 +141,12 @@
     }
   }
 
-  .mc-walker {
-    position: absolute;
-    bottom: 8px;
-    font-size: 28px;
+  .mc-player {
+    font-size: 26px;
     line-height: 1;
-    cursor: pointer;
-    background: none;
-    border: none;
-    animation: mc-walk 9s linear infinite alternate;
     filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
-  }
-  @keyframes mc-walk {
-    0%   { left: 4%;  transform: scaleX(1); }
-    49%  { transform: scaleX(1); }
-    50%  { left: 92%; transform: scaleX(-1); }
-    99%  { transform: scaleX(-1); }
-    100% { left: 4%;  transform: scaleX(1); }
-  }
-  .mc-walker--jump {
-    animation: mc-walk 9s linear infinite alternate, mc-jump 0.3s ease-out;
-  }
-  @keyframes mc-jump {
-    0%, 100% { translate: 0 0; }
-    50%      { translate: 0 -14px; }
+    will-change: left, bottom, transform;
+    pointer-events: none;
   }
 
   .mc-gem {
@@ -187,10 +169,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mc-walker, .mc-walker--jump {
-      animation: none;
-      left: 45%;
-    }
     .mc-shatter-particle {
       animation: none;
       opacity: 0;
