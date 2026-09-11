@@ -97,82 +97,15 @@
     .mc-crack { transition: none; }
   }
 
-  .mc-scene {
+  .mc-scene-3d {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      #6ec6ff 0%, #bfe8ff 55%,
-      #cdfacd 70%,
-      #3f6b2a 70%, #2e4f1e 100%
-    );
-    border-top: 4px solid rgba(0, 0, 0, 0.35);
-    border-bottom: 4px solid rgba(0, 0, 0, 0.35);
+    border: 4px solid rgba(0, 0, 0, 0.35);
   }
-  .mc-scene--torch {
-    filter: brightness(1.12);
-  }
-  .mc-scene--torch::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 40%, rgba(255, 200, 120, 0.25), transparent 60%);
-    pointer-events: none;
-  }
-
-  .mc-block {
-    border: none;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  .mc-shatter-particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: #cbb994;
-    pointer-events: none;
-    animation: mc-shatter-fly 0.5s ease-out forwards;
-  }
-  @keyframes mc-shatter-fly {
-    to {
-      transform: translate(var(--dx), var(--dy)) scale(0.2);
-      opacity: 0;
-    }
-  }
-
-  .mc-player {
-    font-size: 26px;
-    line-height: 1;
-    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
-    will-change: left, bottom, transform;
-    pointer-events: none;
-  }
-
-  .mc-gem {
-    position: absolute;
-    font-size: 18px;
-    opacity: 0.4;
-    filter: grayscale(0.6);
-    cursor: pointer;
-    background: none;
-    border: none;
-    transition: opacity 0.2s, filter 0.2s, transform 0.2s;
-  }
-  .mc-gem:hover {
-    opacity: 0.7;
-  }
-  .mc-gem--found {
-    opacity: 1;
-    filter: none;
-    transform: scale(1.15);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .mc-shatter-particle {
-      animation: none;
-      opacity: 0;
-    }
+  .mc-scene-3d canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 

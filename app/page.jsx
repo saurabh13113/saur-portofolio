@@ -4,7 +4,7 @@ import Sign from "@/components/mc/Sign";
 import XpBar from "@/components/mc/XpBar";
 import StatusRow from "@/components/mc/StatusRow";
 import { socialIcon } from "@/components/mc/icons";
-import HeroScene from "@/components/mc/HeroScene";
+import Scene3D from "@/components/mc/Scene3D";
 
 export default function Home() {
   return (
@@ -52,7 +52,7 @@ export default function Home() {
         </div>
       </div>
 
-      <HeroScene />
+      <Scene3D />
 
       <div id="stats" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 scroll-mt-24">
         {stats.map((s) => (

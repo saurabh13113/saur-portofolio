@@ -23,63 +23,76 @@ export function advanceBlock(hits, toolId) {
   return next >= need ? { hits: 0, broken: true } : { hits: next, broken: false };
 }
 
-// Minimal 2D platformer physics — real gravity/jump/collision, no physics
-// engine. Coordinates are "bottom-up" px within the scene (y = distance from
-// the floor), matching the CSS `bottom` property directly.
-// ponytail: fixed 60fps-ish step (no delta-time) — fine for a decorative
-// widget; add delta-time if it ever feels off on very high refresh displays.
-export const PHYSICS = {
-  gravity: 0.9,
-  jumpVelocity: 15,
-  moveSpeed: 3,
-  groundY: 16,
-  playerWidth: 26,
+// Minimal 3D platformer physics — real gravity/jump/collision, no physics
+// engine (no cannon/rapier). World units are three.js scene units (1 = 1m),
+// y is up, ground is y=0. x/z is the horizontal plane; movement is
+// world-axis-aligned (not camera-relative) — the simplest thing that still
+// feels right for a fixed chase camera.
+// ponytail: fixed-step integration (no delta-time) driven by r3f's useFrame;
+// add delta-time scaling if it ever feels off on very high refresh displays.
+export const PHYSICS_3D = {
+  gravity: 0.025,
+  jumpVelocity: 0.42,
+  moveSpeed: 0.08,
+  groundY: 0,
+  playerRadius: 0.35,
 };
 
-function surfaceAt(x, platforms) {
-  let best = PHYSICS.groundY;
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
+
+// platforms: [{minX, maxX, minZ, maxZ, top}] — solid boxes the player can
+// stand on, in world x/z with their top surface height.
+function surfaceAt3D(x, z, platforms) {
+  let best = PHYSICS_3D.groundY;
+  const r = PHYSICS_3D.playerRadius;
   for (const p of platforms) {
-    if (x + PHYSICS.playerWidth > p.left && x < p.right) {
+    if (x + r > p.minX && x - r < p.maxX && z + r > p.minZ && z - r < p.maxZ) {
       best = Math.max(best, p.top);
     }
   }
   return best;
 }
 
-export function isOnSurface(x, y, platforms) {
-  return y <= surfaceAt(x, platforms) + 0.5;
+export function isOnSurface3D(x, y, z, platforms) {
+  return y <= surfaceAt3D(x, z, platforms) + 0.02;
 }
 
-// state: {x, y, vy, facing}. input: {left, right, jump}.
-// platforms: [{left, right, top}] — solid surfaces the player can stand on.
-export function stepPhysics(state, input, platforms, sceneWidth) {
-  let { x, vy, facing } = state;
+// state: {x, y, z, vy, rotY}. input: {forward, back, left, right, jump}.
+export function stepPhysics3D(state, input, platforms, bounds) {
+  let { x, z, vy, rotY } = state;
   const { y } = state;
 
-  if (input.left) {
-    x -= PHYSICS.moveSpeed;
-    facing = -1;
+  let dx = 0;
+  let dz = 0;
+  if (input.forward) dz -= 1;
+  if (input.back) dz += 1;
+  if (input.left) dx -= 1;
+  if (input.right) dx += 1;
+  if (dx !== 0 || dz !== 0) {
+    const len = Math.hypot(dx, dz);
+    dx = (dx / len) * PHYSICS_3D.moveSpeed;
+    dz = (dz / len) * PHYSICS_3D.moveSpeed;
+    rotY = Math.atan2(dx, dz);
   }
-  if (input.right) {
-    x += PHYSICS.moveSpeed;
-    facing = 1;
-  }
-  x = Math.max(0, Math.min(Math.max(0, sceneWidth - PHYSICS.playerWidth), x));
+  x = clamp(x + dx, bounds.minX, bounds.maxX);
+  z = clamp(z + dz, bounds.minZ, bounds.maxZ);
 
-  if (input.jump && isOnSurface(x, y, platforms)) {
-    vy = PHYSICS.jumpVelocity;
+  if (input.jump && isOnSurface3D(x, y, z, platforms)) {
+    vy = PHYSICS_3D.jumpVelocity;
   }
 
-  vy -= PHYSICS.gravity;
+  vy -= PHYSICS_3D.gravity;
   let newY = y + vy;
 
-  const surface = surfaceAt(x, platforms);
+  const surface = surfaceAt3D(x, z, platforms);
   if (vy <= 0 && newY <= surface) {
     newY = surface;
     vy = 0;
   }
 
-  return { x, y: newY, vy, facing };
+  return { x, y: newY, z, vy, rotY };
 }
 
 function readJSON(key, fallback) {
