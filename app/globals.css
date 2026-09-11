@@ -96,6 +96,106 @@
   @media (prefers-reduced-motion: reduce) {
     .mc-crack { transition: none; }
   }
+
+  .mc-scene {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      180deg,
+      #6ec6ff 0%, #bfe8ff 55%,
+      #cdfacd 70%,
+      #3f6b2a 70%, #2e4f1e 100%
+    );
+    border-top: 4px solid rgba(0, 0, 0, 0.35);
+    border-bottom: 4px solid rgba(0, 0, 0, 0.35);
+  }
+  .mc-scene--torch {
+    filter: brightness(1.12);
+  }
+  .mc-scene--torch::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(255, 200, 120, 0.25), transparent 60%);
+    pointer-events: none;
+  }
+
+  .mc-block {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .mc-shatter-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #cbb994;
+    pointer-events: none;
+    animation: mc-shatter-fly 0.5s ease-out forwards;
+  }
+  @keyframes mc-shatter-fly {
+    to {
+      transform: translate(var(--dx), var(--dy)) scale(0.2);
+      opacity: 0;
+    }
+  }
+
+  .mc-walker {
+    position: absolute;
+    bottom: 8px;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    background: none;
+    border: none;
+    animation: mc-walk 9s linear infinite alternate;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
+  }
+  @keyframes mc-walk {
+    0%   { left: 4%;  transform: scaleX(1); }
+    49%  { transform: scaleX(1); }
+    50%  { left: 92%; transform: scaleX(-1); }
+    99%  { transform: scaleX(-1); }
+    100% { left: 4%;  transform: scaleX(1); }
+  }
+  .mc-walker--jump {
+    animation: mc-walk 9s linear infinite alternate, mc-jump 0.3s ease-out;
+  }
+  @keyframes mc-jump {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -14px; }
+  }
+
+  .mc-gem {
+    position: absolute;
+    font-size: 18px;
+    opacity: 0.4;
+    filter: grayscale(0.6);
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: opacity 0.2s, filter 0.2s, transform 0.2s;
+  }
+  .mc-gem:hover {
+    opacity: 0.7;
+  }
+  .mc-gem--found {
+    opacity: 1;
+    filter: none;
+    transform: scale(1.15);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mc-walker, .mc-walker--jump {
+      animation: none;
+      left: 45%;
+    }
+    .mc-shatter-particle {
+      animation: none;
+      opacity: 0;
+    }
+  }
 }
 
 :root {

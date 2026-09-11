@@ -4,6 +4,7 @@ import Sign from "@/components/mc/Sign";
 import XpBar from "@/components/mc/XpBar";
 import StatusRow from "@/components/mc/StatusRow";
 import { socialIcon } from "@/components/mc/icons";
+import HeroScene from "@/components/mc/HeroScene";
 
 export default function Home() {
   return (
@@ -51,7 +52,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
+      <HeroScene />
+
+      <div id="stats" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 scroll-mt-24">
         {stats.map((s) => (
           <XpBar key={s.label} label={s.label} value={s.value} max={s.max} suffix={s.suffix} count />
         ))}
