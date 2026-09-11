@@ -97,15 +97,23 @@
     .mc-crack { transition: none; }
   }
 
-  .mc-scene-3d {
-    position: relative;
-    overflow: hidden;
-    border: 4px solid rgba(0, 0, 0, 0.35);
+  .mc-char {
+    font-size: 26px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
+    will-change: left, bottom, transform;
   }
-  .mc-scene-3d canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
+
+  @keyframes mc-bump-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+  .mc-bumped {
+    animation: mc-bump-wiggle 0.4s ease-in-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mc-bumped { animation: none; }
   }
 }
 

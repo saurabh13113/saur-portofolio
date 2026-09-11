@@ -13,6 +13,7 @@ export default function Chest({ project }) {
         <button
           type="button"
           onClick={() => play("orb")}
+          data-mc-bump
           className={`group relative mc-bevel tex-plank p-4 text-left w-full h-full focus:outline focus:outline-2 focus:outline-white ${
             project.featured ? "sm:col-span-2" : ""
           }`}

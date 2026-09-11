@@ -4,6 +4,7 @@ import "./globals.css";
 import Hotbar from "@/components/mc/Hotbar";
 import PageTransition from "@/components/PageTransition";
 import BreakOverlay from "@/components/mc/BreakOverlay";
+import PageCharacter from "@/components/mc/PageCharacter";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
         <BreakOverlay />
         <PageTransition>{children}</PageTransition>
         <Hotbar />
+        <PageCharacter />
       </body>
     </html>
   );

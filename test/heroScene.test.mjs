@@ -1,104 +1,83 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  TOOLS, EMERALD_IDS, hitsToBreak, advanceBlock, loadFoundEmeralds, saveFoundEmeralds,
-  PHYSICS_3D, stepPhysics3D, isOnSurface3D,
+  CHAR, stepCharacter, isOnSurface, advanceBreak, CRATE, stepCrate, pushCrate,
+  loadFlag, saveFlag,
 } from "../components/mc/hero-scene-logic.js";
 
-test("every tool has an id, label, glyph and a positive hitsToBreak", () => {
-  for (const t of TOOLS) {
-    assert.ok(t.id && t.label && t.glyph);
-    assert.ok(t.hitsToBreak >= 1);
-  }
+const FLOOR = [{ left: 0, right: 1000, top: 20 }];
+
+test("stepCharacter: gravity pulls the character down when airborne", () => {
+  const state = { x: 0, y: 100, vy: 0, facing: 1 };
+  const next = stepCharacter(state, {}, FLOOR, 400);
+  assert.ok(next.y < 100, "character should fall");
+  assert.equal(next.vy, -CHAR.gravity);
 });
 
-test("sword breaks in one hit, pickaxe takes three", () => {
-  assert.equal(hitsToBreak("sword"), 1);
-  assert.equal(hitsToBreak("pickaxe"), 3);
+test("stepCharacter: jump only launches the character when on a surface", () => {
+  const grounded = { x: 0, y: 20, vy: 0, facing: 1 };
+  const jumped = stepCharacter(grounded, { jump: true }, FLOOR, 400);
+  assert.ok(jumped.vy > 0, "jump should give upward velocity on a surface");
+
+  const airborne = { x: 0, y: 50, vy: 2, facing: 1 };
+  const stillFalling = stepCharacter(airborne, { jump: true }, FLOOR, 400);
+  assert.ok(stillFalling.vy < 2, "jump input mid-air should not re-launch the character");
 });
 
-test("unknown tool id falls back to 3 hits", () => {
-  assert.equal(hitsToBreak("nope"), 3);
+test("stepCharacter: lands on a real element's rect instead of falling through it", () => {
+  const platforms = [...FLOOR, { left: 40, right: 100, top: 80 }];
+  let state = { x: 50, y: 200, vy: 0, facing: 1 };
+  for (let i = 0; i < 50; i++) state = stepCharacter(state, {}, platforms, 400);
+  assert.equal(state.y, 80);
+  assert.equal(state.vy, 0);
+  assert.ok(isOnSurface(state.x, state.y, platforms));
 });
 
-test("advanceBlock cycles and reports broken only at the threshold", () => {
-  let r = advanceBlock(0, "pickaxe");
+test("stepCharacter: horizontal movement is clamped to the viewport", () => {
+  let state = { x: 0, y: 20, vy: 0, facing: 1 };
+  for (let i = 0; i < 500; i++) state = stepCharacter(state, { left: true }, FLOOR, 400);
+  assert.equal(state.x, 0);
+
+  state = { x: 0, y: 20, vy: 0, facing: 1 };
+  for (let i = 0; i < 500; i++) state = stepCharacter(state, { right: true }, FLOOR, 400);
+  assert.equal(state.x, 400 - CHAR.width);
+});
+
+test("advanceBreak cycles and reports broken only at the threshold", () => {
+  let r = advanceBreak(0, 3);
   assert.deepEqual(r, { hits: 1, broken: false });
-  r = advanceBlock(r.hits, "pickaxe");
+  r = advanceBreak(r.hits, 3);
   assert.deepEqual(r, { hits: 2, broken: false });
-  r = advanceBlock(r.hits, "pickaxe");
+  r = advanceBreak(r.hits, 3);
   assert.deepEqual(r, { hits: 0, broken: true });
 });
 
-test("advanceBlock with sword breaks immediately", () => {
-  assert.deepEqual(advanceBlock(0, "sword"), { hits: 0, broken: true });
+test("stepCrate: friction decays velocity to zero and offset is clamped", () => {
+  let state = pushCrate({ offset: 0, v: 0 }, 1);
+  assert.ok(state.v > 0);
+  for (let i = 0; i < 500; i++) state = stepCrate(state);
+  assert.equal(state.v, 0);
+  assert.ok(Math.abs(state.offset) <= CRATE.maxOffset);
 });
 
-test("loadFoundEmeralds returns [] when localStorage is unavailable", () => {
-  assert.deepEqual(loadFoundEmeralds(), []);
+test("pushCrate direction flips which way the offset moves", () => {
+  const right = stepCrate(pushCrate({ offset: 0, v: 0 }, 1));
+  const left = stepCrate(pushCrate({ offset: 0, v: 0 }, -1));
+  assert.ok(right.offset > 0);
+  assert.ok(left.offset < 0);
 });
 
-test("save/load round-trips through a shimmed localStorage", () => {
+test("loadFlag returns the fallback when localStorage is unavailable", () => {
+  assert.equal(loadFlag("mc-secret", false), false);
+});
+
+test("save/load flag round-trips through a shimmed localStorage", () => {
   const store = {};
   globalThis.localStorage = {
     getItem: (k) => (k in store ? store[k] : null),
     setItem: (k, v) => { store[k] = String(v); },
   };
-  saveFoundEmeralds(["cloud", "grass"]);
-  assert.deepEqual(loadFoundEmeralds(), ["cloud", "grass"]);
-  delete globalThis.localStorage;
-});
-
-const BOUNDS = { minX: -5, maxX: 5, minZ: -3, maxZ: 3 };
-
-test("stepPhysics3D: gravity pulls the player down when airborne", () => {
-  const state = { x: 0, y: 3, z: 0, vy: 0, rotY: 0 };
-  const next = stepPhysics3D(state, {}, [], BOUNDS);
-  assert.ok(next.y < 3, "player should fall");
-  assert.equal(next.vy, -PHYSICS_3D.gravity);
-});
-
-test("stepPhysics3D: jump only launches the player when on a surface", () => {
-  const grounded = { x: 0, y: PHYSICS_3D.groundY, z: 0, vy: 0, rotY: 0 };
-  const jumped = stepPhysics3D(grounded, { jump: true }, [], BOUNDS);
-  assert.ok(jumped.vy > 0, "jump should give upward velocity on the ground");
-
-  const airborne = { x: 0, y: 1, z: 0, vy: 0.1, rotY: 0 };
-  const stillRising = stepPhysics3D(airborne, { jump: true }, [], BOUNDS);
-  assert.ok(stillRising.vy < 0.1, "jump input mid-air should not re-launch the player");
-});
-
-test("stepPhysics3D: lands on a platform instead of falling through it", () => {
-  const platforms = [{ minX: -1, maxX: 1, minZ: -1, maxZ: 1, top: 1.5 }];
-  let state = { x: 0, y: 6, z: 0, vy: 0, rotY: 0 };
-  for (let i = 0; i < 100; i++) state = stepPhysics3D(state, {}, platforms, BOUNDS);
-  assert.equal(state.y, 1.5);
-  assert.equal(state.vy, 0);
-  assert.ok(isOnSurface3D(state.x, state.y, state.z, platforms));
-});
-
-test("stepPhysics3D: horizontal movement is clamped to the world bounds", () => {
-  let state = { x: 0, y: PHYSICS_3D.groundY, z: 0, vy: 0, rotY: 0 };
-  for (let i = 0; i < 500; i++) state = stepPhysics3D(state, { left: true }, [], BOUNDS);
-  assert.equal(state.x, BOUNDS.minX);
-
-  state = { x: 0, y: PHYSICS_3D.groundY, z: 0, vy: 0, rotY: 0 };
-  for (let i = 0; i < 500; i++) state = stepPhysics3D(state, { forward: true }, [], BOUNDS);
-  assert.equal(state.z, BOUNDS.minZ);
-});
-
-test("stepPhysics3D: diagonal input moves at the same speed as a single direction", () => {
-  const straight = stepPhysics3D({ x: 0, y: 0, z: 0, vy: 0, rotY: 0 }, { forward: true }, [], BOUNDS);
-  const diagonal = stepPhysics3D({ x: 0, y: 0, z: 0, vy: 0, rotY: 0 }, { forward: true, left: true }, [], BOUNDS);
-  const straightDist = Math.hypot(straight.x, straight.z);
-  const diagonalDist = Math.hypot(diagonal.x, diagonal.z);
-  assert.ok(Math.abs(straightDist - diagonalDist) < 1e-9, "diagonal movement should be normalized");
-});
-
-test("loadFoundEmeralds filters out unknown ids", () => {
-  const store = { "mc-emeralds": JSON.stringify(["cloud", "bogus"]) };
-  globalThis.localStorage = { getItem: (k) => store[k] ?? null, setItem: () => {} };
-  assert.deepEqual(loadFoundEmeralds(), ["cloud"]);
-  assert.ok(EMERALD_IDS.includes("cloud"));
+  saveFlag("mc-secret", true);
+  assert.equal(loadFlag("mc-secret", false), true);
   delete globalThis.localStorage;
 });

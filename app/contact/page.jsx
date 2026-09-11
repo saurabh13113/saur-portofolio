@@ -59,7 +59,7 @@ export default function Contact() {
           </Select>
           <label className="sr-only" htmlFor="contact-message">Message</label>
           <Textarea id="contact-message" placeholder="Your message" className="h-[160px] mc-bevel bg-obsidian rounded-none" />
-          <BlockButton className="max-w-44" type="submit">
+          <BlockButton className="max-w-44" type="submit" data-mc-hit data-mc-activate>
             Send
           </BlockButton>
         </Panel>
