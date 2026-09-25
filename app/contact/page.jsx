@@ -1,87 +1,128 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-import { Select, SelectContent, SelectGroup, SelectItem,
-         SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";  
-
+import {
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-
+import { profile, services } from "@/data/portfolio";
+import Sign from "@/components/mc/Sign";
+import Panel from "@/components/mc/Panel";
+import BlockButton from "@/components/mc/BlockButton";
 
 const info = [
-    {icon: <FaPhoneAlt />, title: "Phone", description: "647-831-6703",},
-    {icon: <FaEnvelope />, title: "Email", description: "saurabhnair13113@gmail.com",},
-    {icon: <FaMapMarkerAlt />, title: "Location", description: "Toronto, Ontario",},
+  { icon: <FaPhoneAlt />, title: "Phone", value: profile.phone },
+  { icon: <FaEnvelope />, title: "Email", value: profile.email },
+  { icon: <FaMapMarkerAlt />, title: "Location", value: profile.location },
 ];
 
-import { motion,easeIn } from "framer-motion";
+export default function Contact() {
+  const [trade, setTrade] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [errors, setErrors] = useState({});
 
-const contact = () => {
-    return (<motion.section initial={{opacity: 0}}
-                            animate={{opacity: 1, transition:{delay:2.4, duration:0.4, ease:"easeIn"},}}
-                            className="py-6"> 
-                        <div className="container mx-auto">
-                            <div className="flex flex-col xl:flex-row gap-[30px]">
-                                <div className="xl:h-[54px] order-2 xl:order-none">
-                                    {/* FORM */}
-                                    <form className="flex flex-col gap-6 p-10 bg-[#27272c]
-                                                     rounded-xl"> 
-                                        <h3 className="text-4xl text-accent"> LETS WORK TOGETHER </h3>
-                                        <p className="text-white/60">
-                                           Get in touch with me, I am sure we can come up with something fantastic together!</p> 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <Input type="First Name" placeholder="First Name"/>
-                                            <Input type="Last Name" placeholder="Last Name"/>
-                                            <Input type="Email Address" placeholder="Email Address"/>
-                                            <Input type="Phone Number" placeholder="Phone Number"/>
-                                        </div>
-                                        {/* SELECT */}
-                                        <Select>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a service"/>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel> Select a Service </SelectLabel>
-                                                    <SelectItem value="est">Web Development</SelectItem>
-                                                    <SelectItem value="cst">Social Media Management</SelectItem>
-                                                      <SelectItem value="mst">Software development</SelectItem>
-                                                    <SelectItem value="mst">Content Creation</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {/* TEXTAREA */}
-                                        <Textarea className="h-[200px]" 
-                                                  placeholder="Type your message here."></Textarea>
-                                    {/* BUTTON */}
-                                    <Button size="md" className="max-w-40"> Send Message </Button>
-                                    </form>
-                                </div>
-                                {/* INFO */}
-                                <div className="flex-1 flex items-center xl:justify-end order-1
-                                                xl:order-none mb-8 xl:mb-0">
-                                    <ul className="flex flex-col gap-10">
-                                        {info.map((item,index) => {
-                                            return (<li key={index} className="flex items-center gap-6">
-                                                <div className="w-[52px] h-[52px] xl:w-[72px] xl:h-[72px] bg-[#27272c] 
-                                                                text-accent rounded-md flex items-center justify-center">
-                                                    <div className="text-[28px]">{item.icon}</div>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <p className="text-white/60">{item.title}</p>
-                                                    <h3 className="text-xl ">{item.description}</h3>
-                                                </div>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-            </motion.section>
-        );
-};
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const formEl = e.currentTarget; // capture before any await — React nulls e.currentTarget after this handler returns
+    setStatus("sending");
+    setErrors({});
 
-export default contact
+    const form = new FormData(formEl);
+    const payload = {
+      firstName: form.get("contact-first"),
+      lastName: form.get("contact-last"),
+      email: form.get("contact-email"),
+      message: form.get("contact-message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        setErrors(data.errors ?? {});
+        setStatus("error");
+        return;
+      }
+      setStatus("sent");
+      formEl.reset();
+      setTrade("");
+    } catch {
+      setErrors({ form: "Couldn't reach the server — check your connection and try again." });
+      setStatus("error");
+    }
+  }
+
+  return (
+    <section className="container mx-auto py-12">
+      <Sign className="mb-8">Book &amp; Quill</Sign>
+
+      <div className="flex flex-col xl:flex-row gap-8">
+        <Panel as="form" tex="stone" className="p-8 flex flex-col gap-5 text-[#f4e4c1] xl:w-[60%]" onSubmit={handleSubmit}>
+          <h3 className="font-mc text-2xl text-emerald">Let&apos;s build something</h3>
+          <p className="text-white/70 font-primary text-sm">Send a note and I&apos;ll get back to you.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label className="sr-only" htmlFor="contact-first">First name</label>
+            <Input id="contact-first" name="contact-first" placeholder="First name" required className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-last">Last name</label>
+            <Input id="contact-last" name="contact-last" placeholder="Last name" required className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-email">Email</label>
+            <Input id="contact-email" name="contact-email" type="email" placeholder="Email" required className="mc-bevel bg-obsidian rounded-none" />
+            <label className="sr-only" htmlFor="contact-phone">Phone</label>
+            <Input id="contact-phone" name="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
+          </div>
+          {errors.firstName || errors.lastName || errors.email ? (
+            <p role="alert" className="text-redstone text-xs">
+              {errors.firstName ?? errors.lastName ?? errors.email}
+            </p>
+          ) : null}
+          <Select value={trade} onValueChange={setTrade}>
+            <SelectTrigger aria-label="Pick a trade" className="mc-bevel bg-obsidian rounded-none">
+              <SelectValue placeholder="Pick a trade" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Trades</SelectLabel>
+                {services.map((s) => (
+                  <SelectItem key={s.num} value={s.num}>{s.title}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <label className="sr-only" htmlFor="contact-message">Message</label>
+          <Textarea id="contact-message" name="contact-message" placeholder="Your message" required className="h-[160px] mc-bevel bg-obsidian rounded-none" />
+          {errors.message ? <p role="alert" className="text-redstone text-xs">{errors.message}</p> : null}
+          <BlockButton className="max-w-44" type="submit" disabled={status === "sending"}>
+            {status === "sending" ? "Sending..." : "Send"}
+          </BlockButton>
+          {status === "sent" ? (
+            <p role="status" className="text-emerald text-sm">Message sent — I&apos;ll get back to you soon.</p>
+          ) : null}
+          {status === "error" && errors.form ? (
+            <p role="alert" className="text-redstone text-sm">{errors.form}</p>
+          ) : null}
+        </Panel>
+
+        <ul className="flex flex-col gap-4 xl:w-[40%]">
+          {info.map((it) => (
+            <li key={it.title}>
+              <Panel tex="dirt" className="p-4 flex items-center gap-4 text-[#f4e4c1]">
+                <span className="mc-bevel tex-obsidian w-12 h-12 flex items-center justify-center text-emerald text-xl">
+                  {it.icon}
+                </span>
+                <span>
+                  <span className="block text-white/60 font-primary text-xs">{it.title}</span>
+                  <span className="font-mc">{it.value}</span>
+                </span>
+              </Panel>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}

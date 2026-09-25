@@ -31,4 +31,11 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/)!
 
+## Theme
 
+Minecraft-styled reskin. All page content lives in `data/portfolio.js`
+(transcribed from `public/assets/resume.pdf`). Blocky UI primitives are in
+`components/mc/`; textures and the bevel are CSS in `app/globals.css`.
+
+Optional assets (site degrades gracefully without them):
+`public/fonts/Monocraft.ttf`, `public/sfx/{click,break,orb}.mp3`.
