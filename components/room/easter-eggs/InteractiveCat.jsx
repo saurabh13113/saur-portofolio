@@ -1,15 +1,20 @@
 // components/room/easter-eggs/InteractiveCat.jsx
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const REACTIONS = ["Mrow?", "purrrr", "*stretches*", "not now, human"];
 
 export default function InteractiveCat({ style }) {
   const [reaction, setReaction] = useState(null);
+  const timeoutRef = useRef(null);
 
   function handleClick() {
     setReaction(REACTIONS[Math.floor(Math.random() * REACTIONS.length)]);
-    setTimeout(() => setReaction(null), 1500);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setReaction(null);
+      timeoutRef.current = null;
+    }, 1500);
   }
 
   return (
