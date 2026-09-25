@@ -132,3 +132,7 @@
   --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='16' height='16' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
 }
 
+html[data-easter="unlocked"] {
+  filter: hue-rotate(200deg);
+}
+
