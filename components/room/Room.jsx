@@ -1,5 +1,6 @@
 import { profile } from "@/data/portfolio";
 import RoomHotspot from "@/components/room/RoomHotspot";
+import HiddenObject from "@/components/room/easter-eggs/HiddenObject";
 
 const HOTSPOTS = [
   { href: "/work", label: "Work", icon: "🖥️", style: { left: "18%", top: "55%" } },
@@ -34,6 +35,18 @@ export default function Room() {
         {HOTSPOTS.map((h) => (
           <RoomHotspot key={h.href} {...h} />
         ))}
+        <HiddenObject
+          icon="🦆"
+          label="A rubber duck"
+          tooltip="Just a debugging duck. Carry on."
+          style={{ left: "88%", top: "82%" }}
+        />
+        <HiddenObject
+          icon="🖼️"
+          label="A framed poster"
+          tooltip="Dean's List Scholar, 2022-2025."
+          style={{ left: "38%", top: "10%" }}
+        />
       </div>
     </section>
   );
