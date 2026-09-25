@@ -1,6 +1,7 @@
 import { profile } from "@/data/portfolio";
 import RoomHotspot from "@/components/room/RoomHotspot";
 import HiddenObject from "@/components/room/easter-eggs/HiddenObject";
+import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
 
 const HOTSPOTS = [
   { href: "/work", label: "Work", icon: "🖥️", style: { left: "18%", top: "55%" } },
@@ -47,6 +48,7 @@ export default function Room() {
           tooltip="Dean's List Scholar, 2022-2025."
           style={{ left: "38%", top: "10%" }}
         />
+        <InteractiveCat style={{ left: "60%", top: "75%" }} />
       </div>
     </section>
   );
