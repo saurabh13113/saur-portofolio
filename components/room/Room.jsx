@@ -2,10 +2,10 @@ import { profile } from "@/data/portfolio";
 import RoomHotspot from "@/components/room/RoomHotspot";
 
 const HOTSPOTS = [
-  { href: "/work", label: "Work", icon: "🖥️", style: { left: "20%", top: "55%" } },
-  { href: "/resume", label: "Resume", icon: "📚", style: { left: "78%", top: "35%" } },
-  { href: "/contact", label: "Contact", icon: "☎️", style: { left: "12%", top: "80%" } },
-  { href: "/services", label: "Services", icon: "🚪", style: { left: "50%", top: "20%" } },
+  { href: "/work", label: "Work", icon: "🖥️", style: { left: "18%", top: "55%" } },
+  { href: "/resume", label: "Resume", icon: "📚", style: { left: "82%", top: "42%" } },
+  { href: "/contact", label: "Contact", icon: "☎️", style: { left: "12%", top: "85%" } },
+  { href: "/services", label: "Services", icon: "🚪", style: { left: "50%", top: "12%" } },
 ];
 
 export default function Room() {
@@ -25,7 +25,7 @@ export default function Room() {
         />
         <div
           className="absolute -translate-x-1/2 -translate-y-1/2 mc-bevel tex-plank px-2 py-1 text-[9px] font-mc text-[#f4e4c1] text-center leading-tight max-w-[110px]"
-          style={{ left: "88%", top: "18%" }}
+          style={{ left: "90%", top: "10%" }}
         >
           🏆 TMU Solution Hacks &apos;25 winner
           <br />
