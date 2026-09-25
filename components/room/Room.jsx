@@ -2,6 +2,7 @@ import { profile } from "@/data/portfolio";
 import RoomHotspot from "@/components/room/RoomHotspot";
 import HiddenObject from "@/components/room/easter-eggs/HiddenObject";
 import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
+import PhotoFrame from "@/components/room/easter-eggs/PhotoFrame";
 
 const HOTSPOTS = [
   { href: "/work", label: "Work", icon: "🖥️", style: { left: "18%", top: "55%" } },
@@ -49,6 +50,7 @@ export default function Room() {
           style={{ left: "38%", top: "10%" }}
         />
         <InteractiveCat style={{ left: "60%", top: "75%" }} />
+        <PhotoFrame images={["/assets/photo.jpg", "/assets/photo.png"]} style={{ left: "25%", top: "14%" }} />
       </div>
     </section>
   );
