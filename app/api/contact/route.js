@@ -23,7 +23,8 @@ export async function POST(request) {
       text: `${message}\n\n— ${firstName} ${lastName} <${email}>`,
     });
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[contact] failed to send email:", err);
     return NextResponse.json(
       { ok: false, errors: { form: "Couldn't send right now — try again in a bit." } },
       { status: 502 }

@@ -24,10 +24,11 @@ export default function Contact() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const formEl = e.currentTarget; // capture before any await — React nulls e.currentTarget after this handler returns
     setStatus("sending");
     setErrors({});
 
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formEl);
     const payload = {
       firstName: form.get("contact-first"),
       lastName: form.get("contact-last"),
@@ -48,7 +49,7 @@ export default function Contact() {
         return;
       }
       setStatus("sent");
-      e.currentTarget.reset();
+      formEl.reset();
       setTrade("");
     } catch {
       setErrors({ form: "Couldn't reach the server — check your connection and try again." });

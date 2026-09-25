@@ -41,3 +41,37 @@ test("handles a completely empty/undefined input without throwing", () => {
   assert.equal(result.ok, false);
   assert.ok(Object.keys(result.errors).length > 0);
 });
+
+test("rejects a first name over 100 characters", () => {
+  const result = validateContact({
+    firstName: "A".repeat(101),
+    lastName: "Nair",
+    email: "a@b.com",
+    message: "hi",
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.firstName);
+});
+
+test("rejects a message over 5000 characters", () => {
+  const result = validateContact({
+    firstName: "A",
+    lastName: "B",
+    email: "a@b.com",
+    message: "x".repeat(5001),
+  });
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.message);
+});
+
+test("strips CR/LF from firstName on an otherwise-valid submission", () => {
+  const result = validateContact({
+    firstName: "Evil\r\nBcc:attacker@example.com",
+    lastName: "Nair",
+    email: "a@b.com",
+    message: "hi",
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.data.firstName.includes("\r"), false);
+  assert.equal(result.data.firstName.includes("\n"), false);
+});

@@ -5,6 +5,7 @@ const SEQUENCE = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "
 
 export default function KonamiUnlock() {
   const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("Secret palette unlocked.");
 
   useEffect(() => {
     try {
@@ -28,10 +29,17 @@ export default function KonamiUnlock() {
         progress += 1;
         if (progress === SEQUENCE.length) {
           progress = 0;
-          document.documentElement.setAttribute("data-easter", "unlocked");
+          const isCurrentlyUnlocked = document.documentElement.getAttribute("data-easter") === "unlocked";
+          const next = !isCurrentlyUnlocked;
+          if (next) {
+            document.documentElement.setAttribute("data-easter", "unlocked");
+          } else {
+            document.documentElement.removeAttribute("data-easter");
+          }
           try {
-            localStorage.setItem("easter-unlocked", "true");
+            localStorage.setItem("easter-unlocked", String(next));
           } catch {}
+          setToastMessage(next ? "Secret palette unlocked." : "Secret palette restored to normal.");
           setToast(true);
           setTimeout(() => setToast(false), 3000);
         }
@@ -48,7 +56,7 @@ export default function KonamiUnlock() {
 
   return (
     <div role="status" className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] mc-bevel tex-plank px-4 py-3 text-xs font-mc text-[#f4e4c1]">
-      Secret palette unlocked.
+      {toastMessage}
     </div>
   );
 }
