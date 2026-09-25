@@ -1,4 +1,12 @@
 import { profile } from "@/data/portfolio";
+import RoomHotspot from "@/components/room/RoomHotspot";
+
+const HOTSPOTS = [
+  { href: "/work", label: "Work", icon: "🖥️", style: { left: "20%", top: "55%" } },
+  { href: "/resume", label: "Resume", icon: "📚", style: { left: "78%", top: "35%" } },
+  { href: "/contact", label: "Contact", icon: "☎️", style: { left: "12%", top: "80%" } },
+  { href: "/services", label: "Services", icon: "🪟", style: { left: "50%", top: "20%" } },
+];
 
 export default function Room() {
   return (
@@ -23,6 +31,9 @@ export default function Room() {
           <br />
           🌱 Dean&apos;s List, 4 yrs
         </div>
+        {HOTSPOTS.map((h) => (
+          <RoomHotspot key={h.href} {...h} />
+        ))}
       </div>
     </section>
   );
