@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -17,32 +18,68 @@ const info = [
 ];
 
 export default function Contact() {
+  const [trade, setTrade] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [errors, setErrors] = useState({});
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setStatus("sending");
+    setErrors({});
+
+    const form = new FormData(e.currentTarget);
+    const payload = {
+      firstName: form.get("contact-first"),
+      lastName: form.get("contact-last"),
+      email: form.get("contact-email"),
+      message: form.get("contact-message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        setErrors(data.errors ?? {});
+        setStatus("error");
+        return;
+      }
+      setStatus("sent");
+      e.currentTarget.reset();
+      setTrade("");
+    } catch {
+      setErrors({ form: "Couldn't reach the server — check your connection and try again." });
+      setStatus("error");
+    }
+  }
+
   return (
     <section className="container mx-auto py-12">
       <Sign className="mb-8">Book &amp; Quill</Sign>
 
       <div className="flex flex-col xl:flex-row gap-8">
-        <Panel
-          as="form"
-          tex="stone"
-          className="p-8 flex flex-col gap-5 text-[#f4e4c1] xl:w-[60%]"
-          onSubmit={(e) => e.preventDefault()}
-        >
+        <Panel as="form" tex="stone" className="p-8 flex flex-col gap-5 text-[#f4e4c1] xl:w-[60%]" onSubmit={handleSubmit}>
           <h3 className="font-mc text-2xl text-emerald">Let&apos;s build something</h3>
-          <p className="text-white/70 font-primary text-sm">
-            Send a note and I&apos;ll get back to you.
-          </p>
+          <p className="text-white/70 font-primary text-sm">Send a note and I&apos;ll get back to you.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="sr-only" htmlFor="contact-first">First name</label>
-            <Input id="contact-first" placeholder="First name" className="mc-bevel bg-obsidian rounded-none" />
+            <Input id="contact-first" name="contact-first" placeholder="First name" required className="mc-bevel bg-obsidian rounded-none" />
             <label className="sr-only" htmlFor="contact-last">Last name</label>
-            <Input id="contact-last" placeholder="Last name" className="mc-bevel bg-obsidian rounded-none" />
+            <Input id="contact-last" name="contact-last" placeholder="Last name" required className="mc-bevel bg-obsidian rounded-none" />
             <label className="sr-only" htmlFor="contact-email">Email</label>
-            <Input id="contact-email" placeholder="Email" className="mc-bevel bg-obsidian rounded-none" />
+            <Input id="contact-email" name="contact-email" type="email" placeholder="Email" required className="mc-bevel bg-obsidian rounded-none" />
             <label className="sr-only" htmlFor="contact-phone">Phone</label>
-            <Input id="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
+            <Input id="contact-phone" name="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
           </div>
-          <Select>
+          {errors.firstName || errors.lastName || errors.email ? (
+            <p role="alert" className="text-redstone text-xs">
+              {errors.firstName ?? errors.lastName ?? errors.email}
+            </p>
+          ) : null}
+          <Select value={trade} onValueChange={setTrade}>
             <SelectTrigger aria-label="Pick a trade" className="mc-bevel bg-obsidian rounded-none">
               <SelectValue placeholder="Pick a trade" />
             </SelectTrigger>
@@ -50,18 +87,23 @@ export default function Contact() {
               <SelectGroup>
                 <SelectLabel>Trades</SelectLabel>
                 {services.map((s) => (
-                  <SelectItem key={s.num} value={s.num}>
-                    {s.title}
-                  </SelectItem>
+                  <SelectItem key={s.num} value={s.num}>{s.title}</SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
           </Select>
           <label className="sr-only" htmlFor="contact-message">Message</label>
-          <Textarea id="contact-message" placeholder="Your message" className="h-[160px] mc-bevel bg-obsidian rounded-none" />
-          <BlockButton className="max-w-44" type="submit" data-mc-hit data-mc-activate>
-            Send
+          <Textarea id="contact-message" name="contact-message" placeholder="Your message" required className="h-[160px] mc-bevel bg-obsidian rounded-none" />
+          {errors.message ? <p role="alert" className="text-redstone text-xs">{errors.message}</p> : null}
+          <BlockButton className="max-w-44" type="submit" disabled={status === "sending"}>
+            {status === "sending" ? "Sending..." : "Send"}
           </BlockButton>
+          {status === "sent" ? (
+            <p role="status" className="text-emerald text-sm">Message sent — I&apos;ll get back to you soon.</p>
+          ) : null}
+          {status === "error" && errors.form ? (
+            <p role="alert" className="text-redstone text-sm">{errors.form}</p>
+          ) : null}
         </Panel>
 
         <ul className="flex flex-col gap-4 xl:w-[40%]">

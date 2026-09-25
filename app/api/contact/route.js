@@ -3,8 +3,6 @@ import { Resend } from "resend";
 import { validateContact } from "@/lib/validateContact";
 import { profile } from "@/data/portfolio";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request) {
   const body = await request.json().catch(() => null);
   const result = validateContact(body ?? {});
@@ -16,6 +14,7 @@ export async function POST(request) {
   const { firstName, lastName, email, message } = result.data;
 
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
       to: profile.email,
