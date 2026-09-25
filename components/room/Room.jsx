@@ -5,7 +5,7 @@ const HOTSPOTS = [
   { href: "/work", label: "Work", icon: "🖥️", style: { left: "20%", top: "55%" } },
   { href: "/resume", label: "Resume", icon: "📚", style: { left: "78%", top: "35%" } },
   { href: "/contact", label: "Contact", icon: "☎️", style: { left: "12%", top: "80%" } },
-  { href: "/services", label: "Services", icon: "🪟", style: { left: "50%", top: "20%" } },
+  { href: "/services", label: "Services", icon: "🚪", style: { left: "50%", top: "20%" } },
 ];
 
 export default function Room() {
