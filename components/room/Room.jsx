@@ -69,7 +69,7 @@ export default function Room() {
           label="A framed poster"
           tooltip="Dean's List Scholar, 2022-2025."
           tooltipAlign="right"
-          style={{ left: "70%", top: "36%" }}
+          style={{ left: "70%", top: "48%" }}
         />
         <InteractiveCat style={{ left: "55%", top: "80%" }} />
         <PhotoFrame images={["/assets/photo.jpg", "/assets/photo.png"]} style={{ left: "15%", top: "15%" }} />
