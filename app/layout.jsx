@@ -5,6 +5,7 @@ import Hotbar from "@/components/mc/Hotbar";
 import PageTransition from "@/components/PageTransition";
 import BreakOverlay from "@/components/mc/BreakOverlay";
 import KonamiUnlock from "@/components/room/easter-eggs/KonamiUnlock";
+import ConsoleEasterEgg from "@/components/room/easter-eggs/ConsoleEasterEgg";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <PageTransition>{children}</PageTransition>
         <Hotbar />
         <KonamiUnlock />
+        <ConsoleEasterEgg />
       </body>
     </html>
   );
