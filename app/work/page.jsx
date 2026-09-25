@@ -4,10 +4,13 @@ import { motion } from "framer-motion";
 import { projects, sortedProjects, filterProjects, CATEGORIES } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Chest from "@/components/mc/Chest";
+import ArchiveList from "@/components/mc/ArchiveList";
 
 export default function Work() {
   const [cat, setCat] = useState("All");
   const list = sortedProjects(filterProjects(projects, cat));
+  const featured = list.filter((p) => p.featured);
+  const archive = list.filter((p) => !p.featured);
 
   return (
     <motion.section
@@ -33,10 +36,12 @@ export default function Work() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-        {list.map((p) => (
+        {featured.map((p) => (
           <Chest key={p.slug} project={p} />
         ))}
       </div>
+
+      <ArchiveList projects={archive} />
     </motion.section>
   );
 }
