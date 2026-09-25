@@ -25,7 +25,7 @@ export default function InteractiveCat({ style }) {
         onClick={handleClick}
         className="min-w-11 min-h-11 flex items-center justify-center text-2xl transition-transform duration-150 hover:scale-110 active:scale-95 focus:outline focus:outline-2 focus:outline-white"
       >
-        {"\u{1F408}‍⬛"}
+        {"🐱"}
       </button>
       {reaction ? (
         <div role="status" className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-mc text-[#f4e4c1]">
