@@ -3,6 +3,7 @@ import RoomHotspot from "@/components/room/RoomHotspot";
 import HiddenObject from "@/components/room/easter-eggs/HiddenObject";
 import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
 import PhotoFrame from "@/components/room/easter-eggs/PhotoFrame";
+import AudioObject from "@/components/room/easter-eggs/AudioObject";
 
 const HOTSPOTS = [
   { href: "/work", label: "Work", icon: "🖥️", style: { left: "18%", top: "55%" } },
@@ -51,6 +52,8 @@ export default function Room() {
         />
         <InteractiveCat style={{ left: "60%", top: "75%" }} />
         <PhotoFrame images={["/assets/photo.jpg", "/assets/photo.png"]} style={{ left: "25%", top: "14%" }} />
+        <AudioObject icon="\u{1F3B9}" label="Play a favorite piece" src="/sfx/keyboard-piece.mp3" style={{ left: "55%", top: "48%" }} />
+        <AudioObject icon="\u{1F50A}" label="Play a song on loop" src="/sfx/speaker-loop.mp3" loop style={{ left: "8%", top: "38%" }} />
       </div>
     </section>
   );
