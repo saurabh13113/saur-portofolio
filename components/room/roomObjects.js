@@ -14,16 +14,12 @@ export const PLAYLIST = [
   { title: "Minecraft – C418", src: "/music/minecraft.mp3" },
 ];
 
-// The family photo on the wall opens this carousel ("The people that made me me"),
-// oldest first. Photos live in public/assets/family/.
-export const FAMILY = [
-  { src: "/assets/family/family-1.jpg", caption: "Where it all started" },
-  { src: "/assets/family/family-2.jpg", caption: "Top of the world, August 2015" },
-  { src: "/assets/family/family-3.jpg", caption: "Sunny days out together" },
-  { src: "/assets/family/family-4.jpg", caption: "Mountains and lakes" },
-  { src: "/assets/family/family-5.jpeg", caption: "Monterey, California" },
-  { src: "/assets/family/family-6.jpeg", caption: "All dressed up" },
-];
+// The family photo on the wall opens this carousel, oldest first; every photo
+// carries the same caption. Photos live in public/assets/family/.
+export const FAMILY_CAPTION = "The people that made me me";
+export const FAMILY = ["family-1.jpg", "family-2.jpg", "family-3.jpg", "family-4.jpg", "family-5.jpeg", "family-6.jpeg"].map(
+  (f, i) => ({ src: `/assets/family/${f}`, alt: `Family photo ${i + 1} of 6` })
+);
 
 export const ROOM_OBJECTS = [
   { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
@@ -32,31 +28,31 @@ export const ROOM_OBJECTS = [
   { id: "services", kind: "nav", label: "What I do", href: "/services", anchor: [0.05, 1.45, 3.35] },
   { id: "contact", kind: "nav", label: "Say hi", href: "/contact", anchor: [1.3, 0.05, 1.5] },
 
-  { id: "pennant", kind: "egg", label: "UTM pennant", tooltip: "CS & Economics @ University of Toronto", anchor: [0.02, 2.65, 1.45] },
-  { id: "trophies", kind: "egg", label: "Trophy shelf", tooltip: "🏆 TMU Solution Hacks '25 winner · 🌱 Dean's List, 4 yrs", anchor: [0.15, 2.3, 0.55] },
-  { id: "abudhabi", kind: "egg", label: "Abu Dhabi poster", tooltip: "Home: the Abu Dhabi skyline 🇦🇪", anchor: [3.1, 2.2, 0.02] },
-  { id: "uae", kind: "egg", label: "UAE flag", tooltip: "🇦🇪 → 🇨🇦 From Abu Dhabi, building in Toronto.", anchor: [0.2, 2.25, 2.35] },
+  { id: "pennant", kind: "egg", label: "UTM pennant", tooltip: "I wanted to be at the intersection of money and technology.", anchor: [0.02, 2.65, 1.45] },
+  { id: "trophies", kind: "egg", label: "Trophy shelf", tooltip: "Dean's list, Academic Society of the Year 25/26", anchor: [0.15, 2.3, 0.55] },
+  { id: "abudhabi", kind: "egg", label: "Abu Dhabi poster", tooltip: "A good shawarma really does wonders", anchor: [3.1, 2.2, 0.02] },
+  { id: "uae", kind: "egg", label: "UAE flag", tooltip: "Made me an adult, taught me how to survive", anchor: [0.2, 2.25, 2.35] },
   { id: "backpack", kind: "egg", label: "Backpack", tooltip: "Always packed for the next hackathon.", anchor: [0.6, 0.6, 2.65] },
-  { id: "bed", kind: "egg", label: "The bed", tooltip: "5 more minutes... then one more commit.", anchor: [1.3, 0.7, 4.9] },
-  { id: "nightstand", kind: "egg", label: "Nightstand books", tooltip: "Bedtime reading: Better Code, Better Days.", anchor: [0.22, 0.85, 4.05] },
-  { id: "hoodie", kind: "egg", label: "Hoodie on the hook", tooltip: "The hackathon hoodie. Undefeated.", anchor: [0.1, 1.75, 2.72] },
-  { id: "beanbag", kind: "egg", label: "Beanbag", tooltip: "Where the hardest bugs get solved.", anchor: [5.45, 0.8, 2.85] },
-  { id: "laundry", kind: "egg", label: "Laundry basket", tooltip: "Scheduled for after the next deploy.", anchor: [5.6, 0.65, 0.4] },
-  { id: "studentid", kind: "egg", label: "Student ID", tooltip: "UTM student card. Access level: caffeine.", anchor: [2.0, 0.85, 0.6] },
-  { id: "coffee", kind: "egg", label: "Instant coffee", tooltip: "Instant coffee: fuel of champions (and deadlines).", anchor: [2.45, 1.05, 0.4] },
-  { id: "soccer", kind: "egg", label: "Soccer ball", tooltip: "Weekend footy. Still chasing that top-bins finish.", anchor: [3.51, 0.45, 4.66] },
-  { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Table tennis: undefeated in the common room. Allegedly.", anchor: [5.05, 0.95, 4.12] },
-  { id: "messi", kind: "egg", label: "Messi jersey", tooltip: "Argentina #10, framed. The GOAT debate is closed.", anchor: [0.05, 1.7, 4.85] },
-  { id: "bleach", kind: "egg", label: "Bleach poster", tooltip: "Bankai! Ichigo & Zangetsu, all-time favourite anime.", anchor: [2.24, 1.9, 0.03] },
-  { id: "ps4", kind: "egg", label: "PS4", tooltip: "PS4 plugged in. FIFA rematch, anyone?", anchor: [5.08, 1.0, 3.85] },
+  { id: "bed", kind: "egg", label: "The bed", tooltip: "Night owl always, 12 am onwards is my primetime", anchor: [1.3, 0.7, 4.9] },
+  { id: "nightstand", kind: "egg", label: "Nightstand books", tooltip: "Currently reading some Wolverine comics", anchor: [0.22, 0.85, 4.05] },
+  { id: "hoodie", kind: "egg", label: "Hoodie on the hook", tooltip: "My green Tom & Jerry hoodie, the one thing that is as comfy as 6 years ago.", anchor: [0.1, 1.75, 2.72] },
+  { id: "beanbag", kind: "egg", label: "Beanbag", tooltip: "My best thinking is done late at night, on my bed.", anchor: [5.45, 0.8, 2.85] },
+  { id: "laundry", kind: "egg", label: "Laundry basket", tooltip: "Sometimes you forget to shower or two honestly.", anchor: [5.6, 0.65, 0.4] },
+  { id: "studentid", kind: "egg", label: "Student ID", tooltip: "UTM has been my home for 4 years, the deer on campus are my bros now.", anchor: [2.0, 0.85, 0.6] },
+  { id: "coffee", kind: "egg", label: "Coffee", tooltip: "I love a good iced coffee, french vanilla from Tims is my G", anchor: [2.45, 1.05, 0.4] },
+  { id: "soccer", kind: "egg", label: "Soccer ball", tooltip: "Center back, making sure no one scores and no one gets by.", anchor: [3.51, 0.45, 4.66] },
+  { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Doubles champion during high school, champion amongst friends now lol", anchor: [5.05, 0.95, 4.12] },
+  { id: "messi", kind: "egg", label: "Messi jersey", tooltip: "That hat-trick vs France in the '22 WC final, unmatched.", anchor: [0.05, 1.7, 4.85] },
+  { id: "bleach", kind: "egg", label: "Bleach poster", tooltip: "Ichigo, Bankai: Tensa Zangetsu!", anchor: [2.24, 1.9, 0.03] },
+  { id: "ps4", kind: "egg", label: "PS4", tooltip: "FIFA or Minecraft, keeps me relaxed", anchor: [5.08, 1.0, 3.85] },
 
   { id: "lights", kind: "switch", label: "Light switch", anchor: [0.05, 1.5, 3.95] },
-  { id: "cat", kind: "cat", label: "Pet the cat", anchor: [4.75, 1.45, 0.1] },
+  { id: "cat", kind: "cat", label: "Pet Tutroo the cat", anchor: [4.75, 1.45, 0.1] },
   { id: "family", kind: "album", label: "Family photos", anchor: [1.3, 2.05, 0.05] },
   { id: "photo", kind: "photo", label: "A photo", anchor: [2.36, 1.0, 0.07] },
   { id: "music", kind: "audio", label: "Play a favorite piece", src: "/sfx/keyboard-piece.mp3", anchor: [4.4, 0.6, 0.5] },
   { id: "song", kind: "speaker", label: "Speaker: play music", anchor: [2.52, 1.0, 0.1] },
 ];
 
-export const CAT_REACTIONS = ["Mrow?", "purrrr", "*stretches*", "not now, human"];
+export const CAT_REACTIONS = ["Meow", "I am on my 2/9 lives", "What is a cat's favorite color? Purr-ple", "Lots of love, from Tutroo"];
 export const PHOTOS = ["/assets/photo.jpg", "/assets/photo.png"];

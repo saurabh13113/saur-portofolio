@@ -6,7 +6,7 @@ export const profile = {
   name: "Saurabh Nair",
   role: "Software Developer",
   // shown under my name in the sidebar: the 10-second version for recruiters
-  pitch: "CS + Econ @ UofT · ex-Bayer, Emirates Steel",
+  pitch: "CS + Econ @ UofT | TA @ UofT | ex-Bayer | ex-Lead Organizer @ DeerHacks",
   status: "Open to new-grad SWE roles (2027)",
   highlights: "🏆 TMU Solution Hacks '25 winner · Dean's List ×4",
   tagline:

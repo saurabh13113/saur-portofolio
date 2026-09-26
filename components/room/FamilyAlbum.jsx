@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { BsChevronLeft, BsChevronRight, BsX } from "react-icons/bs";
-import { FAMILY } from "@/components/room/roomObjects";
+import { FAMILY, FAMILY_CAPTION } from "@/components/room/roomObjects";
 
 // The family photo on the wall, opened up: a modal carousel (native <dialog>
 // handles focus, Esc and the backdrop). ←/→ keys and swipes flip photos.
@@ -25,12 +25,9 @@ export default function FamilyAlbum({ open, onClose }) {
       onClose={onClose}
       onClick={(e) => e.target === dialog.current && onClose()}
       onKeyDown={(e) => (e.key === "ArrowRight" ? go(1) : e.key === "ArrowLeft" ? go(-1) : null)}
-      aria-labelledby="family-album-title"
+      aria-label={FAMILY_CAPTION}
       className="family-album bg-transparent p-0 w-[min(92vw,640px)] text-[#f4e4c1]"
     >
-      <h2 id="family-album-title" className="font-mc text-lg sm:text-xl text-center text-[#f4d27a] mb-3">
-        The people that made me me
-      </h2>
       {/* a wooden frame with a cream mat, like the one on my wall */}
       <figure className="bg-[#5e3c22] p-3 sm:p-4 shadow-[6px_6px_0_rgba(0,0,0,0.45)] border-2 border-[#3d2615]">
         <div className="bg-[#efe6d2] p-3 sm:p-5 border border-[#3d2615]/40">
@@ -43,11 +40,9 @@ export default function FamilyAlbum({ open, onClose }) {
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- plain img: sizes vary, no layout shift inside the fixed box */}
-            <img key={photo.src} src={photo.src} alt={photo.caption} className="slide-in absolute inset-0 w-full h-full object-contain" style={{ imageRendering: "auto" }} />
+            <img key={photo.src} src={photo.src} alt={photo.alt} className="slide-in absolute inset-0 w-full h-full object-contain" style={{ imageRendering: "auto" }} />
           </div>
-          <figcaption aria-live="polite" className="mt-3 text-center font-mc text-sm sm:text-base text-[#3b2a1a] leading-snug min-h-[2.8em]">
-            {photo.caption}
-          </figcaption>
+          <figcaption className="mt-3 text-center font-mc text-sm sm:text-base text-[#3b2a1a]">{FAMILY_CAPTION}</figcaption>
         </div>
       </figure>
       <div className="flex items-center justify-center gap-2 mt-3">
@@ -62,7 +57,7 @@ export default function FamilyAlbum({ open, onClose }) {
               key={p.src}
               type="button"
               onClick={() => setI(k)}
-              aria-label={`Photo ${k + 1}: ${p.caption}`}
+              aria-label={p.alt}
               aria-current={k === i}
               className={`w-3 h-3 border border-[#f4d27a] focus:outline focus:outline-2 focus:outline-white ${k === i ? "bg-[#f4d27a]" : "bg-transparent"}`}
             />

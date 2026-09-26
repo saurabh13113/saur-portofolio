@@ -200,15 +200,14 @@ const TIPS = {
     "Hi, I'm Saurabh! 👋",
     "Everything in my room is clickable.",
     "Psst, try the light switch by the door.",
-    "The cat doesn't bite. Mostly.",
+    "The cat doesn't bite. Hopefully.",
     "Click the keyboard for some music 🎹",
     "The speaker on my desk has a playlist 🎵",
-    "Click the family photo above my monitors.",
   ],
-  "/work": ["Here's what I've built!", "Use ← → to flip through projects.", "Every project has a shareable link."],
-  "/resume": ["The short version of my story.", "The full PDF is top right.", "Skills: what I'm proficient in vs. still learning."],
-  "/services": ["Here's how I can help your team.", "Each card links to where I've done it.", "Like what you see? Say hi on Contact."],
-  "/contact": ["Drop me a line! 👋", "I read every message.", "I'll type along while you write ✍️"],
+  "/work": ["the stuff i have built", "Use ← → to flip through projects.", "Every project has a shareable link."],
+  "/resume": ["tldr of my life (professionally for now)", "The full PDF is top right.", "Skills: what I'm proficient in vs. still learning."],
+  "/services": ["need some help? lets chat!", "Each card links to where I've done it.", "Like what you see? Say hi on Contact."],
+  "/contact": ["hit me up for anything and everything", "I read every message.", "I'll type along while you write ✍️"],
 };
 
 // bubble: a speech bubble that stays up (inner pages: "click me to go home"); the
@@ -274,7 +273,7 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
     };
     const onCheer = () => {
       cheerAt.current = clock.current?.elapsedTime ?? 0;
-      say("Message sent! Talk soon 🎉", 3500);
+      say("I'll get back to you soon!", 3500);
     };
     window.addEventListener("input", onInput);
     window.addEventListener("avatar:cheer", onCheer);

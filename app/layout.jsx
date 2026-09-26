@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={jetbrainsMono.variable}>
         {/* sidebar (3D me, name, socials) beside every page; the page fills the rest */}
-        <div className="mx-auto max-w-[1800px] px-4 lg:px-8 pt-3 grid gap-4 lg:gap-6 lg:grid-cols-[260px_1fr]">
+        <div className="mx-auto max-w-[1800px] px-4 lg:px-8 pt-3 grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-[260px_1fr]">
           <Sidebar />
           <main className="min-w-0">
             <SiteNav />

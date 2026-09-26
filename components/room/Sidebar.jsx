@@ -1,4 +1,5 @@
 "use client";
+import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { profile } from "@/data/portfolio";
@@ -25,10 +26,20 @@ export default function Sidebar() {
           <Link href="/" aria-label="Back to my room (home)" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
         )}
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 min-w-0">
         <Name className="font-mc text-2xl lg:text-4xl text-[#f4e4c1] leading-tight">{profile.name}</Name>
         <p className="font-mc text-sm lg:text-base text-[#f4d27a]">{profile.role}</p>
-        <p className="text-xs text-white/70 leading-snug">{profile.pitch}</p>
+        {/* each "|" part stays whole, so the line wraps between parts, not mid-word */}
+        <p className="text-xs text-white/70 leading-snug">
+          {profile.pitch.split(" | ").map((part, i, all) => (
+            <Fragment key={part}>
+              <span className="whitespace-nowrap">
+                {part}
+                {i < all.length - 1 ? " |" : ""}
+              </span>{" "}
+            </Fragment>
+          ))}
+        </p>
         <p className="text-xs text-emerald leading-snug">● {profile.status}</p>
         <p className="hidden lg:block text-xs text-white/60 leading-snug">{profile.highlights}</p>
         <div className="flex gap-2 mt-1">

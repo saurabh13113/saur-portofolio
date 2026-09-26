@@ -97,7 +97,7 @@ export default function Room3D() {
         setTimeout(() => router.push(o.href), 330);
       } else if (o.kind === "audio" || o.kind === "speaker") {
         const a = o.kind === "audio" ? music : song;
-        setTip(a.playing ? null : { id, text: "♪ now playing (click again to stop)" });
+        setTip(a.playing ? null : { id, text: o.kind === "audio" ? "♪ Yiruma, River Flows in You, what a wonderful song." : "♪ now playing (click again to stop)" });
         a.toggle();
       } else if (o.kind === "cat") {
         catJumpAt.current = clock.current?.elapsedTime ?? 0;
@@ -105,7 +105,7 @@ export default function Room3D() {
         tipTimer.current = setTimeout(() => setTip(null), 1500);
       } else if (o.kind === "switch") {
         setDay((d) => !d);
-        setTip({ id, text: day ? "Night mode 🌙" : "Good morning ☀️" });
+        setTip({ id, text: day ? "Time to zzzzzzz" : "Get out of bed, go do stuff" });
         tipTimer.current = setTimeout(() => setTip(null), 1500);
       } else if (o.kind === "album") {
         setTip(null);

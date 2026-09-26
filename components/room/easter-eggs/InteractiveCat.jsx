@@ -14,9 +14,9 @@ export default function InteractiveCat({ style }) {
   }
 
   return (
-    <button type="button" aria-label="Pet the cat" onClick={handleClick} className="room-hotspot" style={style}>
+    <button type="button" aria-label="Pet Tutroo the cat" onClick={handleClick} className="room-hotspot" style={style}>
       <span className="room-label" style={reaction ? { opacity: 1 } : undefined} role={reaction ? "status" : undefined}>
-        {reaction ?? "Pet the cat"}
+        {reaction ?? "Pet Tutroo"}
       </span>
     </button>
   );
