@@ -10,11 +10,11 @@ import { makeCamera } from "./camera";
 import { toScreen, TARGET } from "@/components/room/projection";
 import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS } from "@/components/room/roomObjects";
 import FamilyAlbum from "@/components/room/FamilyAlbum";
+import PenaltyGame from "@/components/room/PenaltyGame";
 import { PixelPhoto } from "@/components/room/easter-eggs/PhotoFrame";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
 import { useMusic } from "@/hooks/useMusic";
 import { track } from "@vercel/analytics";
-import RoomImage from "@/components/room/RoomImage";
 import { WEATHER_URL, weatherKind, decorations } from "@/components/room/season";
 
 const OBJECTS = ROOM_OBJECTS.filter((o) => o.anchor);
@@ -62,11 +62,10 @@ function CameraRig({ focus }) {
   return null;
 }
 
-export default function Room3D() {
+export default function Room3D({ onReady }) {
   const router = useRouter();
   const camera = useMemo(makeCamera, []);
   const screen = useMemo(() => Object.fromEntries(OBJECTS.map((o) => [o.id, toScreen(o.anchor)])), []);
-  const [ready, setReady] = useState(false);
   const wrap = useRef(null);
   const [dpr, setDpr] = useState(0.5);
   const [onScreen, setOnScreen] = useState(true);
@@ -78,6 +77,9 @@ export default function Room3D() {
   const [focus, setFocus] = useState(null);
   const [photoIdx, setPhotoIdx] = useState(0);
   const [album, setAlbum] = useState(false);
+  const [game, setGame] = useState(false);
+  const [lampOn, setLampOn] = useState(true);
+  const acts = useRef({}); // id -> clock time it was last clicked (the scene animates from it)
   const catJumpAt = useRef(null);
   const clock = useRef(null);
   const tipTimer = useRef(null);
@@ -90,6 +92,7 @@ export default function Room3D() {
       const o = BY_ID[id];
       track("room_click", { object: id }); // which objects people actually find
       clearTimeout(tipTimer.current);
+      acts.current[id] = clock.current?.elapsedTime ?? 0;
       if (o.kind === "nav") {
         if (reduce) return router.push(o.href);
         setTip(null);
@@ -107,6 +110,12 @@ export default function Room3D() {
         setDay((d) => !d);
         setTip({ id, text: day ? "Time to zzzzzzz" : "Get out of bed, go do stuff" });
         tipTimer.current = setTimeout(() => setTip(null), 1500);
+      } else if (o.kind === "lamp") {
+        setLampOn((on) => !on);
+        setTip(null);
+      } else if (o.kind === "game") {
+        setTip(null);
+        setGame(true);
       } else if (o.kind === "album") {
         setTip(null);
         setAlbum(true);
@@ -162,10 +171,10 @@ export default function Room3D() {
         onCreated={(s) => (clock.current = s.clock)}
         onPointerMissed={() => setTip(null)}
       >
-        <FirstFrame onReady={() => setReady(true)} />
+        <FirstFrame onReady={() => onReady?.()} />
         <CameraRig focus={focus} />
         <RoomCtx.Provider value={ctx}>
-          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} weather={weather} deco={deco} />
+          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} weather={weather} deco={deco} acts={acts} lampOn={lampOn} />
         </RoomCtx.Provider>
       </Canvas>
 
@@ -202,7 +211,7 @@ export default function Room3D() {
       ) : null}
 
       <FamilyAlbum open={album} onClose={() => setAlbum(false)} />
-      {!ready ? <RoomImage /> : null}
+      <PenaltyGame open={game} onClose={() => setGame(false)} />
     </div>
   );
 }

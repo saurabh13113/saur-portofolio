@@ -2,6 +2,7 @@
 //   public/assets/room-poster.png  the 3D room at its native 420px render size, shown
 //                                  while three.js loads and where WebGL is unavailable
 //   public/og.png                  1200x630 link-preview image (LinkedIn, Discord, ...)
+//   public/assets/avatar-poster.png the sidebar avatar, shown until its 3D wakes up
 // Run against a production server:  npm run build && npm start  (then, in another terminal)  npm run poster
 // Uses an installed Chrome/Edge; set CHROME_PATH if it isn't the Windows Edge default.
 import puppeteer from "puppeteer-core";
@@ -29,6 +30,9 @@ const size = await canvas.evaluate((c) => [c.width, c.height]);
 if (size[0] !== 420) throw new Error(`expected a 420px-wide canvas, got ${size.join("x")}`);
 await canvas.screenshot({ path: "public/assets/room-poster.png", omitBackground: true });
 console.log(`wrote public/assets/room-poster.png (${size.join("x")})`);
+const avatar = await page.$(".avatar3d canvas");
+await avatar.screenshot({ path: "public/assets/avatar-poster.png", omitBackground: true });
+console.log("wrote public/assets/avatar-poster.png");
 
 // 2) link preview: the home page as visitors see it
 const og = await browser.newPage();

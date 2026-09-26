@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   profile, stats, projects, experience, education, skills, services,
-  CATEGORIES, filterProjects, sortedProjects,
+  CATEGORIES, filterProjects,
 } from "../data/portfolio.js";
 import { socialIcon, techIcon } from "../components/mc/icons.js";
 
@@ -28,15 +28,6 @@ test("filterProjects returns all for 'All' and only matches otherwise", () => {
   assert.equal(filterProjects(projects, "All").length, projects.length);
   for (const c of CATEGORIES.filter((c) => c !== "All")) {
     assert.ok(filterProjects(projects, c).every((p) => p.category === c));
-  }
-});
-
-test("sortedProjects puts featured first without dropping any", () => {
-  const s = sortedProjects(projects);
-  assert.equal(s.length, projects.length);
-  const firstNonFeatured = s.findIndex((p) => !p.featured);
-  if (firstNonFeatured !== -1) {
-    assert.ok(s.slice(firstNonFeatured).every((p) => !p.featured));
   }
 });
 

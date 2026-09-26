@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { BsArrowUpRight, BsGithub, BsChevronLeft, BsChevronRight, BsLink45Deg } from "react-icons/bs";
-import { CATEGORIES, filterProjects } from "@/data/portfolio";
 import { techIcon } from "@/components/mc/icons";
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -25,12 +24,11 @@ function Cover({ project, n }) {
   );
 }
 
-// One project at a time, like flipping through builds: arrows, a numbered strip,
-// swipe on touch screens, and ←/→ keys.
+// The featured projects, one at a time: arrows, a numbered strip, swipe on touch
+// screens, and ←/→ keys. (The rest are in MoreProjects below.)
 export default function WorkCarousel({ projects }) {
-  const [cat, setCat] = useState("All");
   const [i, setI] = useState(0);
-  const list = filterProjects(projects, cat);
+  const list = projects;
   const p = list[Math.min(i, list.length - 1)];
   const go = (d) => setI((x) => (x + d + list.length) % list.length);
 
@@ -47,13 +45,16 @@ export default function WorkCarousel({ projects }) {
   const strip = useRef(null);
   useEffect(() => {
     strip.current?.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "nearest", inline: "center" });
-  }, [i, cat]);
+  }, [i]);
 
-  // Shareable links: /work?project=<slug> opens that project, and the URL follows
+  // Shareable links: /projects?project=<slug> opens that project, and the URL follows
   // along as you browse (left alone until you actually move off the first slide).
+  // A slug from "More projects" scrolls down to its card instead.
   useEffect(() => {
-    const k = projects.findIndex((q) => q.slug === new URLSearchParams(window.location.search).get("project"));
+    const slug = new URLSearchParams(window.location.search).get("project");
+    const k = projects.findIndex((q) => q.slug === slug);
     if (k >= 0) setI(k);
+    else if (slug) document.getElementById(slug)?.scrollIntoView({ block: "center" });
   }, [projects]);
   const synced = useRef(false);
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function WorkCarousel({ projects }) {
   const [copied, setCopied] = useState(false);
   const copyLink = () =>
     navigator.clipboard
-      ?.writeText(`${window.location.origin}/work?project=${p.slug}`)
+      ?.writeText(`${window.location.origin}/projects?project=${p.slug}`)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
@@ -84,32 +85,16 @@ export default function WorkCarousel({ projects }) {
 
   return (
     <div className="mt-6">
-      <div className="flex gap-1 p-1 mc-bevel tex-stone w-max max-w-full overflow-x-auto">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => {
-              setCat(c);
-              setI(0);
-            }}
-            aria-pressed={cat === c}
-            className={`shrink-0 mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
-              cat === c ? "outline outline-2 outline-[#f4d27a]" : ""
-            }`}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8" aria-live="polite">
         <div key={`text-${p.slug}`} className="slide-in order-2 lg:order-1 flex flex-col gap-5">
           <div aria-hidden="true" className="text-7xl font-extrabold leading-none text-transparent" style={{ WebkitTextStroke: "1px #f4d27a" }}>
             {pad(list.indexOf(p) + 1)}
           </div>
-          <div className="font-mc text-xs uppercase tracking-widest text-emerald">{p.category} project</div>
+          <div className="font-mc text-xs uppercase tracking-widest text-emerald">
+            {[p.category, p.context, p.year, p.role].filter(Boolean).join(" · ")}
+          </div>
           <h2 className="font-mc text-2xl sm:text-3xl text-[#f4e4c1] leading-tight">{p.title}</h2>
+          {p.outcome ? <p className="font-mc text-sm text-[#f4d27a]">{p.outcome}</p> : null}
           <p className="text-white/70 text-sm leading-relaxed">{p.description}</p>
           <ul className="flex flex-wrap gap-2">
             {p.stack.map((s) => {

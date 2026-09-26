@@ -1,7 +1,8 @@
 // Every clickable thing in the room, shared by the 3D room (Room3D) and the
 // picture fallback (RoomImage). anchor: [x, y, z] world point where the
 // object's label/tooltip (and, in the picture, its hotspot) sits.
-// kind: nav (link) | egg (tooltip) | audio | speaker (playlist) | cat | photo | album (family carousel) | switch (day/night)
+// kind: nav (link) | egg (tooltip; some also animate when clicked, see Scene) | audio | speaker (playlist) | cat |
+// photo | album (family carousel) | switch (day/night) | lamp (desk lamp on/off) | game (PS4 penalty shootout)
 
 // Background music for the desk speaker: plays through in order, round and round.
 // Drop mp3s in public/music/ and list them here.
@@ -22,13 +23,13 @@ export const FAMILY = ["family-1.jpg", "family-2.jpg", "family-3.jpg", "family-4
 );
 
 export const ROOM_OBJECTS = [
-  { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
+  { id: "work", kind: "nav", label: "Projects", href: "/projects", anchor: [1.2, 1.55, 0.15] },
   { id: "resume", kind: "nav", label: "Resume", href: "/resume", anchor: [0.2, 2.05, 2.05] },
   { id: "skills", kind: "nav", label: "Skills", href: "/resume?tab=skills", anchor: [5.55, 1.2, 3.9] },
   { id: "services", kind: "nav", label: "What I do", href: "/services", anchor: [0.05, 1.45, 3.35] },
   { id: "contact", kind: "nav", label: "Say hi", href: "/contact", anchor: [1.3, 0.05, 1.5] },
 
-  { id: "pennant", kind: "egg", label: "UTM pennant", tooltip: "I wanted to be at the intersection of money and technology.", anchor: [0.02, 2.65, 1.45] },
+  { id: "pennant", kind: "egg", label: "UTM pennant", tooltip: "My home away from home.", anchor: [0.02, 2.65, 1.45] },
   { id: "trophies", kind: "egg", label: "Trophy shelf", tooltip: "Dean's list, Academic Society of the Year 25/26", anchor: [0.15, 2.3, 0.55] },
   { id: "abudhabi", kind: "egg", label: "Abu Dhabi poster", tooltip: "A good shawarma really does wonders", anchor: [3.1, 2.2, 0.02] },
   { id: "uae", kind: "egg", label: "UAE flag", tooltip: "Made me an adult, taught me how to survive", anchor: [0.2, 2.25, 2.35] },
@@ -44,8 +45,9 @@ export const ROOM_OBJECTS = [
   { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Doubles champion during high school, champion amongst friends now lol", anchor: [5.05, 0.95, 4.12] },
   { id: "messi", kind: "egg", label: "Messi jersey", tooltip: "That hat-trick vs France in the '22 WC final, unmatched.", anchor: [0.05, 1.7, 4.85] },
   { id: "bleach", kind: "egg", label: "Bleach poster", tooltip: "Ichigo, Bankai: Tensa Zangetsu!", anchor: [2.24, 1.9, 0.03] },
-  { id: "ps4", kind: "egg", label: "PS4", tooltip: "FIFA or Minecraft, keeps me relaxed", anchor: [5.08, 1.0, 3.85] },
+  { id: "ps4", kind: "game", label: "PS4: penalty shootout", anchor: [5.08, 1.0, 3.85] },
 
+  { id: "lamp", kind: "lamp", label: "Desk lamp", anchor: [0.19, 1.3, 0.21] },
   { id: "lights", kind: "switch", label: "Light switch", anchor: [0.05, 1.5, 3.95] },
   { id: "cat", kind: "cat", label: "Pet Tutroo the cat", anchor: [4.75, 1.45, 0.1] },
   { id: "family", kind: "album", label: "Family photos", anchor: [1.3, 2.05, 0.05] },

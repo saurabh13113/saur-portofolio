@@ -13,7 +13,7 @@ const RH = 2.8;
 const C = {
   wallL: "#c9bca4", wallR: "#c2b59d", trim: "#5a3d27",
   wood: "#7a4f2f", darkWood: "#5e3c22", deskTop: "#8b5a34",
-  metal: "#1d1e24", navy: "#2c3d66", hair: "#1a1412", skin: "#9a6242", jeans: "#2a3348",
+  metal: "#1d1e24", navy: "#2c3d66", sweater: "#2c5a45", rib: "#224736", hair: "#1a1412", skin: "#9a6242", jeans: "#2a3348",
   amber: "#f4d27a", glow: "#ffb347", screen: "#0c1d33", blue: "#2d7bff",
 };
 const BOOKS = ["#b03a2e", "#2e6b57", "#c9973f", "#34598f", "#6d4c8f", "#c65a1e", "#1f7a70", "#e6dcc4", "#8a2f3f"];
@@ -262,24 +262,29 @@ function Monitor({ p, w, h = 0.42, rotY = 0, seed = 0, reduce }) {
   );
 }
 
-function Desk({ reduce, songPlaying, day }) {
+// seconds since an object was last clicked (acts comes from Room3D)
+const since = (acts, id, t) => t - (acts.current[id] ?? -99);
+
+function Desk({ reduce, songPlaying, day, acts, lampOn }) {
   const lamp = useRef();
   const leds = useRef([]);
   const steam = useRef([]);
   const cone = useRef();
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    if (lamp.current) lamp.current.intensity = (day ? 0.8 : 5) * (reduce ? 1 : 1 + 0.04 * wave(t, 7) + 0.03 * wave(t, 23));
+    if (lamp.current) lamp.current.intensity = lampOn ? (day ? 0.8 : 5) * (reduce ? 1 : 1 + 0.04 * wave(t, 7) + 0.03 * wave(t, 23)) : 0;
     leds.current.forEach((m, i) => {
       if (!m) return;
       m.material.emissiveIntensity = songPlaying ? 0.6 + 0.6 * Math.abs(wave(t, 6, i)) : 0.7 + (reduce ? 0 : 0.15 * wave(t, 1.5, i));
     });
     if (cone.current) cone.current.scale.setScalar(songPlaying && !reduce ? 1 + 0.15 * Math.abs(wave(t, 9)) : 1);
+    // clicking the coffee sends up a big puff for a couple of seconds
+    const puff = since(acts, "coffee", t) < 2.5;
     steam.current.forEach((m, i) => {
       if (!m || reduce) return;
-      const k = (t * 0.5 + i / 3) % 1;
-      m.position.y = 0.92 + k * 0.25;
-      m.scale.setScalar(1 - k * 0.6);
+      const k = (t * (puff ? 1.4 : 0.5) + i / 3) % 1;
+      m.position.y = 0.92 + k * (puff ? 0.4 : 0.25);
+      m.scale.setScalar((1 - k * 0.6) * (puff ? 1.8 : 1));
     });
   });
   return (
@@ -299,10 +304,12 @@ function Desk({ reduce, songPlaying, day }) {
         <B p={[0.08, 0.77, 0.45]} s={[0.3, 0.06, 0.22]} c="#34598f" />
         <B p={[0.1, 0.83, 0.46]} s={[0.27, 0.05, 0.2]} c="#1f2a44" />
       </Obj>
-      {/* desk lamp */}
-      <B p={[0.1, 0.77, 0.12]} s={[0.14, 0.03, 0.14]} c={C.metal} />
-      <B p={[0.16, 0.8, 0.18]} s={[0.025, 0.35, 0.025]} c={C.metal} />
-      <B p={[0.08, 1.12, 0.1]} s={[0.22, 0.12, 0.22]} c={C.amber} e={C.glow} ei={day ? 0.25 : 0.9} />
+      {/* desk lamp: click to switch it off and on */}
+      <Obj id="lamp">
+        <B p={[0.1, 0.77, 0.12]} s={[0.14, 0.03, 0.14]} c={C.metal} />
+        <B p={[0.16, 0.8, 0.18]} s={[0.025, 0.35, 0.025]} c={C.metal} />
+        <B p={[0.08, 1.12, 0.1]} s={[0.22, 0.12, 0.22]} c={lampOn ? C.amber : "#6b6250"} e={lampOn ? C.glow : "#000000"} ei={day ? 0.25 : 0.9} />
+      </Obj>
       <pointLight ref={lamp} position={[0.3, 1.0, 0.35]} color="#ffb35c" intensity={5} distance={4.5} decay={1.6} />
       <pointLight position={[1.3, 1.15, 0.75]} color="#7cc0ff" intensity={4} distance={3} decay={1.6} />
       {/* PC tower: its LEDs pulse along with the speaker */}
@@ -376,13 +383,18 @@ function Me({ reduce }) {
       <B p={[1.35, 0.05, 0.55]} s={[0.14, 0.4, 0.12]} c={C.jeans} />
       <B p={[1.12, 0, 0.48]} s={[0.16, 0.06, 0.2]} c="#e8e8e8" />
       <B p={[1.34, 0, 0.48]} s={[0.16, 0.06, 0.2]} c="#e8e8e8" />
-      {/* body + arms */}
-      <B p={[1.12, 0.5, 0.98]} s={[0.36, 0.46, 0.26]} c={C.navy} />
-      <B p={[1.06, 0.62, 0.62]} s={[0.1, 0.1, 0.4]} c={C.navy} />
-      <B p={[1.44, 0.62, 0.62]} s={[0.1, 0.1, 0.4]} c={C.navy} />
+      {/* body in my green sweater; the arms sit outside the chair back so they show
+          from behind: shoulders, upper arms down the sides, forearms out to the keyboard */}
+      <B p={[1.12, 0.5, 0.98]} s={[0.36, 0.46, 0.26]} c={C.sweater} />
+      <B p={[0.99, 0.64, 0.98]} s={[0.13, 0.3, 0.14]} c={C.sweater} />
+      <B p={[1.48, 0.64, 0.98]} s={[0.13, 0.3, 0.14]} c={C.sweater} />
+      <B p={[1.02, 0.74, 0.52]} s={[0.1, 0.1, 0.48]} c={C.sweater} />
+      <B p={[1.45, 0.74, 0.52]} s={[0.1, 0.1, 0.48]} c={C.sweater} />
+      <B p={[1.02, 0.74, 0.52]} s={[0.1, 0.1, 0.04]} c={C.rib} />
+      <B p={[1.45, 0.74, 0.52]} s={[0.1, 0.1, 0.04]} c={C.rib} />
       <B mref={(m) => (hands.current[0] = m)} p={[1.07, 0.82, 0.43]} s={[0.08, 0.04, 0.1]} c={C.skin} />
       <B mref={(m) => (hands.current[1] = m)} p={[1.43, 0.82, 0.43]} s={[0.08, 0.04, 0.1]} c={C.skin} />
-      <B p={[1.17, 0.9, 1.18]} s={[0.26, 0.08, 0.08]} c="#18223a" />
+      <B p={[1.17, 0.9, 1.18]} s={[0.26, 0.08, 0.08]} c={C.rib} />
       {/* head, hair, headphones */}
       <group ref={head} userData={{ live: true }}>
         <B p={[1.16, 0.97, 0.95]} s={[0.28, 0.28, 0.27]} c={C.skin} />
@@ -526,7 +538,31 @@ function BedCorner({ reduce, day }) {
   );
 }
 
-function RightSide() {
+function RightSide({ acts, reduce }) {
+  const ball = useRef();
+  const bag = useRef();
+  const pong = useRef();
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    // football: rolls off toward the bed and back (2.4s), with a little hop
+    if (ball.current) {
+      const k = reduce ? 1 : Math.min(1, since(acts, "soccer", t) / 2.4);
+      const dx = -1.3 * Math.sin(Math.PI * k);
+      ball.current.position.x = 3.51 + dx;
+      ball.current.position.y = 0.11 + (k < 0.12 ? Math.sin((k / 0.12) * Math.PI) * 0.1 : 0);
+      ball.current.rotation.z = -dx / 0.11;
+    }
+    // beanbag: a squish when you flop onto it
+    if (bag.current) {
+      const k = since(acts, "beanbag", t) / 0.6;
+      bag.current.scale.y = k < 1 && !reduce ? 1 - 0.18 * Math.sin(Math.PI * k) : 1;
+    }
+    // ping-pong ball: bounces on the dresser and settles
+    if (pong.current) {
+      const s = since(acts, "paddle", t);
+      pong.current.position.y = 0.84 + (s < 1.8 && !reduce ? Math.abs(Math.sin(s * 9)) * 0.25 * (1 - s / 1.8) : 0);
+    }
+  });
   const towers = [[2.84, 0.18], [2.94, 0.3], [3.03, 0.22], [3.12, 0.46], [3.22, 0.26], [3.3, 0.16]];
   return (
     <>
@@ -550,18 +586,23 @@ function RightSide() {
         <B p={[5.5, 0.48, 0.3]} s={[0.12, 0.03, 0.1]} c="#1f2a44" />
       </Obj>
       <Obj id="beanbag">
-        <B p={[5.05, 0, 2.4]} s={[0.8, 0.25, 0.8]} c="#23443a" />
-        <B p={[5.1, 0.25, 2.45]} s={[0.7, 0.2, 0.7]} c="#23443a" />
-        <B p={[5.55, 0.25, 2.45]} s={[0.32, 0.42, 0.7]} c="#1f3d34" />
-        <B p={[5.2, 0.45, 2.55]} s={[0.4, 0.08, 0.5]} c="#23443a" />
-        <B p={[5.26, 0.53, 2.7]} s={[0.14, 0.04, 0.09]} c="#1a1a1f" />
-        <B p={[5.3, 0.57, 2.7]} s={[0.06, 0.004, 0.01]} c={C.blue} e={C.blue} />
+        <group ref={bag} userData={{ live: true }}>
+          <B p={[5.05, 0, 2.4]} s={[0.8, 0.25, 0.8]} c="#23443a" />
+          <B p={[5.1, 0.25, 2.45]} s={[0.7, 0.2, 0.7]} c="#23443a" />
+          <B p={[5.55, 0.25, 2.45]} s={[0.32, 0.42, 0.7]} c="#1f3d34" />
+          <B p={[5.2, 0.45, 2.55]} s={[0.4, 0.08, 0.5]} c="#23443a" />
+          <B p={[5.26, 0.53, 2.7]} s={[0.14, 0.04, 0.09]} c="#1a1a1f" />
+          <B p={[5.3, 0.57, 2.7]} s={[0.06, 0.004, 0.01]} c={C.blue} e={C.blue} />
+        </group>
       </Obj>
+      {/* football: pivots at its centre so it can roll */}
       <Obj id="soccer">
-        <B p={[3.4, 0, 4.55]} s={[0.22, 0.22, 0.22]} c="#f2f2f2" />
-        <B p={[3.47, 0.221, 4.62]} s={[0.08, 0.002, 0.08]} c="#111111" />
-        <B p={[3.621, 0.07, 4.62]} s={[0.002, 0.08, 0.08]} c="#111111" />
-        <B p={[3.47, 0.07, 4.771]} s={[0.08, 0.08, 0.002]} c="#111111" />
+        <group ref={ball} position={[3.51, 0.11, 4.66]} userData={{ live: true }}>
+          <B p={[-0.11, -0.11, -0.11]} s={[0.22, 0.22, 0.22]} c="#f2f2f2" />
+          <B p={[-0.04, 0.111, -0.04]} s={[0.08, 0.002, 0.08]} c="#111111" />
+          <B p={[0.111, -0.04, -0.04]} s={[0.002, 0.08, 0.08]} c="#111111" />
+          <B p={[-0.04, -0.04, 0.111]} s={[0.08, 0.08, 0.002]} c="#111111" />
+        </group>
       </Obj>
       {/* dresser: skills books, PS4, paddle, bottle, cube */}
       <Obj id="skills">
@@ -584,7 +625,9 @@ function RightSide() {
       <Obj id="paddle">
         <B p={[4.95, 0.82, 4.02]} s={[0.17, 0.012, 0.15]} c="#c62828" />
         <B p={[5.12, 0.82, 4.07]} s={[0.12, 0.02, 0.05]} c="#b07a45" />
-        <B p={[5.28, 0.82, 4.15]} s={[0.04, 0.04, 0.04]} c="#f5a623" />
+        <group ref={pong} position={[5.3, 0.84, 4.17]} userData={{ live: true }}>
+          <B p={[-0.02, -0.02, -0.02]} s={[0.04, 0.04, 0.04]} c="#f5a623" />
+        </group>
       </Obj>
     </>
   );
@@ -674,7 +717,7 @@ function Shadows() {
   );
 }
 
-export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day, weather = "clear", deco = {} }) {
+export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day, weather = "clear", deco = {}, acts, lampOn = true }) {
   return (
     <>
       <ambientLight color={day ? "#fff4e0" : "#8088c0"} intensity={day ? 1.5 : 0.75} />
@@ -688,10 +731,10 @@ export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, da
         <Piano playing={musicPlaying} reduce={reduce} />
         <LeftWall />
         <LightSwitch day={day} />
-        <Desk reduce={reduce} songPlaying={songPlaying} day={day} />
+        <Desk reduce={reduce} songPlaying={songPlaying} day={day} acts={acts} lampOn={lampOn} />
         <Me reduce={reduce} />
         <BedCorner reduce={reduce} day={day} />
-        <RightSide />
+        <RightSide acts={acts} reduce={reduce} />
       </Merge>
       <Shadows />
     </>

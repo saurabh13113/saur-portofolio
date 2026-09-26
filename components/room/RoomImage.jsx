@@ -5,6 +5,7 @@ import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
 import PhotoFrame from "@/components/room/easter-eggs/PhotoFrame";
 import AudioObject, { SpeakerObject } from "@/components/room/easter-eggs/AudioObject";
 import { AlbumHotspot } from "@/components/room/FamilyAlbum";
+import { GameHotspot } from "@/components/room/PenaltyGame";
 import { ROOM_OBJECTS, PHOTOS } from "@/components/room/roomObjects";
 import { toScreen } from "@/components/room/projection";
 
@@ -18,6 +19,7 @@ function Hotspot({ o }) {
   const style = at(o.anchor);
   if (o.kind === "nav") return <RoomHotspot href={o.href} label={o.label} style={style} />;
   if (o.kind === "cat") return <InteractiveCat style={style} />;
+  if (o.kind === "game") return <GameHotspot label={o.label} style={style} />;
   if (o.kind === "album") return <AlbumHotspot label={o.label} style={style} />;
   if (o.kind === "photo") return <PhotoFrame images={PHOTOS} style={style} />;
   if (o.kind === "speaker") return <SpeakerObject label={o.label} style={style} />;
@@ -37,7 +39,7 @@ export default function RoomImage() {
         className="select-none"
         style={{ imageRendering: "pixelated" }}
       />
-      {ROOM_OBJECTS.filter((o) => o.kind !== "switch").map((o) => (
+      {ROOM_OBJECTS.filter((o) => o.kind !== "switch" && o.kind !== "lamp").map((o) => (
         <Hotspot key={o.id} o={o} />
       ))}
     </div>

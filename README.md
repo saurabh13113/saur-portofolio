@@ -62,18 +62,21 @@ use the same cozy night palette with lamp-amber accents.
   - It reacts to each page: it waves hello with a page-specific line, types along while you fill in a form, and jumps for joy when your message sends.
   - The sidebar stays beside every page; only the right side changes. Off the home page I have a "Click me to go back home!" speech bubble, and clicking me goes back to the room. This replaced the old hotbar.
   - Without WebGL, it shows a pixelated version of my photo instead.
-- **Work page** (`components/work/WorkCarousel.jsx`): a carousel through every
-  project.
+- **Projects page** (`/projects`, formerly `/work`): a carousel of the 6 featured projects (`components/work/WorkCarousel.jsx`), with year, context and outcome where known, then a filterable "More projects" list (`MoreProjects.jsx`).
   - Each slide shows a big number, description, stack, and Live/GitHub links.
   - It shows the screenshot when one exists in `public/assets/work/` (checked at build time), otherwise a generated cover.
   - You can browse with the category filters, a numbered strip, prev/next buttons, ←/→ keys, and swiping on phones.
-  - Every project has a shareable link (`/work?project=round1`); the address follows along as you browse, and a "Copy link" button copies it.
+  - Every project has a shareable link (`/projects?project=round1`); the address follows along as you browse, and a "Copy link" button copies it.
 
 ### Room map
 
 | Object | Goes to / does |
 |---|---|
-| Triple monitors | `/work` |
+| Triple monitors | `/projects` |
+| Soccer ball | Rolls away and back |
+| PS4 | A penalty-shootout mini game |
+| Desk lamp | On / off |
+| Paddle, beanbag, coffee | The ping-pong ball bounces, the beanbag squishes, the coffee puffs steam |
 | Bookshelf | `/resume` |
 | Dresser books | `/resume` (skills) |
 | Door | `/services` ("What I do") |

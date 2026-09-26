@@ -8,7 +8,7 @@ export const profile = {
   // shown under my name in the sidebar: the 10-second version for recruiters
   pitch: "CS + Econ @ UofT | TA @ UofT | ex-Bayer | ex-Lead Organizer @ DeerHacks",
   status: "Open to new-grad SWE roles (2027)",
-  highlights: "🏆 TMU Solution Hacks '25 winner · Dean's List ×4",
+  highlights: "",
   tagline:
     "CS & Economics double major at the University of Toronto. From Abu Dhabi 🇦🇪, building in Toronto.",
   location: "Toronto, ON",
@@ -35,12 +35,18 @@ export const stats = [
 
 export const CATEGORIES = ["All", "Full-stack", "Backend", "ML", "Frontend"];
 
+// Featured projects (featured: true) get the big carousel on /projects; the rest
+// are listed under "More projects". Optional context shown on each slide:
+// year, context (Hackathon / Course / Personal / Team project), role, outcome.
 export const projects = [
   {
     slug: "feynomenon",
     title: "Feynomenon — AI-Powered Learning Tutor",
     category: "Full-stack",
     featured: true,
+    year: "2025",
+    context: "Hackathon",
+    outcome: "🏆 Winner, TMU Solution Hacks '25",
     blurb:
       "Adaptive AI tutor built on the Feynman technique. Winner, TMU Solution Hacks '25.",
     description:
@@ -54,6 +60,7 @@ export const projects = [
     title: "Round1 — Multimodal AI Interviewer",
     category: "Full-stack",
     featured: true,
+    context: "Team project",
     blurb:
       "Job-role-aware interview simulator with a transparent LLM rubric and behavioral metrics.",
     description:
@@ -69,12 +76,12 @@ export const projects = [
     description: "Summer project using SciKit-Learn and pandas to analyze S&P 500 data and predict tomorrow's stock prices.",
     stack: ["Python", "Sci-Kit Learn", "Jupyter", "Pandas"], image: "/assets/work/Pic9.png",
     links: { live: "https://github.com/saurabh13113/ml-stock-price-predictor", github: "https://github.com/saurabh13113/ml-stock-price-predictor" } },
-  { slug: "flashgenie", title: "FlashGenie AI Flashcards", category: "Full-stack", featured: false,
+  { slug: "flashgenie", title: "FlashGenie AI Flashcards", category: "Full-stack", featured: true,
     blurb: "AI flashcard generator with Stripe billing and Clerk auth.",
     description: "Summer project using Meta Llama to build an AI flashcard generator with a premium pricing model (Stripe) and user authentication (Clerk).",
     stack: ["React", "Next.js", "Material UI", "Llama AI", "Stripe", "Clerk"], image: "/assets/work/Pic15.png",
     links: { live: "https://flashcard-saas-mu-liart.vercel.app/", github: "https://github.com/saurabh13113/flashcard-saas/tree/main" } },
-  { slug: "ml-premier-league-predictor", title: "ML Premier League Predictor", category: "ML", featured: false,
+  { slug: "ml-premier-league-predictor", title: "ML Premier League Predictor", category: "ML", featured: true,
     blurb: "Predicts Premier League match results from web-scraped season data.",
     description: "Summer project using SciKit-Learn and pandas over web-scraped Premier League data to predict match results across a season.",
     stack: ["Python", "Sci-Kit Learn", "Jupyter", "Pandas"], image: "/assets/work/Pic12.png",
@@ -84,7 +91,7 @@ export const projects = [
     description: "Summer project using BeautifulSoup and pandas to scrape Premier League data across recent seasons.",
     stack: ["Python", "Beautiful Soup", "Jupyter", "Pandas"], image: "/assets/work/Pic13.png",
     links: { live: "https://github.com/saurabh13113/webscraper-premier-league", github: "https://github.com/saurabh13113/webscraper-premier-league" } },
-  { slug: "math-chatbot", title: "Math Chat Bot (Llama AI)", category: "Full-stack", featured: false,
+  { slug: "math-chatbot", title: "Math Chat Bot (Llama AI)", category: "Full-stack", featured: true,
     blurb: "AI chatbot that helps students work through math problems.",
     description: "Summer project using Meta Llama to build an AI chatbot that helps students practice and work through math problems. Built with Next.js, React and deployed on AWS EC2 / Vercel.",
     stack: ["React", "Next.js", "Material UI", "Llama AI", "AWS EC2"], image: "/assets/work/Pic14.png",
@@ -94,7 +101,7 @@ export const projects = [
     description: "High-school project allowing customers to purchase UAE metro tickets via a Tkinter desktop UI.",
     stack: ["Python", "TKinter"], image: "/assets/work/Pic10.png",
     links: { live: "https://github.com/saurabh13113/uaemetro-ticketer", github: "https://github.com/saurabh13113/uaemetro-ticketer" } },
-  { slug: "pantry-tracker", title: "Pantry Tracker", category: "Full-stack", featured: false,
+  { slug: "pantry-tracker", title: "Pantry Tracker", category: "Full-stack", featured: true,
     blurb: "Pantry management app with Next.js, Material UI and Firebase.",
     description: "Summer project: a pantry management application built with Next.js, Material UI and Firebase.",
     stack: ["React", "Next.js", "Material UI", "Firebase"], image: "/assets/work/Pic11.png",
@@ -124,7 +131,7 @@ export const projects = [
     description: "University project that predicts salaries by building a Naive Bayes classifier.",
     stack: ["Python"], image: "/assets/work/Pic19.png",
     links: { live: "https://github.com/saurabh13113/Naive-Bayes_Model", github: "https://github.com/saurabh13113/Naive-Bayes_Model" } },
-  { slug: "mobile-companytracker", title: "Mobile System Tracker", category: "Frontend", featured: false,
+  { slug: "mobile-companytracker", title: "Mobile System Tracker", category: "Backend", featured: false,
     blurb: "Tracks a mobile carrier and its customers, with a visualizer.",
     description: "University assignment to track a mobile company and its customers, including a PyGame visualizer.",
     stack: ["Python", "PyGame"], image: "/assets/work/pic1.png",
@@ -134,7 +141,7 @@ export const projects = [
     description: "University project using file-system trees and treemaps to organize files and folders through a visualizer.",
     stack: ["Python", "PyGame"], image: "/assets/work/Pic4.png",
     links: { live: "https://github.com/saurabh13113/treemap-file-organizer-tree-", github: "https://github.com/saurabh13113/treemap-file-organizer-tree-" } },
-  { slug: "uber-driver-rider-pairer", title: "Driver / Rider Pairer", category: "Frontend", featured: false,
+  { slug: "uber-driver-rider-pairer", title: "Driver / Rider Pairer", category: "Backend", featured: false,
     blurb: "Matches drivers and riders on locational data.",
     description: "University project that matches drivers and riders based on locational information.",
     stack: ["Python"], image: "/assets/work/Pic8.png",
@@ -244,7 +251,7 @@ export const skills = [
 // "What I do" (/services): each card backed by something I actually shipped.
 export const services = [
   { num: "01", title: "Full-Stack Web Apps", description: "Next.js / React / Node.js apps with auth, a database and a deploy pipeline — end to end.",
-    proof: { text: "Feynomenon: AI tutor, winner at TMU Solution Hacks '25", href: "/work?project=feynomenon" } },
+    proof: { text: "Feynomenon: AI tutor, winner at TMU Solution Hacks '25", href: "/projects?project=feynomenon" } },
   { num: "02", title: "Backend & APIs", description: "Spring Boot or Flask services: REST APIs, data modeling, integrations and monitoring.",
     proof: { text: "Kaytoons: backend + voice-cloning feature, +18% session time", href: "/resume" } },
   { num: "03", title: "ML & Data", description: "Predictive models, feature engineering and dashboards that turn raw data into decisions.",
@@ -255,10 +262,4 @@ export const services = [
 
 export function filterProjects(list, cat) {
   return cat === "All" ? list.slice() : list.filter((p) => p.category === cat);
-}
-
-export function sortedProjects(list) {
-  return list
-    .slice()
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 }

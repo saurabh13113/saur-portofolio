@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { CanvasTexture, MeshLambertMaterial, NearestFilter, SRGBColorSpace } from "three";
+import { useMusic } from "@/hooks/useMusic";
 
 // A Minecraft-style me, built like a real skin: boxes in skin-pixel units
 // (head 8x8x8, body 8x12x4, limbs 4x12x4) with 8x8 pixel-art textures.
@@ -16,6 +17,7 @@ const PAL = {
   K: "#1d1d23", k: "#121216", g: "#3a3a44", // blazer, lapel shade, button
   Q: "#f0ede6", q: "#cfcac0", // white shirt, shirt shade
   J: "#2a3348", j: "#222a3c", F: "#e8e8e8", f: "#bdbdc4", // jeans, shoes
+  V: "#2c5a45", v: "#224736", Y: "#d4b25a", // green sweater, ribbing, gold antler logo
 };
 
 // like my photos: thick brows, a full short beard joined to the sideburns, a big grin
@@ -33,6 +35,11 @@ const BODY_FRONT = ["KqQQQQqK", "KkQQQQkK", "KKkQQkKK", "KKKqqKKK", "KKKKgKKK", 
 const BODY_BACK = ["kKKKKKKk", ...Array(9).fill("KKKKKKKK"), "kkkkkkkk", "JJJJJJJJ"];
 const BODY_SIDE = ["kKKK", ...Array(9).fill("KKKK"), "kkkk", "JJJJ"];
 const ARM = ["kKKk", ...Array(8).fill("KKKK"), "QQQQ", "SSSS", "SSSs"]; // blazer sleeve, shirt cuff, hand
+// my green crewneck with the little gold antlers on the chest, like the hackathon photos
+const SWEATER_FRONT = ["VvvSSvvV", "VVVvvVVV", "VVVVVVVV", "VVYVVYVV", "VVVYYVVV", ...Array(5).fill("VVVVVVVV"), "vvvvvvvv", "JJJJJJJJ"];
+const SWEATER_BACK = ["VvvvvvvV", ...Array(9).fill("VVVVVVVV"), "vvvvvvvv", "JJJJJJJJ"];
+const SWEATER_SIDE = ["vVVV", ...Array(9).fill("VVVV"), "vvvv", "JJJJ"];
+const SWEATER_ARM = [...Array(9).fill("VVVV"), "vvvv", "SSSS", "SSSs"];
 const LEG = [...Array(9).fill("JJJj"), "jjjj", "FFFF", "ffff"]; // jeans with a side seam, white shoes
 const fill = (ch, w, h) => Array.from({ length: h }, () => ch.repeat(w));
 const mirror = (rows) => rows.map((r) => [...r].reverse().join(""));
@@ -74,7 +81,8 @@ const flat = (color) => <meshLambertMaterial color={color} />;
 const SPEECH = "room-label absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 whitespace-normal w-max max-w-[240px]";
 const clamp = (v) => Math.max(-1, Math.min(1, v));
 
-function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
+// outfit: "blazer" | "sweater"; phones: headphones on (while the desk speaker plays)
+function Me({ pointer, waveAt, typingAt, cheerAt, reduce, outfit, phones }) {
   const head = useRef();
   const body = useRef();
   const armR = useRef();
@@ -82,17 +90,25 @@ function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
   const pupils = useRef([]);
   const lids = useRef();
   const look = useRef({ x: 0, y: 0 });
+  const headphones = useRef();
+  const spin = useRef({ outfit, at: -9 });
 
   const parts = useMemo(
     () => ({
       // side maps are drawn front-to-back for +x; three reads -x back-to-front, hence mirror
       head: [SIDE, mirror(SIDE), TOP, fill("D", 8, 8), FACE, BACK],
       curls: [CURL_SIDE, mirror(CURL_SIDE), CURL_TOP, fill(".", 8, 8), CURL_FRONT, CURL_BACK],
-      body: [BODY_SIDE, BODY_SIDE, ["kQQQQQQk", ...fill("k", 8, 3)], fill("J", 8, 4), BODY_FRONT, BODY_BACK],
-      arm: [ARM, ARM, fill("K", 4, 4), fill("S", 4, 4), ARM, ARM],
+      body:
+        outfit === "blazer"
+          ? [BODY_SIDE, BODY_SIDE, ["kQQQQQQk", ...fill("k", 8, 3)], fill("J", 8, 4), BODY_FRONT, BODY_BACK]
+          : [SWEATER_SIDE, SWEATER_SIDE, ["vvSSSSvv", ...fill("V", 8, 3)], fill("J", 8, 4), SWEATER_FRONT, SWEATER_BACK],
+      arm:
+        outfit === "blazer"
+          ? [ARM, ARM, fill("K", 4, 4), fill("S", 4, 4), ARM, ARM]
+          : [SWEATER_ARM, SWEATER_ARM, fill("V", 4, 4), fill("S", 4, 4), SWEATER_ARM, SWEATER_ARM],
       leg: [LEG, LEG, fill("J", 4, 4), fill("f", 4, 4), LEG, LEG],
     }),
-    []
+    [outfit]
   );
 
   useFrame(({ clock }, dt) => {
@@ -108,7 +124,11 @@ function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
     const { x, y } = look.current;
 
     head.current.rotation.set(y * 0.35, x * 0.6, 0);
-    body.current.rotation.y = x * 0.15;
+    // a quick twirl whenever the outfit changes
+    if (spin.current.outfit !== outfit) spin.current = { outfit, at: t };
+    const twirl = reduce ? 0 : Math.min(1, (t - spin.current.at) / 0.6);
+    body.current.rotation.y = x * 0.15 + (twirl < 1 ? twirl * Math.PI * 2 : 0);
+    if (headphones.current) headphones.current.visible = phones;
     const cheering = t - (cheerAt.current ?? -9) < 1.8;
     const typing = t - (typingAt.current ?? -9) < 0.6;
     body.current.position.y = reduce ? 0 : cheering ? Math.abs(Math.sin(t * 9)) * 2.5 : Math.sin(t * 2) * 0.15;
@@ -163,7 +183,8 @@ function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
             </mesh>
           ))}
         </group>
-        {/* headphones */}
+        {/* headphones, on while music plays */}
+        <group ref={headphones}>
         <mesh position={[0, 9.2, 0]}>
           <boxGeometry args={[10, 0.7, 1.2]} />
           {flat("#2a2a33")}
@@ -180,6 +201,7 @@ function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
             </mesh>
           </group>
         ))}
+        </group>
       </group>
     </group>
   );
@@ -204,7 +226,7 @@ const TIPS = {
     "Click the keyboard for some music 🎹",
     "The speaker on my desk has a playlist 🎵",
   ],
-  "/work": ["the stuff i have built", "Use ← → to flip through projects.", "Every project has a shareable link."],
+  "/projects": ["the stuff i have built", "Use ← → to flip through projects.", "Every project has a shareable link."],
   "/resume": ["tldr of my life (professionally for now)", "The full PDF is top right.", "Skills: what I'm proficient in vs. still learning."],
   "/services": ["need some help? lets chat!", "Each card links to where I've done it.", "Like what you see? Say hi on Contact."],
   "/contact": ["hit me up for anything and everything", "I read every message.", "I'll type along while you write ✍️"],
@@ -221,6 +243,9 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
   const cheerAt = useRef(null);
   const tips = TIPS[page] ?? TIPS["/"];
   const reduce = useMemo(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
+  // suited up for the professional pages, my green sweater everywhere else
+  const outfit = page === "/resume" || page === "/services" ? "blazer" : "sweater";
+  const { playing } = useMusic();
   const [tip, setTip] = useState(null);
   const tipIdx = useRef(0);
   const timer = useRef(null);
@@ -300,7 +325,7 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
         <ambientLight intensity={1.1} color="#fff4e6" />
         <directionalLight position={[-20, 40, 40]} intensity={1.6} color="#ffe2b8" />
         <directionalLight position={[30, 20, -30]} intensity={1.2} color="#6d8cff" />
-        <Me pointer={pointer} waveAt={waveAt} typingAt={typingAt} cheerAt={cheerAt} reduce={reduce} />
+        <Me pointer={pointer} waveAt={waveAt} typingAt={typingAt} cheerAt={cheerAt} reduce={reduce} outfit={outfit} phones={playing} />
         <Shadow />
       </Canvas>
       {bubble ? null : (

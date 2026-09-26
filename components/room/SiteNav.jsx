@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
-  ["/work", "Work"],
+  ["/projects", "Projects"],
   ["/resume", "Resume"],
   ["/services", "What I do"],
   ["/contact", "Contact"],

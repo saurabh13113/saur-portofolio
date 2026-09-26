@@ -41,7 +41,7 @@ export default function Sidebar() {
           ))}
         </p>
         <p className="text-xs text-emerald leading-snug">● {profile.status}</p>
-        <p className="hidden lg:block text-xs text-white/60 leading-snug">{profile.highlights}</p>
+        {profile.highlights ? <p className="hidden lg:block text-xs text-white/60 leading-snug">{profile.highlights}</p> : null}
         <div className="flex gap-2 mt-1">
           {profile.socials.map((s) => {
             const Icon = socialIcon(s.key);

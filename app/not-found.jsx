@@ -13,7 +13,7 @@ export default function NotFound() {
       <div className="flex flex-wrap gap-3 mt-6">
         {[
           ["/", "Back to my room"],
-          ["/work", "Work"],
+          ["/projects", "Projects"],
           ["/resume", "Resume"],
           ["/contact", "Contact"],
         ].map(([href, label]) => (
