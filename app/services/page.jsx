@@ -2,6 +2,12 @@ import { services } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
 
+export const metadata = {
+  title: "Services",
+  description: "What Saurabh Nair builds: full-stack web apps, backend APIs, ML and data, DevOps and cloud automation.",
+  alternates: { canonical: "/services" },
+};
+
 export default function Services() {
   return (
     <section className="container mx-auto py-12">

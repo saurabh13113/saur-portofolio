@@ -17,7 +17,7 @@ export default function Sidebar() {
   const avatarCls = "w-[110px] shrink-0 lg:w-[260px]";
   const Name = home ? "h1" : "p"; // inner pages have their own h1
   return (
-    <aside className="pt-8 lg:pt-0 flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-screen lg:justify-center">
+    <aside className="pt-8 lg:pt-0 flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-[calc(100vh-0.75rem)] lg:justify-center">
       {/* same tree on every page so the avatar's canvas survives navigation */}
       <div className={`relative ${avatarCls}`}>
         <Avatar page={page} bubble={home ? null : "Click me to go back home!"} />
@@ -35,7 +35,7 @@ export default function Sidebar() {
               <a
                 key={s.key}
                 href={s.href}
-                target="_blank"
+                target={s.href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer"
                 aria-label={s.key}
                 className="mc-bevel tex-obsidian w-11 h-11 flex items-center justify-center text-[#a8f0c0] text-base focus:outline focus:outline-2 focus:outline-white"

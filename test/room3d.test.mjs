@@ -24,3 +24,13 @@ test("plain-math projection matches the real three.js camera", () => {
     assert.ok(Math.abs(pct(top) - ((1 - v.y) / 2) * 100) < 1e-6, `y mismatch at ${p}`);
   }
 });
+
+test("every playlist and album file exists, with exact filename case (Vercel is case-sensitive)", async () => {
+  const { readdirSync } = await import("node:fs");
+  const { PLAYLIST, FAMILY } = await import("../components/room/roomObjects.js");
+  const srcs = [...PLAYLIST, ...FAMILY].map((t) => t.src).concat(ROOM_OBJECTS.filter((o) => o.src).map((o) => o.src));
+  for (const src of srcs) {
+    const dir = new URL(`../public${src.slice(0, src.lastIndexOf("/"))}/`, import.meta.url);
+    assert.ok(readdirSync(dir).includes(src.slice(src.lastIndexOf("/") + 1)), `missing or wrong case: public${src}`);
+  }
+});

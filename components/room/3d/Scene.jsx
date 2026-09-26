@@ -13,7 +13,7 @@ const RH = 2.8;
 const C = {
   wallL: "#c9bca4", wallR: "#c2b59d", trim: "#5a3d27",
   wood: "#7a4f2f", darkWood: "#5e3c22", deskTop: "#8b5a34",
-  metal: "#1d1e24", navy: "#2c3d66", hair: "#1a1412", skin: "#8d5a3b", jeans: "#2a3348",
+  metal: "#1d1e24", navy: "#2c3d66", hair: "#1a1412", skin: "#9a6242", jeans: "#2a3348",
   amber: "#f4d27a", glow: "#ffb347", screen: "#0c1d33", blue: "#2d7bff",
 };
 const BOOKS = ["#b03a2e", "#2e6b57", "#c9973f", "#34598f", "#6d4c8f", "#c65a1e", "#1f7a70", "#e6dcc4", "#8a2f3f"];

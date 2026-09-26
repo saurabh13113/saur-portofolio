@@ -19,6 +19,9 @@ export const profile = {
   ],
 };
 
+// canonical address of the live site
+export const SITE = `https://${profile.website}`;
+
 export const stats = [
   { label: "Internships", value: 4, max: 5, suffix: "" },
   { label: "CGPA", value: 3.73, max: 4, suffix: "" },
@@ -26,32 +29,34 @@ export const stats = [
   { label: "Shipped projects", value: 19, max: 20, suffix: "+" },
 ];
 
-export const CATEGORIES = ["All", "FullStack", "Backend", "ML", "Frontend"];
+export const CATEGORIES = ["All", "Full-stack", "Backend", "ML", "Frontend"];
 
 export const projects = [
   {
     slug: "feynomenon",
     title: "Feynomenon — AI-Powered Learning Tutor",
-    category: "FullStack",
+    category: "Full-stack",
     featured: true,
     blurb:
       "Adaptive AI tutor built on the Feynman technique. Winner, TMU Solution Hacks '25.",
     description:
       "Adaptive AI tutoring platform that applies the Feynman technique, using the Gemini API for dynamic response generation. Fully responsive Next.js + TailwindCSS frontend with Firebase authentication and MongoDB-backed session analytics. Deployed on Vercel and Railway. Winner at TMU Solution Hacks '25.",
     stack: ["Next.js", "TailwindCSS", "Node.js", "MongoDB", "Firebase", "Gemini"],
-    links: { live: "", github: "https://github.com/saurabh13113" },
+    image: "/assets/work/feynomenon.png",
+    links: { live: "https://feynomenon-chatbot.vercel.app/", github: "https://github.com/saurabh13113/feynomenon-chatbot" },
   },
   {
     slug: "round1",
     title: "Round1 — Multimodal AI Interviewer",
-    category: "FullStack",
+    category: "Full-stack",
     featured: true,
     blurb:
       "Job-role-aware interview simulator with a transparent LLM rubric and behavioral metrics.",
     description:
       "Interview simulator that conducts job-role-aware questioning and applies a transparent LLM rubric for real-time scoring, combining natural-language understanding with behavioral metrics extracted via MediaPipe. Includes a recruiter dashboard with interactive charts, transcripts, pass/fail thresholds and engagement flags, backed by Firebase Hosting and Storage.",
     stack: ["Next.js", "TailwindCSS", "Firebase", "MediaPipe", "Gemini", "RoboFlow"],
-    links: { live: "", github: "https://github.com/saurabh13113" },
+    image: "/assets/work/round1.png",
+    links: { live: "https://round1-two.vercel.app/", github: "https://github.com/Big-ShahMir/Round1" },
   },
 
   // --- Archive: existing GitHub repos (real screenshots under /assets/work) ---
@@ -60,7 +65,7 @@ export const projects = [
     description: "Summer project using SciKit-Learn and pandas to analyze S&P 500 data and predict tomorrow's stock prices.",
     stack: ["Python", "Sci-Kit Learn", "Jupyter", "Pandas"], image: "/assets/work/Pic9.png",
     links: { live: "https://github.com/saurabh13113/ml-stock-price-predictor", github: "https://github.com/saurabh13113/ml-stock-price-predictor" } },
-  { slug: "flashgenie", title: "FlashGenie AI Flashcards", category: "FullStack", featured: false,
+  { slug: "flashgenie", title: "FlashGenie AI Flashcards", category: "Full-stack", featured: false,
     blurb: "AI flashcard generator with Stripe billing and Clerk auth.",
     description: "Summer project using Meta Llama to build an AI flashcard generator with a premium pricing model (Stripe) and user authentication (Clerk).",
     stack: ["React", "Next.js", "Material UI", "Llama AI", "Stripe", "Clerk"], image: "/assets/work/Pic15.png",
@@ -75,17 +80,17 @@ export const projects = [
     description: "Summer project using BeautifulSoup and pandas to scrape Premier League data across recent seasons.",
     stack: ["Python", "Beautiful Soup", "Jupyter", "Pandas"], image: "/assets/work/Pic13.png",
     links: { live: "https://github.com/saurabh13113/webscraper-premier-league", github: "https://github.com/saurabh13113/webscraper-premier-league" } },
-  { slug: "math-chatbot", title: "Math Chat Bot (Llama AI)", category: "FullStack", featured: false,
+  { slug: "math-chatbot", title: "Math Chat Bot (Llama AI)", category: "Full-stack", featured: false,
     blurb: "AI chatbot that helps students work through math problems.",
     description: "Summer project using Meta Llama to build an AI chatbot that helps students practice and work through math problems. Built with Next.js, React and deployed on AWS EC2 / Vercel.",
     stack: ["React", "Next.js", "Material UI", "Llama AI", "AWS EC2"], image: "/assets/work/Pic14.png",
     links: { live: "https://math-chatbot-eta.vercel.app/", github: "https://github.com/saurabh13113/math-chatbot/tree/main" } },
-  { slug: "uaemetro-ticketer", title: "UAE Metro Ticketer", category: "FullStack", featured: false,
+  { slug: "uaemetro-ticketer", title: "UAE Metro Ticketer", category: "Full-stack", featured: false,
     blurb: "Desktop app to purchase UAE metro tickets.",
     description: "High-school project allowing customers to purchase UAE metro tickets via a Tkinter desktop UI.",
     stack: ["Python", "TKinter"], image: "/assets/work/Pic10.png",
     links: { live: "https://github.com/saurabh13113/uaemetro-ticketer", github: "https://github.com/saurabh13113/uaemetro-ticketer" } },
-  { slug: "pantry-tracker", title: "Pantry Tracker", category: "FullStack", featured: false,
+  { slug: "pantry-tracker", title: "Pantry Tracker", category: "Full-stack", featured: false,
     blurb: "Pantry management app with Next.js, Material UI and Firebase.",
     description: "Summer project: a pantry management application built with Next.js, Material UI and Firebase.",
     stack: ["React", "Next.js", "Material UI", "Firebase"], image: "/assets/work/Pic11.png",
@@ -120,7 +125,7 @@ export const projects = [
     description: "University assignment to track a mobile company and its customers, including a PyGame visualizer.",
     stack: ["Python", "PyGame"], image: "/assets/work/pic1.png",
     links: { live: "https://github.com/saurabh13113/mobile-companytracker", github: "https://github.com/saurabh13113/mobile-companytracker" } },
-  { slug: "treemap-file-organizer", title: "TreeMap File Organizer", category: "FullStack", featured: false,
+  { slug: "treemap-file-organizer", title: "TreeMap File Organizer", category: "Full-stack", featured: false,
     blurb: "Organizes files/folders with a treemap visualizer.",
     description: "University project using file-system trees and treemaps to organize files and folders through a visualizer.",
     stack: ["Python", "PyGame"], image: "/assets/work/Pic4.png",
@@ -130,7 +135,7 @@ export const projects = [
     description: "University project that matches drivers and riders based on locational information.",
     stack: ["Python"], image: "/assets/work/Pic8.png",
     links: { live: "https://github.com/saurabh13113/uber-driver-rider-pairer", github: "https://github.com/saurabh13113/uber-driver-rider-pairer" } },
-  { slug: "mindsnatcher-game", title: "MindSnatcher (team game)", category: "FullStack", featured: false,
+  { slug: "mindsnatcher-game", title: "MindSnatcher (team game)", category: "Full-stack", featured: false,
     blurb: "3-month Agile team build of a JavaFX game.",
     description: "University assignment building a game over three months in Java and JavaFX, in a team of four following Agile practices.",
     stack: ["Java", "JavaFx", "PlayHT"], image: "/assets/work/Pic3.png",

@@ -6,20 +6,30 @@ import Panel from "@/components/mc/Panel";
 import XpBar from "@/components/mc/XpBar";
 import { techIcon } from "@/components/mc/icons";
 import { FiDownload } from "react-icons/fi";
+import { useEffect, useState } from "react";
+
+const TABS = ["experience", "education", "skills", "about"];
 
 export default function Resume() {
+  // /resume?tab=skills opens that tab (the room's Skills object links there)
+  const [tab, setTab] = useState("experience");
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    if (TABS.includes(t)) setTab(t);
+  }, []);
+
   return (
     <section className="container mx-auto py-12">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <Sign>Resume</Sign>
-        <a href={profile.resumePdf} download className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
+        <a href={profile.resumePdf} download="Saurabh_Nair_Resume.pdf" className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
           <FiDownload aria-hidden="true" /> Download PDF
         </a>
       </div>
 
-      <Tabs defaultValue="experience" className="flex flex-col xl:flex-row gap-10">
+      <Tabs value={tab} onValueChange={setTab} className="flex flex-col xl:flex-row gap-10">
         <TabsList className="grid grid-cols-2 sm:flex xl:flex-col gap-2 h-max bg-transparent p-0">
-          {["experience", "education", "skills", "about"].map((v) => (
+          {TABS.map((v) => (
             <TabsTrigger
               key={v}
               value={v}

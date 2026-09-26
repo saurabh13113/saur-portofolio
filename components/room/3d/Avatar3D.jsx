@@ -10,15 +10,17 @@ import { CanvasTexture, MeshLambertMaterial, NearestFilter, SRGBColorSpace } fro
 const PAL = {
   H: "#17110e", h: "#2a1d17", // hair
   B: "#120c0a", // eyebrows
-  S: "#8d5a3b", s: "#6e452c", E: "#7a4c31", // skin, stubble/shadow, ear
+  S: "#9a6242", s: "#7c4c31", E: "#87553a", // skin, shadow, ear
+  D: "#1c1411", d: "#2e211a", // beard, beard edge
   W: "#f2efe8", M: "#3a1a14", T: "#f7f4ee", // eye white, mouth, teeth
   K: "#1d1d23", k: "#121216", g: "#3a3a44", // blazer, lapel shade, button
   Q: "#f0ede6", q: "#cfcac0", // white shirt, shirt shade
   J: "#2a3348", j: "#222a3c", F: "#e8e8e8", f: "#bdbdc4", // jeans, shoes
 };
 
-const FACE = ["HHHHHHHH", "HhHHhHhH", "SBBSSBBS", "SWWSSWWS", "SSSssSSS", "sMTTTTMs", "ssssssss", "ssssssss"];
-const SIDE = ["HHHHHHHH", "HHHHHHHH", "SHHHHHHH", "SSHHHHHH", "SSSEHHHH", "sSSEHHHH", "ssSSHHHH", "ssSSSHHH"];
+// like my photos: thick brows, a full short beard joined to the sideburns, a big grin
+const FACE = ["HHHHHHHH", "HSSSSSSH", "SBBSSBBS", "SWWSSWWS", "dSSssSSd", "DSDDDDSD", "DMTTTTMD", "DDDDDDDD"];
+const SIDE = ["HHHHHHHH", "HHHHHHHH", "SHHHHHHH", "SSdHHHHH", "SSDEHHHH", "dDDEHHHH", "DDDDSHHH", "DDDSSSHH"];
 const TOP = ["HhHHhHHh", "hHHhHHhH", "HHhHHhHH", "hHHHhHHh", "HhHHHhHH", "HHhHhHHh", "hHHhHHhH", "HhHHhHHH"];
 const BACK = ["HHhHHhHH", "HhHHHHhH", "HHHhHHHH", "hHHHHhHH", "HHHHHHHh", "HhHHhHHH", "HHHHHHHH", "sHHHHHHs"];
 // Outer "hat" layer for curl volume ('.' = see-through)
@@ -72,7 +74,7 @@ const flat = (color) => <meshLambertMaterial color={color} />;
 const SPEECH = "room-label absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 whitespace-normal w-max max-w-[240px]";
 const clamp = (v) => Math.max(-1, Math.min(1, v));
 
-function Me({ pointer, waveAt, typingAt, cheerAt }) {
+function Me({ pointer, waveAt, typingAt, cheerAt, reduce }) {
   const head = useRef();
   const body = useRef();
   const armR = useRef();
@@ -84,7 +86,7 @@ function Me({ pointer, waveAt, typingAt, cheerAt }) {
   const parts = useMemo(
     () => ({
       // side maps are drawn front-to-back for +x; three reads -x back-to-front, hence mirror
-      head: [SIDE, mirror(SIDE), TOP, fill("s", 8, 8), FACE, BACK],
+      head: [SIDE, mirror(SIDE), TOP, fill("D", 8, 8), FACE, BACK],
       curls: [CURL_SIDE, mirror(CURL_SIDE), CURL_TOP, fill(".", 8, 8), CURL_FRONT, CURL_BACK],
       body: [BODY_SIDE, BODY_SIDE, ["kQQQQQQk", ...fill("k", 8, 3)], fill("J", 8, 4), BODY_FRONT, BODY_BACK],
       arm: [ARM, ARM, fill("K", 4, 4), fill("S", 4, 4), ARM, ARM],
@@ -97,7 +99,7 @@ function Me({ pointer, waveAt, typingAt, cheerAt }) {
     const t = clock.elapsedTime;
     const p = pointer.current;
     // follow the cursor; drift around idly if it hasn't moved for a while
-    const idle = t - p.at > 4;
+    const idle = !reduce && t - p.at > 4;
     const tx = idle ? 0.5 * Math.sin(t * 0.5) : p.x;
     const ty = idle ? 0.25 * Math.sin(t * 0.7) : p.y;
     const k = Math.min(1, dt * 8);
@@ -109,7 +111,7 @@ function Me({ pointer, waveAt, typingAt, cheerAt }) {
     body.current.rotation.y = x * 0.15;
     const cheering = t - (cheerAt.current ?? -9) < 1.8;
     const typing = t - (typingAt.current ?? -9) < 0.6;
-    body.current.position.y = cheering ? Math.abs(Math.sin(t * 9)) * 2.5 : Math.sin(t * 2) * 0.15;
+    body.current.position.y = reduce ? 0 : cheering ? Math.abs(Math.sin(t * 9)) * 2.5 : Math.sin(t * 2) * 0.15;
     // pupils slide across their 2-pixel eye whites
     pupils.current.forEach((m, i) => m && (m.position.x = (i ? 1.5 : -2.5) + (x + 1) / 2));
     // blink roughly every 4 seconds
@@ -219,6 +221,7 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
   const typingAt = useRef(null);
   const cheerAt = useRef(null);
   const tips = TIPS[page] ?? TIPS["/"];
+  const reduce = useMemo(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
   const [tip, setTip] = useState(null);
   const tipIdx = useRef(0);
   const timer = useRef(null);
@@ -293,11 +296,12 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
         gl={{ antialias: false, alpha: true }}
         flat
         className="avatar3d"
+        aria-hidden="true"
       >
         <ambientLight intensity={1.1} color="#fff4e6" />
         <directionalLight position={[-20, 40, 40]} intensity={1.6} color="#ffe2b8" />
         <directionalLight position={[30, 20, -30]} intensity={1.2} color="#6d8cff" />
-        <Me pointer={pointer} waveAt={waveAt} typingAt={typingAt} cheerAt={cheerAt} />
+        <Me pointer={pointer} waveAt={waveAt} typingAt={typingAt} cheerAt={cheerAt} reduce={reduce} />
         <Shadow />
       </Canvas>
       {bubble ? null : (

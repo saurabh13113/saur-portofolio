@@ -11,6 +11,12 @@ const list = sortedProjects(projects).map((p) => ({
   image: p.image && fs.existsSync(path.join(process.cwd(), "public", p.image)) ? p.image : null,
 }));
 
+export const metadata = {
+  title: "Work",
+  description: "Projects by Saurabh Nair: AI tutors, interview simulators, ML models, full-stack apps and more.",
+  alternates: { canonical: "/work" },
+};
+
 export default function Work() {
   return (
     <section className="container mx-auto py-12">

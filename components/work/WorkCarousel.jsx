@@ -84,7 +84,7 @@ export default function WorkCarousel({ projects }) {
 
   return (
     <div className="mt-6">
-      <div className="flex flex-wrap gap-1 p-1 mc-bevel tex-stone w-max max-w-full">
+      <div className="flex gap-1 p-1 mc-bevel tex-stone w-max max-w-full overflow-x-auto">
         {CATEGORIES.map((c) => (
           <button
             key={c}
@@ -94,7 +94,7 @@ export default function WorkCarousel({ projects }) {
               setI(0);
             }}
             aria-pressed={cat === c}
-            className={`mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
+            className={`shrink-0 mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
               cat === c ? "outline outline-2 outline-[#f4d27a]" : ""
             }`}
           >
@@ -148,7 +148,7 @@ export default function WorkCarousel({ projects }) {
           >
             <div key={`media-${p.slug}`} className="slide-in absolute inset-0">
               {p.image ? (
-                <Image src={p.image} alt={`Screenshot of ${p.title}`} fill sizes="(max-width: 960px) 100vw, 600px" className="object-cover object-top" style={{ imageRendering: "auto" }} />
+                <Image src={p.image} alt={`Screenshot of ${p.title}`} fill sizes="(max-width: 960px) 100vw, 600px" className="object-cover object-left-top" style={{ imageRendering: "auto" }} />
               ) : (
                 <Cover project={p} n={list.indexOf(p) + 1} />
               )}

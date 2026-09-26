@@ -5,7 +5,14 @@
 
 // Background music for the desk speaker: plays through in order, round and round.
 // Drop mp3s in public/music/ and list them here.
-export const PLAYLIST = [{ title: "Lofi loop", src: "/sfx/speaker-loop.mp3" }];
+export const PLAYLIST = [
+  { title: "Aruarian Dance – Nujabes", src: "/music/aruarian-dance.mp3" },
+  { title: "Subwoofer Lullaby – C418", src: "/music/subwoofer-lullaby.mp3" },
+  { title: "Chubina", src: "/music/chubina.mp3" },
+  { title: "Mice on Venus – C418", src: "/music/mice-on-venus.mp3" },
+  { title: "Aria Math – C418", src: "/music/aria-math.mp3" },
+  { title: "Minecraft – C418", src: "/music/minecraft.mp3" },
+];
 
 // The family photo on the wall opens this carousel. Drop pictures in public/assets/family/.
 export const FAMILY = [
@@ -15,7 +22,7 @@ export const FAMILY = [
 export const ROOM_OBJECTS = [
   { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
   { id: "resume", kind: "nav", label: "Resume", href: "/resume", anchor: [0.2, 2.05, 2.05] },
-  { id: "skills", kind: "nav", label: "Skills", href: "/resume", anchor: [5.55, 1.2, 3.9] },
+  { id: "skills", kind: "nav", label: "Skills", href: "/resume?tab=skills", anchor: [5.55, 1.2, 3.9] },
   { id: "services", kind: "nav", label: "Services", href: "/services", anchor: [0.05, 1.45, 3.35] },
   { id: "contact", kind: "nav", label: "Say hi", href: "/contact", anchor: [1.3, 0.05, 1.5] },
 

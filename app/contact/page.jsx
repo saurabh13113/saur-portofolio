@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,
+  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { profile, services } from "@/data/portfolio";
@@ -12,13 +12,30 @@ import Panel from "@/components/mc/Panel";
 import BlockButton from "@/components/mc/BlockButton";
 
 const info = [
-  { icon: <FaPhoneAlt />, title: "Phone", value: profile.phone },
-  { icon: <FaEnvelope />, title: "Email", value: profile.email },
+  { icon: <FaPhoneAlt />, title: "Phone", value: profile.phone, href: `tel:${profile.phone.replace(/[^+\d]/g, "")}` },
+  { icon: <FaEnvelope />, title: "Email", value: profile.email, href: `mailto:${profile.email}` },
   { icon: <FaMapMarkerAlt />, title: "Location", value: profile.location },
 ];
 
+// Recruiters first, then the services, then everyone else.
+const TOPICS = ["Job / internship opportunity", "Collaboration", ...services.map((s) => s.title), "Just saying hi"];
+
+const FIELD = "mc-bevel bg-obsidian rounded-none";
+
+function Field({ id, label, required = false, children }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="font-mc text-xs text-white/70">
+        {label}
+        {required ? <span className="text-[#f4d27a]"> *</span> : <span className="text-white/40"> (optional)</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 export default function Contact() {
-  const [trade, setTrade] = useState("");
+  const [topic, setTopic] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const [errors, setErrors] = useState({});
 
@@ -35,7 +52,8 @@ export default function Contact() {
       email: form.get("contact-email"),
       message: form.get("contact-message"),
       phone: form.get("contact-phone"),
-      service: services.find((s) => s.num === trade)?.title ?? "",
+      service: topic,
+      company: form.get("company"), // honeypot, see below
     };
 
     try {
@@ -53,7 +71,7 @@ export default function Contact() {
       setStatus("sent");
       window.dispatchEvent(new Event("avatar:cheer")); // the sidebar me celebrates
       formEl.reset();
-      setTrade("");
+      setTopic("");
     } catch {
       setErrors({ form: "Couldn't reach the server — check your connection and try again." });
       setStatus("error");
@@ -69,44 +87,58 @@ export default function Contact() {
           <h3 className="font-mc text-2xl text-emerald">Let&apos;s build something</h3>
           <p className="text-white/70 font-primary text-sm">Send a note and I&apos;ll get back to you.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label className="sr-only" htmlFor="contact-first">First name</label>
-            <Input id="contact-first" name="contact-first" placeholder="First name" required className="mc-bevel bg-obsidian rounded-none" />
-            <label className="sr-only" htmlFor="contact-last">Last name</label>
-            <Input id="contact-last" name="contact-last" placeholder="Last name" required className="mc-bevel bg-obsidian rounded-none" />
-            <label className="sr-only" htmlFor="contact-email">Email</label>
-            <Input id="contact-email" name="contact-email" type="email" placeholder="Email" required className="mc-bevel bg-obsidian rounded-none" />
-            <label className="sr-only" htmlFor="contact-phone">Phone</label>
-            <Input id="contact-phone" name="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
+            <Field id="contact-first" label="First name" required>
+              <Input id="contact-first" name="contact-first" autoComplete="given-name" required className={FIELD} />
+            </Field>
+            <Field id="contact-last" label="Last name" required>
+              <Input id="contact-last" name="contact-last" autoComplete="family-name" required className={FIELD} />
+            </Field>
+            <Field id="contact-email" label="Email" required>
+              <Input id="contact-email" name="contact-email" type="email" autoComplete="email" required className={FIELD} />
+            </Field>
+            <Field id="contact-phone" label="Phone">
+              <Input id="contact-phone" name="contact-phone" type="tel" autoComplete="tel" className={FIELD} />
+            </Field>
           </div>
           {errors.firstName || errors.lastName || errors.email || errors.phone ? (
             <p role="alert" className="text-redstone text-xs">
               {errors.firstName ?? errors.lastName ?? errors.email ?? errors.phone}
             </p>
           ) : null}
-          <Select value={trade} onValueChange={setTrade}>
-            <SelectTrigger aria-label="Pick a service" className="mc-bevel bg-obsidian rounded-none">
-              <SelectValue placeholder="Pick a service" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Services</SelectLabel>
-                {services.map((s) => (
-                  <SelectItem key={s.num} value={s.num}>{s.title}</SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <label className="sr-only" htmlFor="contact-message">Message</label>
-          <Textarea id="contact-message" name="contact-message" placeholder="Your message" required className="h-[160px] mc-bevel bg-obsidian rounded-none" />
+          <Field id="contact-topic" label="What's this about?">
+            <Select value={topic} onValueChange={setTopic}>
+              <SelectTrigger id="contact-topic" className={FIELD}>
+                <SelectValue placeholder="Pick one" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {TOPICS.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+          {/* spam trap: hidden from people (and screen readers); bots fill every field */}
+          <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+            <label htmlFor="contact-company">Company</label>
+            <input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" />
+          </div>
+          <Field id="contact-message" label="Message" required>
+            <Textarea id="contact-message" name="contact-message" required className={`h-[160px] ${FIELD}`} />
+          </Field>
           {errors.message ? <p role="alert" className="text-redstone text-xs">{errors.message}</p> : null}
-          <BlockButton className="max-w-44" type="submit" disabled={status === "sending"}>
-            {status === "sending" ? "Sending..." : "Send"}
+          <BlockButton className="max-w-52 normal-case" type="submit" disabled={status === "sending"}>
+            {status === "sending" ? "Sending..." : "Send message"}
           </BlockButton>
           {status === "sent" ? (
             <p role="status" className="text-emerald text-sm">Message sent — I&apos;ll get back to you soon.</p>
           ) : null}
           {status === "error" && errors.form ? (
-            <p role="alert" className="text-redstone text-sm">{errors.form}</p>
+            <p role="alert" className="text-redstone text-sm">
+              {errors.form} Or email me directly at{" "}
+              <a href={`mailto:${profile.email}`} className="underline text-[#f4d27a]">{profile.email}</a>.
+            </p>
           ) : null}
         </Panel>
 
@@ -119,7 +151,11 @@ export default function Contact() {
                 </span>
                 <span>
                   <span className="block text-white/60 font-primary text-xs">{it.title}</span>
-                  <span className="font-mc">{it.value}</span>
+                  {it.href ? (
+                    <a href={it.href} className="font-mc hover:text-[#f4d27a] underline-offset-4 hover:underline">{it.value}</a>
+                  ) : (
+                    <span className="font-mc">{it.value}</span>
+                  )}
                 </span>
               </Panel>
             </li>
