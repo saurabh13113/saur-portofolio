@@ -13,7 +13,9 @@ import FamilyAlbum from "@/components/room/FamilyAlbum";
 import { PixelPhoto } from "@/components/room/easter-eggs/PhotoFrame";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
 import { useMusic } from "@/hooks/useMusic";
+import { track } from "@vercel/analytics";
 import RoomImage from "@/components/room/RoomImage";
+import { WEATHER_URL, weatherKind, decorations } from "@/components/room/season";
 
 const OBJECTS = ROOM_OBJECTS.filter((o) => o.anchor);
 const BY_ID = Object.fromEntries(OBJECTS.map((o) => [o.id, o]));
@@ -27,6 +29,10 @@ function startsAsDay() {
   const h = new Date().getHours();
   return h >= 7 && h < 19;
 }
+
+// ?weather=rain|snow|clear and ?date=YYYY-MM-DD override the real ones (testing, and
+// npm run poster keeps the loading picture neutral).
+const param = (k) => new URLSearchParams(window.location.search).get(k);
 
 function FirstFrame({ onReady }) {
   const done = useRef(false);
@@ -65,6 +71,8 @@ export default function Room3D() {
   const [dpr, setDpr] = useState(0.5);
   const [onScreen, setOnScreen] = useState(true);
   const [day, setDay] = useState(startsAsDay);
+  const [weather, setWeather] = useState(() => param("weather") ?? "clear");
+  const deco = useMemo(() => decorations(param("date") ? new Date(`${param("date")}T12:00:00`) : new Date()), []);
   const [hovered, setHovered] = useState(null);
   const [tip, setTip] = useState(null); // { id, text } | { id, photo }
   const [focus, setFocus] = useState(null);
@@ -80,6 +88,7 @@ export default function Room3D() {
   const activate = useCallback(
     (id) => {
       const o = BY_ID[id];
+      track("room_click", { object: id }); // which objects people actually find
       clearTimeout(tipTimer.current);
       if (o.kind === "nav") {
         if (reduce) return router.push(o.href);
@@ -131,6 +140,15 @@ export default function Room3D() {
     };
   }, []);
 
+  // Toronto's real weather in the window (stays clear if the request fails).
+  useEffect(() => {
+    if (param("weather")) return;
+    fetch(WEATHER_URL)
+      .then((r) => r.json())
+      .then((j) => setWeather(weatherKind(j.current.weather_code)))
+      .catch(() => {});
+  }, []);
+
   const ctx = useMemo(() => ({ hovered, setHovered, activate }), [hovered, activate]);
 
   return (
@@ -147,7 +165,7 @@ export default function Room3D() {
         <FirstFrame onReady={() => setReady(true)} />
         <CameraRig focus={focus} />
         <RoomCtx.Provider value={ctx}>
-          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} />
+          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} weather={weather} deco={deco} />
         </RoomCtx.Provider>
       </Canvas>
 

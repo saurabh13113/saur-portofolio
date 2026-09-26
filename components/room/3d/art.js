@@ -38,9 +38,11 @@ const disc = (g, color, cx, cy, r) => {
   }
 };
 
-// Family on the beach at sunset (the Abu Dhabi corniche, roughly).
+// The family photo above my monitors: a real photo shrunk to 32x22 pixels, with
+// a drawn family-at-sunset as the stand-in while it loads.
 export const FAMILY_ART = {
   px: [32, 22],
+  src: "/assets/family/family-6.jpeg",
   draw(g) {
     rect(g, "#f39a5b", 0, 0, 32, 5);
     rect(g, "#f7c07e", 0, 5, 32, 5);

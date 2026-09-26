@@ -43,25 +43,33 @@ function Shell() {
 
 // The view out of the window: a flat backdrop sitting just behind the glass
 // (a diorama trick; anything deeper would show up outside the room).
-function WindowView({ reduce, day }) {
-  const rain = useRef([]);
-  useFrame((_, dt) => {
-    if (reduce || day) return;
-    rain.current.forEach((m, i) => {
+// Rain or snow falls only when it's actually raining or snowing in Toronto
+// (weather from Room3D); crescent = a crescent moon for Eid.
+const dropX = (i) => 3.66 + ((i * 0.37) % 1.48);
+function WindowView({ reduce, day, weather, crescent }) {
+  const drops = useRef([]);
+  const snow = weather === "snow";
+  const grey = day && weather !== "clear"; // overcast: no sun, and rain dark enough to see
+  useFrame(({ clock }, dt) => {
+    if (reduce || weather === "clear") return;
+    const t = clock.elapsedTime;
+    drops.current.forEach((m, i) => {
       if (!m) return;
-      m.position.y -= dt * (1.6 + (i % 3) * 0.4);
+      m.position.y -= dt * (snow ? 0.25 + (i % 3) * 0.08 : 1.6 + (i % 3) * 0.4);
+      if (snow) m.position.x = dropX(i) + 0.03 * Math.sin(t * 1.5 + i);
       if (m.position.y < 1.05) m.position.y = 2.25;
     });
   });
   const towers = [[3.62, 0.34, 0.5], [3.98, 0.28, 0.75], [4.28, 0.36, 0.4], [4.66, 0.3, 0.85], [4.98, 0.22, 0.55]];
   return (
     <group userData={{ live: true }}>
-      <B p={[3.6, 1.0, -0.2]} s={[1.6, 1.3, 0.02]} c={day ? "#8ec5ff" : "#0e1735"} e={day ? "#7ab8f0" : "#111d48"} />
-      {day ? (
+      <B p={[3.6, 1.0, -0.2]} s={[1.6, 1.3, 0.02]} c={grey ? "#aab4c0" : day ? "#8ec5ff" : "#0e1735"} e={grey ? "#8e99a6" : day ? "#7ab8f0" : "#111d48"} />
+      {grey ? null : day ? (
         <B p={[4.75, 1.9, -0.175]} s={[0.18, 0.18, 0.01]} c="#fff1a8" e="#ffe27a" />
       ) : (
         <>
           <B p={[4.85, 1.95, -0.175]} s={[0.12, 0.12, 0.01]} c="#f3edc8" e="#f3edc8" />
+          {crescent ? <B p={[4.88, 1.98, -0.172]} s={[0.1, 0.1, 0.01]} c="#0e1735" e="#111d48" /> : null}
           {[[3.8, 2.15], [4.1, 2.05], [4.45, 2.2], [5.05, 2.1], [3.7, 1.9]].map(([x, y]) => (
             <B key={x} p={[x, y, -0.176]} s={[0.02, 0.02, 0.005]} c="#e8e4ff" e="#e8e4ff" />
           ))}
@@ -84,23 +92,69 @@ function WindowView({ reduce, day }) {
       {[3.7, 4.1, 4.5, 4.9].map((x) => (
         <B key={x} p={[x, 1.16, -0.14]} s={[0.22, 0.08, 0.02]} c={day ? "#3f8a4a" : "#10301c"} e={day ? "#1c3d20" : undefined} />
       ))}
-      {!day &&
-        Array.from({ length: 12 }, (_, i) => (
-          <B key={i} mref={(m) => (rain.current[i] = m)} p={[3.66 + ((i * 0.37) % 1.48), 1.05 + ((i * 0.53) % 1.2), -0.12]} s={[0.008, 0.09, 0.006]} c="#9fb4ff" e="#6d86d8" ei={0.7} />
+      {weather !== "clear" &&
+        Array.from({ length: snow ? 16 : 12 }, (_, i) => (
+          <B
+            key={`${weather}-${i}`}
+            mref={(m) => (drops.current[i] = m)}
+            p={[dropX(i), 1.05 + ((i * 0.53) % 1.2), -0.12]}
+            s={snow ? [0.032, 0.032, 0.006] : [0.02, 0.1, 0.006]}
+            c={snow ? "#ffffff" : day ? "#3f5f8f" : "#9fb4ff"}
+            e={snow ? "#dfe8ff" : day ? "#2c4570" : "#6d86d8"}
+            ei={snow ? 0.8 : 0.7}
+          />
         ))}
     </group>
   );
 }
 
-function Window({ catJumpAt, reduce }) {
+// The cat's pivot (middle of its body on the sill); every part is placed relative to it.
+const CAT = [4.785, 0, 0.105];
+const WALK = 0.5; // how far along the sill it strolls
+const lerp = (a, b, k) => a + (b - a) * k;
+
+// Awake, it watches your cursor and now and then strolls along the sill and back.
+// At night it sleeps (eyes shut, z's floating up) unless you've just petted it.
+function Window({ catJumpAt, reduce, day }) {
   const tail = useRef();
   const cat = useRef();
-  useFrame(({ clock }) => {
+  const head = useRef();
+  const eyes = useRef([]);
+  const lids = useRef([]);
+  const zs = useRef([]);
+  useFrame(({ clock, pointer }) => {
     const t = clock.elapsedTime;
-    if (tail.current && !reduce) tail.current.rotation.x = 0.35 * wave(t, 2);
-    if (cat.current) {
-      const since = t - (catJumpAt.current ?? -9);
-      cat.current.position.y = since < 0.45 ? Math.sin((since / 0.45) * Math.PI) * 0.18 : 0;
+    const since = t - (catJumpAt.current ?? -99);
+    const asleep = !day && since > 6;
+    if (tail.current && !reduce) tail.current.rotation.x = asleep ? 0.1 * wave(t, 0.8) : 0.35 * wave(t, 2);
+    eyes.current.forEach((m) => m && (m.visible = !asleep));
+    lids.current.forEach((m) => m && (m.visible = asleep));
+    zs.current.forEach((m, i) => {
+      if (!m) return;
+      m.visible = asleep && !reduce;
+      const k = (t * 0.35 + i / 2) % 1;
+      m.position.set(0.12 + k * 0.05, 0.12 + k * 0.22, 0);
+      m.scale.setScalar(0.6 + k * 0.6);
+    });
+    if (!cat.current) return;
+    // stroll schedule (24s loop): sit, walk left, sit, walk back
+    const ph = reduce || asleep ? 0 : t % 24;
+    const walkOut = ph >= 14 && ph < 17;
+    const walkBack = ph >= 20 && ph < 23;
+    const off = walkOut ? -WALK * ((ph - 14) / 3) : ph >= 17 && ph < 20 ? -WALK : walkBack ? -WALK * (1 - (ph - 20) / 3) : 0;
+    const facingLeft = ph >= 14 && ph < 20;
+    const walking = walkOut || walkBack;
+    cat.current.position.x = CAT[0] + off;
+    cat.current.rotation.y = facingLeft ? Math.PI : 0;
+    const hop = since < 0.45 ? Math.sin((since / 0.45) * Math.PI) * 0.18 : 0;
+    cat.current.position.y = hop + (walking ? Math.abs(Math.sin(t * 12)) * 0.012 : 0);
+    // head: droops when asleep, otherwise follows the cursor (pointer is -1..1 over the room)
+    if (head.current) {
+      const r = head.current.rotation;
+      const look = !asleep && !walking && !facingLeft;
+      r.y = lerp(r.y, look ? 0.6 * pointer.x : 0, 0.1);
+      r.z = lerp(r.z, asleep ? -0.35 : look ? 0.3 * pointer.y : 0, 0.1);
+      head.current.position.y = asleep ? 1.15 : 1.19;
     }
   });
   return (
@@ -117,17 +171,27 @@ function Window({ catJumpAt, reduce }) {
       <B p={[3.64, 1.13, -0.02]} s={[0.2, 0.16, 0.2]} c="#3f8a4a" />
       {/* the cat */}
       <Obj id="cat">
-        <group ref={cat} userData={{ live: true }}>
-          <B p={[4.6, 1.01, 0.02]} s={[0.3, 0.15, 0.17]} c="#8f8f95" />
-          <B p={[4.63, 1.161, 0.03]} s={[0.04, 0.001, 0.15]} c="#5e5e64" />
-          <B p={[4.72, 1.161, 0.03]} s={[0.04, 0.001, 0.15]} c="#5e5e64" />
-          <B p={[4.8, 1.03, 0.191]} s={[0.1, 0.11, 0.004]} c="#eeeeee" />
-          <B p={[4.82, 1.12, 0.03]} s={[0.15, 0.14, 0.15]} c="#8f8f95" />
-          <B p={[4.83, 1.26, 0.04]} s={[0.04, 0.05, 0.04]} c="#8f8f95" />
-          <B p={[4.83, 1.26, 0.13]} s={[0.04, 0.05, 0.04]} c="#8f8f95" />
-          <B p={[4.97, 1.17, 0.06]} s={[0.004, 0.025, 0.025]} c="#9be15d" e="#9be15d" ei={0.7} />
-          <B p={[4.97, 1.17, 0.12]} s={[0.004, 0.025, 0.025]} c="#9be15d" e="#9be15d" ei={0.7} />
-          <group ref={tail} position={[4.61, 1.05, 0.1]} userData={{ live: true }}>
+        <group ref={cat} position={CAT} userData={{ live: true }}>
+          <B p={[-0.185, 1.01, -0.085]} s={[0.3, 0.15, 0.17]} c="#8f8f95" />
+          <B p={[-0.155, 1.161, -0.075]} s={[0.04, 0.001, 0.15]} c="#5e5e64" />
+          <B p={[-0.065, 1.161, -0.075]} s={[0.04, 0.001, 0.15]} c="#5e5e64" />
+          <B p={[0.015, 1.03, 0.086]} s={[0.1, 0.11, 0.004]} c="#eeeeee" />
+          {/* head pivots at its centre */}
+          <group ref={head} position={[0.11, 1.19, 0]} userData={{ live: true }}>
+            <B p={[-0.075, -0.07, -0.075]} s={[0.15, 0.14, 0.15]} c="#8f8f95" />
+            <B p={[-0.065, 0.07, -0.065]} s={[0.04, 0.05, 0.04]} c="#8f8f95" />
+            <B p={[-0.065, 0.07, 0.025]} s={[0.04, 0.05, 0.04]} c="#8f8f95" />
+            {[-0.045, 0.015].map((z, i) => (
+              <group key={z}>
+                <B mref={(m) => (eyes.current[i] = m)} p={[0.075, -0.02, z]} s={[0.004, 0.025, 0.025]} c="#9be15d" e="#9be15d" ei={0.7} />
+                <B mref={(m) => (lids.current[i] = m)} p={[0.075, -0.01, z]} s={[0.004, 0.006, 0.025]} c="#3a3a40" />
+              </group>
+            ))}
+            {[0, 1].map((i) => (
+              <B key={i} mref={(m) => (zs.current[i] = m)} p={[0, 0, 0]} s={[0.03, 0.03, 0.004]} c="#e8e4ff" e="#b8b4ff" ei={0.8} />
+            ))}
+          </group>
+          <group ref={tail} position={[-0.175, 1.05, -0.005]} userData={{ live: true }}>
             <B p={[-0.02, -0.28, -0.02]} s={[0.04, 0.3, 0.04]} c="#7a7a80" />
           </group>
         </group>
@@ -536,6 +600,62 @@ function LightSwitch({ day }) {
   );
 }
 
+// Seasonal touches, switched on by date (components/room/season.js): string
+// lights in December, diyas and a rangoli by the door for Diwali, a lantern for
+// Eid, a jack-o'-lantern at the end of October.
+const BULBS = ["#ff5a5a", C.amber, "#5ee08a", "#6fb6ff"];
+function Decorations({ deco, reduce }) {
+  const bulbs = useRef([]);
+  const flames = useRef([]);
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    bulbs.current.forEach((m, i) => m && (m.material.emissiveIntensity = reduce ? 0.9 : (Math.floor(t * 2) + i) % 2 ? 1 : 0.25));
+    flames.current.forEach((m, i) => m && !reduce && (m.scale.y = 1 + 0.25 * Math.sin(t * 11 + i * 2)));
+  });
+  return (
+    <group userData={{ live: true }}>
+      {deco.lights ? (
+        <>
+          <B p={[3.58, 2.265, 0.05]} s={[1.66, 0.006, 0.006]} c="#1d1e24" />
+          {Array.from({ length: 21 }, (_, i) => (
+            <B key={i} mref={(m) => (bulbs.current[i] = m)} p={[3.6 + i * 0.078, 2.225 - (i % 2) * 0.012, 0.045]} s={[0.022, 0.035, 0.022]} c={BULBS[i % 4]} e={BULBS[i % 4]} />
+          ))}
+        </>
+      ) : null}
+      {deco.diyas ? (
+        <>
+          {[["#c2185b", 0.4], ["#ff9800", 0.3], ["#fdd835", 0.2], ["#ffffff", 0.08]].map(([c, w], k) => (
+            <B key={c} p={[0.5 - w / 2, 0.001 + k * 0.0005, 3.3 - w / 2]} s={[w, 0.002, w]} c={c} />
+          ))}
+          {[[0.24, 3.04], [0.7, 3.04], [0.24, 3.5], [0.7, 3.5]].map(([x, z], i) => (
+            <group key={i}>
+              <B p={[x, 0, z]} s={[0.07, 0.03, 0.07]} c="#a0522d" />
+              <B mref={(m) => (flames.current[i] = m)} p={[x + 0.025, 0.03, z + 0.025]} s={[0.02, 0.045, 0.02]} c="#ffd27a" e="#ffb347" />
+            </group>
+          ))}
+          <pointLight position={[0.5, 0.25, 3.3]} color="#ffb347" intensity={1.5} distance={1.5} decay={1.6} />
+        </>
+      ) : null}
+      {deco.lantern ? (
+        <>
+          <B p={[5.02, 1.98, 0.08]} s={[0.006, 0.28, 0.006]} c="#8a6d2f" />
+          <B p={[4.99, 1.98, 0.05]} s={[0.07, 0.02, 0.07]} c="#8a6d2f" />
+          <B p={[4.98, 1.86, 0.04]} s={[0.09, 0.12, 0.09]} c="#f4c95d" e="#ffcf6b" ei={0.9} />
+        </>
+      ) : null}
+      {deco.pumpkin ? (
+        <>
+          <B p={[2.55, 0, 4.95]} s={[0.24, 0.17, 0.22]} c="#e07a1f" />
+          <B p={[2.65, 0.17, 5.04]} s={[0.04, 0.05, 0.04]} c="#3f8a4a" />
+          <B p={[2.59, 0.09, 5.171]} s={[0.04, 0.03, 0.004]} c="#ffb347" e="#ffb347" />
+          <B p={[2.71, 0.09, 5.171]} s={[0.04, 0.03, 0.004]} c="#ffb347" e="#ffb347" />
+          <B p={[2.61, 0.035, 5.171]} s={[0.13, 0.025, 0.004]} c="#ffb347" e="#ffb347" />
+        </>
+      ) : null}
+    </group>
+  );
+}
+
 // Soft contact shadows under the furniture, plus a darker band where floor meets wall.
 function Shadows() {
   const blobs = [
@@ -554,7 +674,7 @@ function Shadows() {
   );
 }
 
-export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day }) {
+export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day, weather = "clear", deco = {} }) {
   return (
     <>
       <ambientLight color={day ? "#fff4e0" : "#8088c0"} intensity={day ? 1.5 : 0.75} />
@@ -562,8 +682,9 @@ export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, da
       <directionalLight color={day ? "#ffe7b0" : "#6d8cff"} intensity={day ? 1.8 : 0.5} position={[4.4, 3, -3]} />
       <Merge>
         <Shell />
-        <WindowView reduce={reduce} day={day} />
-        <Window catJumpAt={catJumpAt} reduce={reduce} />
+        <WindowView reduce={reduce} day={day} weather={weather} crescent={deco.lantern} />
+        <Window catJumpAt={catJumpAt} reduce={reduce} day={day} />
+        <Decorations deco={deco} reduce={reduce} />
         <Piano playing={musicPlaying} reduce={reduce} />
         <LeftWall />
         <LightSwitch day={day} />

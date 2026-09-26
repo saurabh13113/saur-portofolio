@@ -1,6 +1,7 @@
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/room/Sidebar";
 import SiteNav from "@/components/room/SiteNav";
 import { profile, SITE } from "@/data/portfolio";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }) {
         </div>
         <KonamiUnlock />
         <ConsoleEasterEgg />
+        <Analytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON) }} />
       </body>
     </html>

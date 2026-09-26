@@ -23,7 +23,7 @@ export function B({ p, s, c, e, ei = 1, mref }) {
   );
 }
 
-// A flat pixel-art picture on a wall (art = { px, draw } from art.js), placed by
+// A flat pixel-art picture on a wall (art = { px, draw, src? } from art.js), placed by
 // its min corner like B. face "z" hangs it on the right wall (facing +z), "x" on
 // the left wall (facing +x); w runs along the wall, h up it. Flagged keep so
 // Merge doesn't bake away the texture.
@@ -32,11 +32,22 @@ export function Pic({ p, w, h, art, face = "z" }) {
   const map = useMemo(() => {
     const c = document.createElement("canvas");
     [c.width, c.height] = art.px;
-    art.draw(c.getContext("2d"));
+    const g = c.getContext("2d");
+    art.draw(g);
     const t = new CanvasTexture(c);
     t.magFilter = t.minFilter = NearestFilter;
     t.generateMipmaps = false;
     t.colorSpace = SRGBColorSpace;
+    // A real photo, shrunk to pixel-art size (cover-cropped); draw() stays up until it loads.
+    if (art.src) {
+      const img = new Image();
+      img.onload = () => {
+        const s = Math.max(c.width / img.width, c.height / img.height);
+        g.drawImage(img, (c.width - img.width * s) / 2, (c.height - img.height * s) / 2, img.width * s, img.height * s);
+        t.needsUpdate = true;
+      };
+      img.src = art.src;
+    }
     return t;
   }, [art]);
   const x = face === "z";

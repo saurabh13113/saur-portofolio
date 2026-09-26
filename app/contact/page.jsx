@@ -10,6 +10,7 @@ import { profile, services } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
 import BlockButton from "@/components/mc/BlockButton";
+import { track } from "@vercel/analytics";
 
 const info = [
   { icon: <FaEnvelope />, title: "Email", value: profile.email, href: `mailto:${profile.email}` },
@@ -70,6 +71,7 @@ export default function Contact() {
       }
       setStatus("sent");
       window.dispatchEvent(new Event("avatar:cheer")); // the sidebar me celebrates
+      track("contact_sent", { topic: topic || "none" });
       formEl.reset();
       setTopic("");
     } catch {

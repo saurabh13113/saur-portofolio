@@ -17,7 +17,7 @@ const settle = () => new Promise((r) => setTimeout(r, 2500));
 // 1) room poster: pin the room box to 420 CSS px wide so canvas pixels map 1:1 to the render
 const page = await browser.newPage();
 await page.setViewport({ width: 1600, height: 900, deviceScaleFactor: 1 });
-await page.goto(`${URL}?time=night`, { waitUntil: "networkidle0" });
+await page.goto(`${URL}?time=night&weather=clear&date=2026-06-15`, { waitUntil: "networkidle0" });
 await page.addStyleTag({
   content:
     "[data-room]{width:420px!important;max-width:none!important} .room3d-spot,.room3d-tip{display:none!important} html,body{background:transparent!important}",
@@ -33,7 +33,7 @@ console.log(`wrote public/assets/room-poster.png (${size.join("x")})`);
 // 2) link preview: the home page as visitors see it
 const og = await browser.newPage();
 await og.setViewport({ width: 1200, height: 630, deviceScaleFactor: 1 });
-await og.goto(`${URL}?time=night`, { waitUntil: "networkidle0" });
+await og.goto(`${URL}?time=night&weather=clear&date=2026-06-15`, { waitUntil: "networkidle0" });
 await og.waitForSelector(".room3d canvas[data-engine]", { timeout: 15000 });
 await settle();
 await og.screenshot({ path: "public/og.png" });
