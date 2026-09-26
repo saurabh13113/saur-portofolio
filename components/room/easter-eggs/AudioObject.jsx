@@ -1,15 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-export default function AudioObject({ icon, label, src, loop = false, style }) {
+export default function AudioObject({ label, src, loop = false, style }) {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause();
-    };
-  }, []);
+  useEffect(() => () => audioRef.current?.pause(), []);
 
   function toggle() {
     if (!audioRef.current) {
@@ -17,15 +13,14 @@ export default function AudioObject({ icon, label, src, loop = false, style }) {
       audioRef.current.loop = loop;
     }
     const audio = audioRef.current;
+    audio.currentTime = 0;
 
     if (playing) {
       audio.pause();
-      audio.currentTime = 0;
       setPlaying(false);
       return;
     }
 
-    audio.currentTime = 0;
     audio.play().catch(() => {});
     setPlaying(true);
     if (!loop) audio.onended = () => setPlaying(false);
@@ -34,15 +29,14 @@ export default function AudioObject({ icon, label, src, loop = false, style }) {
   return (
     <button
       type="button"
-      aria-label={playing ? `Stop ${label}` : label}
+      aria-label={playing ? `Stop: ${label}` : label}
       aria-pressed={playing}
       onClick={toggle}
-      className={`absolute -translate-x-1/2 -translate-y-1/2 min-w-11 min-h-11 mc-bevel tex-plank flex items-center justify-center text-lg focus:outline focus:outline-2 focus:outline-white ${
-        playing ? "outline outline-2 outline-emerald" : ""
-      }`}
+      className="room-hotspot"
       style={style}
     >
-      <span aria-hidden="true">{icon}</span>
+      {playing ? <span className="room-notes" aria-hidden="true">♪ ♫</span> : null}
+      <span className="room-label">{playing ? "Stop" : label}</span>
     </button>
   );
 }

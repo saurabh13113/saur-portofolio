@@ -31,11 +31,39 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/)!
 
-## Theme
+## Theme: "Saurabh's Room"
 
-Minecraft-styled reskin. All page content lives in `data/portfolio.js`
-(transcribed from `public/assets/resume.pdf`). Blocky UI primitives are in
-`components/mc/`; textures and the bevel are CSS in `app/globals.css`.
+The home page is a single isometric, voxel/pixel-art bedroom at night, with a
+lofi-girl mood. The camera looks down from the top of the near corner, and I'm
+coding at a triple-monitor desk in the far corner. Everything clickable in the
+room leads to part of the portfolio. There's no game engine and no 3D runtime:
+it's one optimized image (`public/assets/room.png`, served as WebP/AVIF by
+`next/image`) with invisible, accessible hotspots and a few CSS effects on top.
 
-Optional assets (site degrades gracefully without them):
-`public/fonts/Monocraft.ttf`, `public/sfx/{click,break,orb}.mp3`.
+### Room map
+
+| Object in the render | Goes to / does |
+|---|---|
+| Triple monitors | `/work` |
+| Bookshelf | `/resume` |
+| Dresser books (Algorithms, Data Structures...) | `/resume` (skills) |
+| Door | `/services` |
+| Me at the desk | `/contact` ("Say hi") |
+| UTM pennant, trophy shelf, poster, backpack, bed, nightstand books, hoodie, beanbag, laundry basket, student ID | Easter-egg tooltips |
+| Cat on the window sill | Pet it |
+| Little photo on the desk | Pops my photos out as pixel art |
+| Desk keyboard / PC tower | Play a favorite piece / a song on loop (never autoplays) |
+
+Live effects are pure CSS in `app/globals.css` (`.room-*`): rain on the window,
+the monitors' glow pulsing, and the lamps flickering.
+
+### Editing the room
+
+- Hotspot positions are `[left, top, width, height]` percentages of the
+  square image, in `components/room/Room.jsx`. If the art is regenerated,
+  re-measure them. Hover outlines show where each hotspot sits.
+- Content still lives in `data/portfolio.js` (transcribed from
+  `public/assets/resume.pdf`). Blocky UI primitives are in `components/mc/`.
+
+Optional assets (the site degrades gracefully without them): `public/fonts/Monocraft.ttf`,
+`public/sfx/{click,break,orb}.mp3`, `public/sfx/{keyboard-piece,speaker-loop}.mp3`.

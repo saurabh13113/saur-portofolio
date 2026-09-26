@@ -37,3 +37,8 @@ next-env.d.ts
 
 # worktrees
 .worktrees
+
+# claude code (local notes, specs and plans)
+CLAUDE.md
+.claude/
+docs/superpowers/

@@ -1,21 +1,39 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
+// The little photo on the desk: click to pop it out as pixel art, click again for the next one.
 export default function PhotoFrame({ images, style }) {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(null);
+  const canvas = useRef(null);
+
+  useEffect(() => {
+    if (index === null) return;
+    const img = new Image();
+    img.onload = () => {
+      const c = canvas.current;
+      if (!c) return;
+      const s = Math.max(c.width / img.width, c.height / img.height); // cover-crop
+      c.getContext("2d").drawImage(img, (c.width - img.width * s) / 2, (c.height - img.height * s) / 2, img.width * s, img.height * s);
+    };
+    img.src = images[index];
+  }, [images, index]);
 
   return (
     <button
       type="button"
-      aria-label={`Photo ${index + 1} of ${images.length} — click for the next one`}
-      onClick={() => setIndex((i) => (i + 1) % images.length)}
-      className="absolute -translate-x-1/2 -translate-y-1/2 min-w-11 min-h-11 mc-bevel tex-obsidian p-1 focus:outline focus:outline-2 focus:outline-white"
+      aria-label={index === null ? "A photo on the desk" : `Photo ${index + 1} of ${images.length}, click for the next one`}
+      onClick={() => setIndex((i) => (i === null ? 0 : (i + 1) % images.length))}
+      onBlur={() => setIndex(null)}
+      className="room-hotspot"
       style={style}
     >
-      <div className="relative w-12 h-12">
-        <Image src={images[index]} alt="" fill className="object-cover" sizes="48px" />
-      </div>
+      <span className="room-label" style={index === null ? undefined : { opacity: 1 }}>
+        {index === null ? (
+          "A photo"
+        ) : (
+          <canvas ref={canvas} width={32} height={40} className="block w-24 h-[120px]" style={{ imageRendering: "pixelated" }} />
+        )}
+      </span>
     </button>
   );
 }

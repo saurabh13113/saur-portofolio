@@ -26,6 +26,9 @@ export default function Hotbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [router, play, toggle]);
 
+  // The room is the nav on the home page; number keys above still work there.
+  if (pathname === "/") return null;
+
   return (
     <nav data-mc-hit className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-1 p-1 mc-bevel tex-stone">
       {hotbar.map((s) => {

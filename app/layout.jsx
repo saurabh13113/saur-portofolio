@@ -2,8 +2,6 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import Hotbar from "@/components/mc/Hotbar";
-import PageTransition from "@/components/PageTransition";
-import BreakOverlay from "@/components/mc/BreakOverlay";
 import KonamiUnlock from "@/components/room/easter-eggs/KonamiUnlock";
 import ConsoleEasterEgg from "@/components/room/easter-eggs/ConsoleEasterEgg";
 
@@ -23,8 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${jetbrainsMono.variable} pb-28`}>
-        <BreakOverlay />
-        <PageTransition>{children}</PageTransition>
+        {children}
         <Hotbar />
         <KonamiUnlock />
         <ConsoleEasterEgg />

@@ -1,29 +1,28 @@
 "use client";
-import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function RoomHotspot({ href, label, icon, style }) {
+// Invisible link over a drawn object. On click the whole room zooms into the
+// object, then navigates.
+export default function RoomHotspot({ href, label, below = false, style }) {
   const router = useRouter();
-  const [zooming, setZooming] = useState(false);
 
-  function handleClick() {
-    if (zooming) return;
-    setZooming(true);
-    setTimeout(() => router.push(href), 260);
+  function handleClick(e) {
+    const room = e.currentTarget.closest("[data-room]");
+    if (!room || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    e.preventDefault();
+    const r = e.currentTarget.getBoundingClientRect();
+    const R = room.getBoundingClientRect();
+    room.style.transformOrigin = `${r.left + r.width / 2 - R.left}px ${r.top + r.height / 2 - R.top}px`;
+    room.style.transition = "transform 0.3s ease-in, opacity 0.3s ease-in";
+    room.style.transform = "scale(2.5)";
+    room.style.opacity = "0";
+    setTimeout(() => router.push(href), 280);
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      aria-label={label}
-      style={style}
-      className={`absolute -translate-x-1/2 -translate-y-1/2 min-w-14 min-h-14 mc-bevel tex-plank flex flex-col items-center justify-center gap-0.5 px-2 py-1 text-[#f4e4c1] font-mc text-[9px] transition-transform duration-200 hover:scale-110 focus:outline focus:outline-2 focus:outline-white ${
-        zooming ? "scale-150 opacity-0" : ""
-      }`}
-    >
-      <span className="text-xl" aria-hidden="true">{icon}</span>
-      <span className="whitespace-nowrap">{label}</span>
-    </button>
+    <Link href={href} onClick={handleClick} aria-label={label} className="room-hotspot" style={style}>
+      <span className={`room-label room-label--nav${below ? " room-label--below" : ""}`}>{label}</span>
+    </Link>
   );
 }

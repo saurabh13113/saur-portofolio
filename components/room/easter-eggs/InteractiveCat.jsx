@@ -1,4 +1,3 @@
-// components/room/easter-eggs/InteractiveCat.jsx
 "use client";
 import { useRef, useState } from "react";
 
@@ -10,28 +9,15 @@ export default function InteractiveCat({ style }) {
 
   function handleClick() {
     setReaction(REACTIONS[Math.floor(Math.random() * REACTIONS.length)]);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setReaction(null);
-      timeoutRef.current = null;
-    }, 1500);
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setReaction(null), 1500);
   }
 
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2" style={style}>
-      <button
-        type="button"
-        aria-label="Pet the cat"
-        onClick={handleClick}
-        className="min-w-11 min-h-11 flex items-center justify-center text-2xl transition-transform duration-150 hover:scale-110 active:scale-95 focus:outline focus:outline-2 focus:outline-white"
-      >
-        {"🐱"}
-      </button>
-      {reaction ? (
-        <div role="status" className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-mc text-[#f4e4c1]">
-          {reaction}
-        </div>
-      ) : null}
-    </div>
+    <button type="button" aria-label="Pet the cat" onClick={handleClick} className="room-hotspot" style={style}>
+      <span className="room-label" style={reaction ? { opacity: 1 } : undefined} role={reaction ? "status" : undefined}>
+        {reaction ?? "Pet the cat"}
+      </span>
+    </button>
   );
 }
