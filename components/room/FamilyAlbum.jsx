@@ -36,7 +36,7 @@ export default function FamilyAlbum({ open, onClose }) {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- plain img: sizes vary, no layout shift inside the fixed box */}
-        <img key={photo.src} src={photo.src} alt={photo.caption} className="slide-in absolute inset-0 w-full h-full object-contain" />
+        <img key={photo.src} src={photo.src} alt={photo.caption} className="slide-in absolute inset-0 w-full h-full object-contain" style={{ imageRendering: "auto" }} />
       </div>
       <div className="flex items-center gap-2 mt-3">
         <p className="font-mc text-sm flex-1">

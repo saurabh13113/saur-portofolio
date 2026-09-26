@@ -114,7 +114,7 @@ export const projects = [
     blurb: "Predicts salaries with a hand-built Naive Bayes model.",
     description: "University project that predicts salaries by building a Naive Bayes classifier.",
     stack: ["Python"], image: "/assets/work/Pic19.png",
-    links: { live: "https://github.com/saurabh13113/Naive-Bayes_Model-", github: "https://github.com/saurabh13113/Naive-Bayes_Model" } },
+    links: { live: "https://github.com/saurabh13113/Naive-Bayes_Model", github: "https://github.com/saurabh13113/Naive-Bayes_Model" } },
   { slug: "mobile-companytracker", title: "Mobile System Tracker", category: "Frontend", featured: false,
     blurb: "Tracks a mobile carrier and its customers, with a visualizer.",
     description: "University assignment to track a mobile company and its customers, including a PyGame visualizer.",

@@ -124,7 +124,7 @@ export default function WorkCarousel({ projects }) {
           </ul>
           <div className="border-t border-white/10" />
           <div className="flex flex-wrap gap-3">
-            {p.links.live ? (
+            {p.links.live && p.links.live !== p.links.github ? (
               <a href={p.links.live} target="_blank" rel="noreferrer" className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
                 <BsArrowUpRight aria-hidden="true" /> Live
               </a>

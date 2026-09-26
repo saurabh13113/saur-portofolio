@@ -12,7 +12,7 @@ export default function Resume() {
     <section className="container mx-auto py-12">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <Sign>Resume</Sign>
-        <a href="/assets/resume.pdf" download className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
+        <a href={profile.resumePdf} download className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
           <FiDownload aria-hidden="true" /> Download PDF
         </a>
       </div>

@@ -30,28 +30,10 @@ module.exports = {
           DEFAULT: '#f4d27a',
           hover: '#e0b25a',
         },
-        grass: { DEFAULT: "#7cb342", dark: "#5b8a3c" },
-        dirt: { DEFAULT: "#866043", dark: "#6b4a32" },
-        stone: { DEFAULT: "#7f7f7f", dark: "#565656" },
-        wood: "#9c6b3f",
         redstone: "#d13a2b",
         emerald: "#2ecc71",
         obsidian: "#14121c",
         xp: "#f4d27a",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

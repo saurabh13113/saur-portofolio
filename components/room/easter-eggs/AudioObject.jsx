@@ -1,9 +1,8 @@
 "use client";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
+import { useMusic } from "@/hooks/useMusic";
 
-export default function AudioObject({ label, src, loop = false, style }) {
-  const { playing, toggle } = useToggleAudio(src, loop);
-
+function AudioButton({ label, playing, toggle, style }) {
   return (
     <button
       type="button"
@@ -17,4 +16,14 @@ export default function AudioObject({ label, src, loop = false, style }) {
       <span className="room-label">{playing ? "Stop" : label}</span>
     </button>
   );
+}
+
+export default function AudioObject({ label, src, loop = false, style }) {
+  return <AudioButton label={label} style={style} {...useToggleAudio(src, loop)} />;
+}
+
+// The desk speaker: the shared background-music playlist.
+export function SpeakerObject({ label, style }) {
+  const { playing, toggle } = useMusic();
+  return <AudioButton label={label} style={style} playing={playing} toggle={toggle} />;
 }

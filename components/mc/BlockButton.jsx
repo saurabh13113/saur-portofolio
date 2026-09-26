@@ -1,17 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useSfx } from "@/hooks/useSfx";
 
-export default function BlockButton({
-  tex = "plank",
-  sfx = "click",
-  className = "",
-  onClick,
-  children,
-  ...rest
-}) {
+// Chunky button that sinks into its shadow while pressed.
+export default function BlockButton({ tex = "plank", className = "", children, ...rest }) {
   const [pressed, setPressed] = useState(false);
-  const { play } = useSfx();
   return (
     <button
       type="button"
@@ -21,10 +13,6 @@ export default function BlockButton({
       onPointerDown={() => setPressed(true)}
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
-      onClick={(e) => {
-        play(sfx);
-        onClick?.(e);
-      }}
       {...rest}
     >
       {children}

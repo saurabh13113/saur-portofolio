@@ -1,7 +1,7 @@
 // Every clickable thing in the room, shared by the 3D room (Room3D) and the
 // picture fallback (RoomImage). anchor: [x, y, z] world point where the
 // object's label/tooltip (and, in the picture, its hotspot) sits.
-// kind: nav (link) | egg (tooltip) | audio | cat | photo | album (family carousel) | switch (day/night)
+// kind: nav (link) | egg (tooltip) | audio | speaker (playlist) | cat | photo | album (family carousel) | switch (day/night)
 
 // Background music for the desk speaker: plays through in order, round and round.
 // Drop mp3s in public/music/ and list them here.
@@ -42,7 +42,7 @@ export const ROOM_OBJECTS = [
   { id: "family", kind: "album", label: "Family photos", anchor: [1.3, 2.05, 0.05] },
   { id: "photo", kind: "photo", label: "A photo", anchor: [2.36, 1.0, 0.07] },
   { id: "music", kind: "audio", label: "Play a favorite piece", src: "/sfx/keyboard-piece.mp3", anchor: [4.4, 0.6, 0.5] },
-  { id: "song", kind: "audio", label: "Speaker: play music", src: PLAYLIST.map((t) => t.src), loop: true, anchor: [2.52, 1.0, 0.1] },
+  { id: "song", kind: "speaker", label: "Speaker: play music", anchor: [2.52, 1.0, 0.1] },
 ];
 
 export const CAT_REACTIONS = ["Mrow?", "purrrr", "*stretches*", "not now, human"];

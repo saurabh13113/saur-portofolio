@@ -15,7 +15,18 @@ test("accepts a fully valid submission and trims whitespace", () => {
     lastName: "Nair",
     email: "saurabh@example.com",
     message: "hello there",
+    phone: "",
+    service: "",
   });
+});
+
+test("passes the optional phone and service through, and caps the phone length", () => {
+  const base = { firstName: "A", lastName: "B", email: "a@b.com", message: "hi" };
+  const ok = validateContact({ ...base, phone: " +1 647 555 0100 ", service: "Backend & APIs" });
+  assert.equal(ok.ok, true);
+  assert.equal(ok.data.phone, "+1 647 555 0100");
+  assert.equal(ok.data.service, "Backend & APIs");
+  assert.equal(validateContact({ ...base, phone: "1".repeat(41) }).ok, false);
 });
 
 test("rejects a missing first name with a specific error", () => {

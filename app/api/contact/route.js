@@ -11,7 +11,7 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, errors: result.errors }, { status: 400 });
   }
 
-  const { firstName, lastName, email, message } = result.data;
+  const { firstName, lastName, email, message, phone, service } = result.data;
 
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -20,7 +20,13 @@ export async function POST(request) {
       to: profile.email,
       replyTo: email,
       subject: `New message from ${firstName} ${lastName}`,
-      text: `${message}\n\n— ${firstName} ${lastName} <${email}>`,
+      text: [
+        service ? `Service: ${service}` : "",
+        message,
+        `— ${firstName} ${lastName} <${email}>${phone ? ` · ${phone}` : ""}`,
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
     });
     return NextResponse.json({ ok: true });
   } catch (err) {

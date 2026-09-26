@@ -8,15 +8,25 @@ import Scene from "./Scene";
 import { RoomCtx } from "./parts";
 import { makeCamera } from "./camera";
 import { toScreen, TARGET } from "@/components/room/projection";
-import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS, PLAYLIST } from "@/components/room/roomObjects";
+import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS } from "@/components/room/roomObjects";
 import FamilyAlbum from "@/components/room/FamilyAlbum";
 import { PixelPhoto } from "@/components/room/easter-eggs/PhotoFrame";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
+import { useMusic } from "@/hooks/useMusic";
 import RoomImage from "@/components/room/RoomImage";
 
 const OBJECTS = ROOM_OBJECTS.filter((o) => o.anchor);
 const BY_ID = Object.fromEntries(OBJECTS.map((o) => [o.id, o]));
 const PIXELS = 420; // render width in real pixels; CSS scales it up nearest-neighbour
+
+// Lights follow the visitor's clock: day from 7am to 7pm. ?time=day|night forces
+// one (npm run poster uses night, to match the loading picture).
+function startsAsDay() {
+  const forced = new URLSearchParams(window.location.search).get("time");
+  if (forced) return forced === "day";
+  const h = new Date().getHours();
+  return h >= 7 && h < 19;
+}
 
 function FirstFrame({ onReady }) {
   const done = useRef(false);
@@ -54,7 +64,7 @@ export default function Room3D() {
   const wrap = useRef(null);
   const [dpr, setDpr] = useState(0.5);
   const [onScreen, setOnScreen] = useState(true);
-  const [day, setDay] = useState(false);
+  const [day, setDay] = useState(startsAsDay);
   const [hovered, setHovered] = useState(null);
   const [tip, setTip] = useState(null); // { id, text } | { id, photo }
   const [focus, setFocus] = useState(null);
@@ -65,7 +75,7 @@ export default function Room3D() {
   const tipTimer = useRef(null);
   const reduce = useMemo(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
   const music = useToggleAudio(BY_ID.music.src);
-  const song = useToggleAudio(BY_ID.song.src, BY_ID.song.loop);
+  const song = useMusic();
 
   const activate = useCallback(
     (id) => {
@@ -76,8 +86,8 @@ export default function Room3D() {
         setTip(null);
         setFocus(o.anchor);
         setTimeout(() => router.push(o.href), 330);
-      } else if (o.kind === "audio") {
-        const a = id === "music" ? music : song;
+      } else if (o.kind === "audio" || o.kind === "speaker") {
+        const a = o.kind === "audio" ? music : song;
         setTip(a.playing ? null : { id, text: "♪ now playing (click again to stop)" });
         a.toggle();
       } else if (o.kind === "cat") {
@@ -164,7 +174,7 @@ export default function Room3D() {
 
       {tip && !focus ? (
         <div role="status" className="room-label room3d-tip" style={screen[tip.id]}>
-          {tip.photo ? <PixelPhoto src={PHOTOS[photoIdx]} /> : tip.id === "song" && song.playing ? `♪ ${PLAYLIST[song.track].title} (click to stop)` : tip.text}
+          {tip.photo ? <PixelPhoto src={PHOTOS[photoIdx]} /> : tip.id === "song" && song.playing ? `♪ ${song.title} (click to stop)` : tip.text}
         </div>
       ) : null}
       {hovered && !tip && BY_ID[hovered].kind !== "nav" ? (

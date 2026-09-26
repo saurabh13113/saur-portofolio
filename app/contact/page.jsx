@@ -34,6 +34,8 @@ export default function Contact() {
       lastName: form.get("contact-last"),
       email: form.get("contact-email"),
       message: form.get("contact-message"),
+      phone: form.get("contact-phone"),
+      service: services.find((s) => s.num === trade)?.title ?? "",
     };
 
     try {
@@ -49,6 +51,7 @@ export default function Contact() {
         return;
       }
       setStatus("sent");
+      window.dispatchEvent(new Event("avatar:cheer")); // the sidebar me celebrates
       formEl.reset();
       setTrade("");
     } catch {
@@ -75,9 +78,9 @@ export default function Contact() {
             <label className="sr-only" htmlFor="contact-phone">Phone</label>
             <Input id="contact-phone" name="contact-phone" placeholder="Phone" className="mc-bevel bg-obsidian rounded-none" />
           </div>
-          {errors.firstName || errors.lastName || errors.email ? (
+          {errors.firstName || errors.lastName || errors.email || errors.phone ? (
             <p role="alert" className="text-redstone text-xs">
-              {errors.firstName ?? errors.lastName ?? errors.email}
+              {errors.firstName ?? errors.lastName ?? errors.email ?? errors.phone}
             </p>
           ) : null}
           <Select value={trade} onValueChange={setTrade}>

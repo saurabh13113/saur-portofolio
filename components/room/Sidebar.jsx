@@ -3,20 +3,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { profile } from "@/data/portfolio";
 import { socialIcon } from "@/components/mc/icons";
+import { BsSkipForwardFill, BsStopFill } from "react-icons/bs";
 import Avatar from "@/components/room/Avatar";
+import { useMusic } from "@/hooks/useMusic";
 
 // The 3D me, my name and socials, beside every page (mounted once in the root
 // layout, so the avatar keeps running across navigation). Off the home page the
 // avatar is the way back: a link with a speech bubble saying so.
 export default function Sidebar() {
-  const home = usePathname() === "/";
+  const page = usePathname();
+  const home = page === "/";
+  const music = useMusic();
   const avatarCls = "w-[110px] shrink-0 lg:w-[260px]";
   const Name = home ? "h1" : "p"; // inner pages have their own h1
   return (
-    <aside className={`${home ? "" : "pt-8 lg:pt-0"} flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-screen lg:justify-center`}>
+    <aside className="pt-8 lg:pt-0 flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-screen lg:justify-center">
       {/* same tree on every page so the avatar's canvas survives navigation */}
       <div className={`relative ${avatarCls}`}>
-        <Avatar bubble={home ? null : "Click me to go back home!"} />
+        <Avatar page={page} bubble={home ? null : "Click me to go back home!"} />
         {home ? null : (
           <Link href="/" aria-label="Back to my room (home)" className="absolute inset-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
         )}
@@ -41,6 +45,18 @@ export default function Sidebar() {
             );
           })}
         </div>
+        {/* the desk speaker's music keeps going across pages */}
+        {music.playing ? (
+          <div className="flex items-center gap-1 mt-1 font-mc text-xs text-[#a8f0c0]">
+            <span className="truncate max-w-[150px] lg:max-w-[180px]">♪ {music.title}</span>
+            <button type="button" onClick={music.next} aria-label="Next song" className="w-8 h-8 flex items-center justify-center hover:text-[#f4d27a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]">
+              <BsSkipForwardFill aria-hidden="true" />
+            </button>
+            <button type="button" onClick={music.stop} aria-label="Stop music" className="w-8 h-8 flex items-center justify-center hover:text-[#f4d27a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]">
+              <BsStopFill aria-hidden="true" />
+            </button>
+          </div>
+        ) : null}
       </div>
     </aside>
   );

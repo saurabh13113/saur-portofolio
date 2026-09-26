@@ -3,7 +3,7 @@ import RoomHotspot from "@/components/room/RoomHotspot";
 import HiddenObject from "@/components/room/easter-eggs/HiddenObject";
 import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
 import PhotoFrame from "@/components/room/easter-eggs/PhotoFrame";
-import AudioObject from "@/components/room/easter-eggs/AudioObject";
+import AudioObject, { SpeakerObject } from "@/components/room/easter-eggs/AudioObject";
 import { AlbumHotspot } from "@/components/room/FamilyAlbum";
 import { ROOM_OBJECTS, PHOTOS } from "@/components/room/roomObjects";
 import { toScreen } from "@/components/room/projection";
@@ -20,6 +20,7 @@ function Hotspot({ o }) {
   if (o.kind === "cat") return <InteractiveCat style={style} />;
   if (o.kind === "album") return <AlbumHotspot label={o.label} style={style} />;
   if (o.kind === "photo") return <PhotoFrame images={PHOTOS} style={style} />;
+  if (o.kind === "speaker") return <SpeakerObject label={o.label} style={style} />;
   if (o.kind === "audio") return <AudioObject label={o.label} src={o.src} loop={o.loop} style={style} />;
   return <HiddenObject label={o.label} tooltip={o.tooltip} style={style} />;
 }

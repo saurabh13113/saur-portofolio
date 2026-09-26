@@ -68,9 +68,11 @@ function Part({ size, position, faces, see = false }) {
 }
 
 const flat = (color) => <meshLambertMaterial color={color} />;
+// Speech bubbles sit just above the avatar (left-aligned on phones, where the avatar hugs the edge).
+const SPEECH = "room-label absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 whitespace-normal w-max max-w-[240px]";
 const clamp = (v) => Math.max(-1, Math.min(1, v));
 
-function Me({ pointer, waveAt }) {
+function Me({ pointer, waveAt, typingAt, cheerAt }) {
   const head = useRef();
   const body = useRef();
   const armR = useRef();
@@ -105,15 +107,28 @@ function Me({ pointer, waveAt }) {
 
     head.current.rotation.set(y * 0.35, x * 0.6, 0);
     body.current.rotation.y = x * 0.15;
-    body.current.position.y = Math.sin(t * 2) * 0.15;
+    const cheering = t - (cheerAt.current ?? -9) < 1.8;
+    const typing = t - (typingAt.current ?? -9) < 0.6;
+    body.current.position.y = cheering ? Math.abs(Math.sin(t * 9)) * 2.5 : Math.sin(t * 2) * 0.15;
     // pupils slide across their 2-pixel eye whites
     pupils.current.forEach((m, i) => m && (m.position.x = (i ? 1.5 : -2.5) + (x + 1) / 2));
     // blink roughly every 4 seconds
     lids.current.visible = t % 4 < 0.12;
 
     const waving = t - (waveAt.current ?? -9) < 1.6;
-    armR.current.rotation.z = waving ? 2.6 + 0.35 * Math.sin(t * 14) : 0.04 * Math.sin(t * 1.5);
-    armL.current.rotation.z = -0.04 * Math.sin(t * 1.5);
+    const [r, l] = [armR.current.rotation, armL.current.rotation];
+    if (cheering) {
+      // both arms up, bouncing
+      r.set(0, 0, 2.8 + 0.2 * Math.sin(t * 12));
+      l.set(0, 0, -2.8 - 0.2 * Math.sin(t * 12));
+    } else if (typing) {
+      // arms forward, hands tapping an invisible keyboard
+      r.set(-1.3 + 0.15 * Math.sin(t * 22), 0, 0);
+      l.set(-1.3 + 0.15 * Math.sin(t * 22 + 1.5), 0, 0);
+    } else {
+      r.set(0, 0, waving ? 2.6 + 0.35 * Math.sin(t * 14) : 0.04 * Math.sin(t * 1.5));
+      l.set(0, 0, -0.04 * Math.sin(t * 1.5));
+    }
   });
 
   return (
@@ -177,23 +192,33 @@ function Shadow() {
   );
 }
 
-const TIPS = [
-  "Hi, I'm Saurabh! 👋",
-  "Everything in my room is clickable.",
-  "Psst, try the light switch by the door.",
-  "The cat doesn't bite. Mostly.",
-  "Click the keyboard for some music 🎹",
-  "The speaker on my desk has a playlist 🎵",
-  "Click the family photo above my monitors.",
-];
+// What I say, per page; the first line greets you when you arrive.
+const TIPS = {
+  "/": [
+    "Hi, I'm Saurabh! 👋",
+    "Everything in my room is clickable.",
+    "Psst, try the light switch by the door.",
+    "The cat doesn't bite. Mostly.",
+    "Click the keyboard for some music 🎹",
+    "The speaker on my desk has a playlist 🎵",
+    "Click the family photo above my monitors.",
+  ],
+  "/work": ["Here's what I've built!", "Use ← → to flip through projects.", "Every project has a shareable link."],
+  "/resume": ["The short version of my story.", "The full PDF is top right.", "Check the Skills tab for the XP bars."],
+  "/services": ["Need something built? I can help.", "Like what you see? Say hi on Contact."],
+  "/contact": ["Drop me a line! 👋", "I read every message.", "I'll type along while you write ✍️"],
+};
 
 // bubble: a speech bubble that stays up (inner pages: "click me to go home"); the
 // click is then handled by the link around the avatar instead of the wave button.
-export default function Avatar3D({ bubble = null }) {
+export default function Avatar3D({ bubble = null, page = "/" }) {
   const wrap = useRef(null);
   const pointer = useRef({ x: 0, y: 0, at: -99 });
   const clock = useRef(null);
   const waveAt = useRef(null);
+  const typingAt = useRef(null);
+  const cheerAt = useRef(null);
+  const tips = TIPS[page] ?? TIPS["/"];
   const [tip, setTip] = useState(null);
   const tipIdx = useRef(0);
   const timer = useRef(null);
@@ -215,12 +240,46 @@ export default function Avatar3D({ bubble = null }) {
     };
   }, []);
 
+  function say(text, ms = 2600) {
+    setTip(text);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setTip(null), ms);
+  }
+
   function greet() {
     waveAt.current = clock.current?.elapsedTime ?? 0;
-    setTip(TIPS[tipIdx.current++ % TIPS.length]);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setTip(null), 2600);
+    say(tips[tipIdx.current++ % tips.length]);
   }
+
+  // New page: wave hello with that page's first line (not on the very first load).
+  const firstPage = useRef(true);
+  useEffect(() => {
+    if (firstPage.current) {
+      firstPage.current = false;
+      return;
+    }
+    waveAt.current = clock.current?.elapsedTime ?? 0;
+    tipIdx.current = 1;
+    say(tips[0]);
+  }, [page]); // eslint-disable-line react-hooks/exhaustive-deps -- only on navigation
+
+  // Type along with any form on the page; cheer when the contact form sends
+  // (app/contact/page.jsx dispatches "avatar:cheer").
+  useEffect(() => {
+    const onInput = (e) => {
+      if (e.target.closest?.("form")) typingAt.current = clock.current?.elapsedTime ?? 0;
+    };
+    const onCheer = () => {
+      cheerAt.current = clock.current?.elapsedTime ?? 0;
+      say("Message sent! Talk soon 🎉", 3500);
+    };
+    window.addEventListener("input", onInput);
+    window.addEventListener("avatar:cheer", onCheer);
+    return () => {
+      window.removeEventListener("input", onInput);
+      window.removeEventListener("avatar:cheer", onCheer);
+    };
+  }, []);
 
   return (
     <div ref={wrap} className="relative w-full h-full">
@@ -238,18 +297,19 @@ export default function Avatar3D({ bubble = null }) {
         <ambientLight intensity={1.1} color="#fff4e6" />
         <directionalLight position={[-20, 40, 40]} intensity={1.6} color="#ffe2b8" />
         <directionalLight position={[30, 20, -30]} intensity={1.2} color="#6d8cff" />
-        <Me pointer={pointer} waveAt={waveAt} />
+        <Me pointer={pointer} waveAt={waveAt} typingAt={typingAt} cheerAt={cheerAt} />
         <Shadow />
       </Canvas>
-      {bubble ? (
-        <div aria-hidden="true" className="room-label absolute left-0 translate-x-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 w-max text-center">
-          {bubble}
-        </div>
-      ) : (
+      {bubble ? null : (
         <button type="button" onClick={greet} aria-label="Say hi to Saurabh" className="absolute inset-0 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
       )}
+      {bubble && !tip ? (
+        <div aria-hidden="true" className={SPEECH}>
+          {bubble}
+        </div>
+      ) : null}
       {tip ? (
-        <div role="status" className="room-label absolute left-1/2 top-0 opacity-100 whitespace-normal w-max max-w-[220px] text-center" style={{ transform: "translate(-50%, -30%)", bottom: "auto" }}>
+        <div role="status" className={SPEECH}>
           {tip}
         </div>
       ) : null}
