@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { BufferAttribute, CanvasTexture, Matrix4, MeshLambertMaterial } from "three";
+import { BufferAttribute, CanvasTexture, Matrix4, MeshLambertMaterial, NearestFilter, SRGBColorSpace } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 // { hovered, setHovered, activate } from Room3D.
@@ -19,6 +19,31 @@ export function B({ p, s, c, e, ei = 1, mref }) {
     <mesh ref={mref} position={[p[0] + s[0] / 2, p[1] + s[1] / 2, p[2] + s[2] / 2]} userData={e || mref ? { keep: true } : undefined}>
       <boxGeometry args={s} />
       <meshLambertMaterial color={c} emissive={e ?? (lit ? HIGHLIGHT : "#000000")} emissiveIntensity={e ? ei : 1} />
+    </mesh>
+  );
+}
+
+// A flat pixel-art picture on a wall (art = { px, draw } from art.js), placed by
+// its min corner like B. face "z" hangs it on the right wall (facing +z), "x" on
+// the left wall (facing +x); w runs along the wall, h up it. Flagged keep so
+// Merge doesn't bake away the texture.
+export function Pic({ p, w, h, art, face = "z" }) {
+  const lit = useContext(LitCtx);
+  const map = useMemo(() => {
+    const c = document.createElement("canvas");
+    [c.width, c.height] = art.px;
+    art.draw(c.getContext("2d"));
+    const t = new CanvasTexture(c);
+    t.magFilter = t.minFilter = NearestFilter;
+    t.generateMipmaps = false;
+    t.colorSpace = SRGBColorSpace;
+    return t;
+  }, [art]);
+  const x = face === "z";
+  return (
+    <mesh position={x ? [p[0] + w / 2, p[1] + h / 2, p[2]] : [p[0], p[1] + h / 2, p[2] + w / 2]} rotation={[0, x ? 0 : Math.PI / 2, 0]} userData={{ keep: true }}>
+      <planeGeometry args={[w, h]} />
+      <meshLambertMaterial map={map} emissive={lit ? HIGHLIGHT : "#000000"} />
     </mesh>
   );
 }

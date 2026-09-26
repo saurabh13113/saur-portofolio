@@ -5,14 +5,20 @@ import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
 import XpBar from "@/components/mc/XpBar";
 import { techIcon } from "@/components/mc/icons";
+import { FiDownload } from "react-icons/fi";
 
 export default function Resume() {
   return (
     <section className="container mx-auto py-12">
-      <Sign className="mb-8">Resume</Sign>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <Sign>Resume</Sign>
+        <a href="/assets/resume.pdf" download className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
+          <FiDownload aria-hidden="true" /> Download PDF
+        </a>
+      </div>
 
       <Tabs defaultValue="experience" className="flex flex-col xl:flex-row gap-10">
-        <TabsList className="flex xl:flex-col gap-2 h-max bg-transparent p-0">
+        <TabsList className="grid grid-cols-2 sm:flex xl:flex-col gap-2 h-max bg-transparent p-0">
           {["experience", "education", "skills", "about"].map((v) => (
             <TabsTrigger
               key={v}

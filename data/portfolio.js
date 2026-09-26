@@ -245,16 +245,6 @@ export const services = [
   { num: "04", title: "DevOps & Cloud Automation", description: "Jenkins / Docker / AWS / GCP pipelines that make releases repeatable instead of manual." },
 ];
 
-export const hotbar = [
-  { slot: 1, label: "Room", kind: "route", href: "/" },
-  { slot: 2, label: "Work", kind: "route", href: "/work" },
-  { slot: 3, label: "Resume", kind: "route", href: "/resume" },
-  { slot: 4, label: "Services", kind: "route", href: "/services" },
-  { slot: 5, label: "Contact", kind: "route", href: "/contact" },
-  { slot: 8, label: "Sound", kind: "sound", href: "" },
-  { slot: 9, label: "PDF", kind: "external", href: "/assets/resume.pdf" },
-];
-
 export function filterProjects(list, cat) {
   return cat === "All" ? list.slice() : list.filter((p) => p.category === cat);
 }

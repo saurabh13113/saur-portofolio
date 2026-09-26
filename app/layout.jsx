@@ -1,7 +1,7 @@
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-import Hotbar from "@/components/mc/Hotbar";
+import Sidebar from "@/components/room/Sidebar";
 import KonamiUnlock from "@/components/room/easter-eggs/KonamiUnlock";
 import ConsoleEasterEgg from "@/components/room/easter-eggs/ConsoleEasterEgg";
 
@@ -35,8 +35,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={jetbrainsMono.variable}>
-        {children}
-        <Hotbar />
+        {/* sidebar (3D me, name, socials) beside every page; the page fills the rest */}
+        <div className="mx-auto max-w-[1800px] px-4 lg:px-8 pt-3 grid gap-4 lg:gap-6 lg:grid-cols-[260px_1fr]">
+          <Sidebar />
+          <main className="min-w-0">{children}</main>
+        </div>
         <KonamiUnlock />
         <ConsoleEasterEgg />
       </body>

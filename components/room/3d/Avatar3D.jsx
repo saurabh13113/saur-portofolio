@@ -183,9 +183,13 @@ const TIPS = [
   "Psst, try the light switch by the door.",
   "The cat doesn't bite. Mostly.",
   "Click the keyboard for some music 🎹",
+  "The speaker on my desk has a playlist 🎵",
+  "Click the family photo above my monitors.",
 ];
 
-export default function Avatar3D() {
+// bubble: a speech bubble that stays up (inner pages: "click me to go home"); the
+// click is then handled by the link around the avatar instead of the wave button.
+export default function Avatar3D({ bubble = null }) {
   const wrap = useRef(null);
   const pointer = useRef({ x: 0, y: 0, at: -99 });
   const clock = useRef(null);
@@ -237,7 +241,13 @@ export default function Avatar3D() {
         <Me pointer={pointer} waveAt={waveAt} />
         <Shadow />
       </Canvas>
-      <button type="button" onClick={greet} aria-label="Say hi to Saurabh" className="absolute inset-0 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
+      {bubble ? (
+        <div aria-hidden="true" className="room-label absolute left-0 translate-x-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 w-max text-center">
+          {bubble}
+        </div>
+      ) : (
+        <button type="button" onClick={greet} aria-label="Say hi to Saurabh" className="absolute inset-0 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
+      )}
       {tip ? (
         <div role="status" className="room-label absolute left-1/2 top-0 opacity-100 whitespace-normal w-max max-w-[220px] text-center" style={{ transform: "translate(-50%, -30%)", bottom: "auto" }}>
           {tip}

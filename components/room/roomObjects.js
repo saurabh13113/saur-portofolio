@@ -1,7 +1,17 @@
 // Every clickable thing in the room, shared by the 3D room (Room3D) and the
 // picture fallback (RoomImage). anchor: [x, y, z] world point where the
 // object's label/tooltip (and, in the picture, its hotspot) sits.
-// kind: nav (link) | egg (tooltip) | audio | cat | photo | switch (day/night)
+// kind: nav (link) | egg (tooltip) | audio | cat | photo | album (family carousel) | switch (day/night)
+
+// Background music for the desk speaker: plays through in order, round and round.
+// Drop mp3s in public/music/ and list them here.
+export const PLAYLIST = [{ title: "Lofi loop", src: "/sfx/speaker-loop.mp3" }];
+
+// The family photo on the wall opens this carousel. Drop pictures in public/assets/family/.
+export const FAMILY = [
+  { src: "/assets/photo.jpg", caption: "Me" },
+];
+
 export const ROOM_OBJECTS = [
   { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
   { id: "resume", kind: "nav", label: "Resume", href: "/resume", anchor: [0.2, 2.05, 2.05] },
@@ -23,13 +33,16 @@ export const ROOM_OBJECTS = [
   { id: "coffee", kind: "egg", label: "Instant coffee", tooltip: "Instant coffee: fuel of champions (and deadlines).", anchor: [2.45, 1.05, 0.4] },
   { id: "soccer", kind: "egg", label: "Soccer ball", tooltip: "Weekend footy. Still chasing that top-bins finish.", anchor: [3.51, 0.45, 4.66] },
   { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Table tennis: undefeated in the common room. Allegedly.", anchor: [5.05, 0.95, 4.12] },
+  { id: "messi", kind: "egg", label: "Messi jersey", tooltip: "Argentina #10, framed. The GOAT debate is closed.", anchor: [0.05, 1.7, 4.85] },
+  { id: "bleach", kind: "egg", label: "Bleach poster", tooltip: "Bankai! Ichigo & Zangetsu, all-time favourite anime.", anchor: [2.24, 1.9, 0.03] },
   { id: "ps4", kind: "egg", label: "PS4", tooltip: "PS4 plugged in. FIFA rematch, anyone?", anchor: [5.08, 1.0, 3.85] },
 
   { id: "lights", kind: "switch", label: "Light switch", anchor: [0.05, 1.5, 3.95] },
   { id: "cat", kind: "cat", label: "Pet the cat", anchor: [4.75, 1.45, 0.1] },
+  { id: "family", kind: "album", label: "Family photos", anchor: [1.3, 2.05, 0.05] },
   { id: "photo", kind: "photo", label: "A photo", anchor: [2.36, 1.0, 0.07] },
   { id: "music", kind: "audio", label: "Play a favorite piece", src: "/sfx/keyboard-piece.mp3", anchor: [4.4, 0.6, 0.5] },
-  { id: "song", kind: "audio", label: "Play a song on loop", src: "/sfx/speaker-loop.mp3", loop: true, anchor: [2.75, 0.6, 0.62] },
+  { id: "song", kind: "audio", label: "Speaker: play music", src: PLAYLIST.map((t) => t.src), loop: true, anchor: [2.52, 1.0, 0.1] },
 ];
 
 export const CAT_REACTIONS = ["Mrow?", "purrrr", "*stretches*", "not now, human"];

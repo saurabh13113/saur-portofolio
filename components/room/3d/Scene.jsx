@@ -1,7 +1,8 @@
 "use client";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { B, Obj, Merge, Shadow } from "./parts";
+import { B, Obj, Merge, Shadow, Pic } from "./parts";
+import { FAMILY_ART, MESSI_ART, BLEACH_ART } from "./art";
 
 // Room: floor 6 x 6 (metres-ish), walls 2.8 tall. Back corner at the origin.
 // Left wall = plane x=0 (door, bookshelf, bed); right wall = plane z=0 (desk, window).
@@ -201,6 +202,7 @@ function Desk({ reduce, songPlaying, day }) {
   const lamp = useRef();
   const leds = useRef([]);
   const steam = useRef([]);
+  const cone = useRef();
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
     if (lamp.current) lamp.current.intensity = (day ? 0.8 : 5) * (reduce ? 1 : 1 + 0.04 * wave(t, 7) + 0.03 * wave(t, 23));
@@ -208,6 +210,7 @@ function Desk({ reduce, songPlaying, day }) {
       if (!m) return;
       m.material.emissiveIntensity = songPlaying ? 0.6 + 0.6 * Math.abs(wave(t, 6, i)) : 0.7 + (reduce ? 0 : 0.15 * wave(t, 1.5, i));
     });
+    if (cone.current) cone.current.scale.setScalar(songPlaying && !reduce ? 1 + 0.15 * Math.abs(wave(t, 9)) : 1);
     steam.current.forEach((m, i) => {
       if (!m || reduce) return;
       const k = (t * 0.5 + i / 3) % 1;
@@ -238,12 +241,30 @@ function Desk({ reduce, songPlaying, day }) {
       <B p={[0.08, 1.12, 0.1]} s={[0.22, 0.12, 0.22]} c={C.amber} e={C.glow} ei={day ? 0.25 : 0.9} />
       <pointLight ref={lamp} position={[0.3, 1.0, 0.35]} color="#ffb35c" intensity={5} distance={4.5} decay={1.6} />
       <pointLight position={[1.3, 1.15, 0.75]} color="#7cc0ff" intensity={4} distance={3} decay={1.6} />
-      {/* PC tower */}
+      {/* PC tower: its LEDs pulse along with the speaker */}
+      <B p={[2.62, 0, 0.1]} s={[0.26, 0.52, 0.5]} c="#1b1c22" />
+      <B mref={(m) => (leds.current[0] = m)} p={[2.66, 0.04, 0.6]} s={[0.03, 0.44, 0.012]} c={C.blue} e={C.blue} />
+      <B mref={(m) => (leds.current[1] = m)} p={[2.881, 0.3, 0.2]} s={[0.005, 0.15, 0.15]} c="#3aa0ff" e="#3aa0ff" />
+      <B mref={(m) => (leds.current[2] = m)} p={[2.881, 0.1, 0.2]} s={[0.005, 0.15, 0.15]} c="#3aa0ff" e="#3aa0ff" />
+      {/* desk speaker: the playlist */}
       <Obj id="song">
-        <B p={[2.62, 0, 0.1]} s={[0.26, 0.52, 0.5]} c="#1b1c22" />
-        <B mref={(m) => (leds.current[0] = m)} p={[2.66, 0.04, 0.6]} s={[0.03, 0.44, 0.012]} c={C.blue} e={C.blue} />
-        <B mref={(m) => (leds.current[1] = m)} p={[2.881, 0.3, 0.2]} s={[0.005, 0.15, 0.15]} c="#3aa0ff" e="#3aa0ff" />
-        <B mref={(m) => (leds.current[2] = m)} p={[2.881, 0.1, 0.2]} s={[0.005, 0.15, 0.15]} c="#3aa0ff" e="#3aa0ff" />
+        <B p={[2.46, 0.77, 0.03]} s={[0.12, 0.22, 0.12]} c="#26262d" />
+        <group ref={cone} position={[2.52, 0.845, 0.152]} userData={{ live: true }}>
+          <B p={[-0.035, -0.035, 0]} s={[0.07, 0.07, 0.004]} c="#111114" />
+          <B p={[-0.012, -0.012, 0.004]} s={[0.024, 0.024, 0.004]} c="#3a3a44" />
+        </group>
+        <B p={[2.508, 0.93, 0.151]} s={[0.024, 0.024, 0.004]} c="#3a3a44" />
+        <B p={[2.47, 0.79, 0.151]} s={[0.012, 0.012, 0.003]} c={songPlaying ? "#2ecc71" : "#55555e"} e={songPlaying ? "#2ecc71" : undefined} />
+      </Obj>
+      {/* family photo on the wall above the monitors */}
+      <Obj id="family">
+        <B p={[0.9, 1.75, 0]} s={[0.8, 0.58, 0.03]} c={C.darkWood} />
+        <Pic p={[0.94, 1.79, 0.032]} w={0.72} h={0.5} art={FAMILY_ART} />
+      </Obj>
+      {/* Bleach poster */}
+      <Obj id="bleach">
+        <B p={[1.96, 1.46, 0]} s={[0.56, 0.8, 0.02]} c="#141418" />
+        <Pic p={[1.98, 1.48, 0.022]} w={0.52} h={0.76} art={BLEACH_ART} />
       </Obj>
       {/* photo, coffee, student ID */}
       <Obj id="photo">
@@ -417,6 +438,11 @@ function BedCorner({ reduce, day }) {
         <B p={[0.21, 0.55, 4.06]} s={[0.16, 0.04, 0.18]} c="#6a6a70" />
       </Obj>
       <pointLight ref={lamp} position={[0.35, 0.8, 4.1]} color="#ffb35c" intensity={2.5} distance={3} decay={1.6} />
+      {/* Messi's Argentina #10, framed over the bed */}
+      <Obj id="messi">
+        <B p={[0, 1.2, 4.45]} s={[0.03, 0.9, 0.8]} c="#141418" />
+        <Pic p={[0.032, 1.24, 4.49]} w={0.72} h={0.82} art={MESSI_ART} face="x" />
+      </Obj>
       <Obj id="bed">
         <B p={[0, 0, 4.3]} s={[2.0, 0.3, 1.15]} c="#6b4428" />
         <B p={[0, 0.3, 4.3]} s={[0.07, 0.55, 1.15]} c="#6b4428" />

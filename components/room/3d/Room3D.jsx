@@ -8,7 +8,8 @@ import Scene from "./Scene";
 import { RoomCtx } from "./parts";
 import { makeCamera } from "./camera";
 import { toScreen, TARGET } from "@/components/room/projection";
-import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS } from "@/components/room/roomObjects";
+import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS, PLAYLIST } from "@/components/room/roomObjects";
+import FamilyAlbum from "@/components/room/FamilyAlbum";
 import { PixelPhoto } from "@/components/room/easter-eggs/PhotoFrame";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
 import RoomImage from "@/components/room/RoomImage";
@@ -58,12 +59,13 @@ export default function Room3D() {
   const [tip, setTip] = useState(null); // { id, text } | { id, photo }
   const [focus, setFocus] = useState(null);
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [album, setAlbum] = useState(false);
   const catJumpAt = useRef(null);
   const clock = useRef(null);
   const tipTimer = useRef(null);
   const reduce = useMemo(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
   const music = useToggleAudio(BY_ID.music.src);
-  const song = useToggleAudio(BY_ID.song.src, true);
+  const song = useToggleAudio(BY_ID.song.src, BY_ID.song.loop);
 
   const activate = useCallback(
     (id) => {
@@ -86,6 +88,9 @@ export default function Room3D() {
         setDay((d) => !d);
         setTip({ id, text: day ? "Night mode 🌙" : "Good morning ☀️" });
         tipTimer.current = setTimeout(() => setTip(null), 1500);
+      } else if (o.kind === "album") {
+        setTip(null);
+        setAlbum(true);
       } else if (o.kind === "photo") {
         setPhotoIdx((i) => (tip?.id === "photo" ? (i + 1) % PHOTOS.length : i));
         setTip({ id, photo: true });
@@ -159,7 +164,7 @@ export default function Room3D() {
 
       {tip && !focus ? (
         <div role="status" className="room-label room3d-tip" style={screen[tip.id]}>
-          {tip.photo ? <PixelPhoto src={PHOTOS[photoIdx]} /> : tip.text}
+          {tip.photo ? <PixelPhoto src={PHOTOS[photoIdx]} /> : tip.id === "song" && song.playing ? `♪ ${PLAYLIST[song.track].title} (click to stop)` : tip.text}
         </div>
       ) : null}
       {hovered && !tip && BY_ID[hovered].kind !== "nav" ? (
@@ -168,6 +173,7 @@ export default function Room3D() {
         </div>
       ) : null}
 
+      <FamilyAlbum open={album} onClose={() => setAlbum(false)} />
       {!ready ? <RoomImage /> : null}
     </div>
   );

@@ -185,3 +185,7 @@ html[data-easter="unlocked"] {
     .room-notes { animation: none; }
   }
 }
+
+.family-album::backdrop {
+  background: rgba(10, 8, 16, 0.75);
+}
