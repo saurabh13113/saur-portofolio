@@ -30,11 +30,11 @@ export default function Hotbar() {
   if (pathname === "/") return null;
 
   return (
-    <nav data-mc-hit className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-1 p-1 mc-bevel tex-stone">
+    <nav className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-1 p-1 mc-bevel tex-stone">
       {hotbar.map((s) => {
         const active = s.kind === "route" && s.href === pathname;
         const cls = `w-14 h-14 mc-bevel tex-dirt flex flex-col items-center justify-center font-mc text-[10px] leading-tight text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
-          active ? "outline outline-2 outline-white" : ""
+          active ? "outline outline-2 outline-[#f4d27a]" : ""
         }`;
         const label = s.kind === "sound" ? (muted ? "OFF" : "ON") : s.label;
         const inner = (
@@ -49,7 +49,6 @@ export default function Hotbar() {
               key={s.slot}
               type="button"
               aria-label={`Sound ${muted ? "off" : "on"}`}
-              data-mc-activate
               className={cls}
               onClick={() => {
                 play("click");

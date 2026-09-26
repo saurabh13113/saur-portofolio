@@ -1,10 +1,9 @@
+// Page title, with a small glowing square echoing the desk lamp in the room.
 export default function Sign({ className = "", children, ...rest }) {
   return (
-    <div
-      className={`inline-block mc-bevel tex-plank px-6 py-3 font-mc text-2xl text-[#f4e4c1] shadow-[0_6px_0_rgba(0,0,0,0.4)] ${className}`}
-      {...rest}
-    >
+    <h1 className={`inline-flex items-center gap-3 font-mc text-3xl text-[#f4e4c1] ${className}`} {...rest}>
+      <span aria-hidden="true" className="w-3 h-3 bg-[#f4d27a] shadow-[0_0_14px_4px_rgba(244,210,122,0.45)]" />
       {children}
-    </div>
+    </h1>
   );
 }

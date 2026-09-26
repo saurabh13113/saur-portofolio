@@ -13,16 +13,14 @@ export default function Chest({ project }) {
         <button
           type="button"
           onClick={() => play("orb")}
-          data-mc-bump
           className={`group relative mc-bevel tex-plank p-4 text-left w-full h-full focus:outline focus:outline-2 focus:outline-white ${
             project.featured ? "sm:col-span-2" : ""
           }`}
         >
-          <span className="mc-crack" aria-hidden="true" />
           <div className="font-mc text-[11px] text-[#d9b98a] uppercase">{project.category}</div>
           <div className="font-mc text-lg text-[#f4e4c1] mt-1">{project.title}</div>
           <p className="text-sm text-white/75 mt-2 line-clamp-3 font-primary">{project.blurb}</p>
-          <span className="absolute right-3 top-3 text-xl opacity-70 group-hover:opacity-100">▦</span>
+          <span className="absolute right-3 top-3 text-xl opacity-70 group-hover:opacity-100 text-[#f4d27a]" aria-hidden="true">+</span>
         </button>
       </SheetTrigger>
       <SheetContent

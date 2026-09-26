@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 // Invisible link over a drawn object. On click the whole room zooms into the
 // object, then navigates.
-export default function RoomHotspot({ href, label, below = false, style }) {
+export default function RoomHotspot({ href, label, style }) {
   const router = useRouter();
 
   function handleClick(e) {
@@ -22,7 +22,7 @@ export default function RoomHotspot({ href, label, below = false, style }) {
 
   return (
     <Link href={href} onClick={handleClick} aria-label={label} className="room-hotspot" style={style}>
-      <span className={`room-label room-label--nav${below ? " room-label--below" : ""}`}>{label}</span>
+      <span className="room-label room-label--nav">{label}</span>
     </Link>
   );
 }

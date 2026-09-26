@@ -9,7 +9,7 @@ import { techIcon } from "@/components/mc/icons";
 export default function Resume() {
   return (
     <section className="container mx-auto py-12">
-      <Sign className="mb-8">Inventory</Sign>
+      <Sign className="mb-8">Resume</Sign>
 
       <Tabs defaultValue="experience" className="flex flex-col xl:flex-row gap-10">
         <TabsList className="flex xl:flex-col gap-2 h-max bg-transparent p-0">
@@ -17,7 +17,7 @@ export default function Resume() {
             <TabsTrigger
               key={v}
               value={v}
-              className="mc-bevel tex-dirt font-mc text-sm px-4 py-3 text-[#f4e4c1] capitalize data-[state=active]:outline data-[state=active]:outline-2 data-[state=active]:outline-white"
+              className="mc-bevel tex-dirt font-mc text-sm px-4 py-3 text-[#f4e4c1] capitalize data-[state=active]:outline data-[state=active]:outline-2 data-[state=active]:outline-[#f4d27a]"
             >
               {v}
             </TabsTrigger>

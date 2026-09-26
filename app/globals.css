@@ -24,112 +24,46 @@
   }
 }
 
-@font-face {
-  font-family: "Monocraft";
-  src: url("/fonts/Monocraft.ttf") format("truetype");
-  font-display: swap;
-}
-
 @layer base {
   html {
     image-rendering: pixelated;
   }
+  /* a faint warm glow at the top of every page, like the desk lamp in the room */
+  body {
+    background-image: radial-gradient(1100px 480px at 50% -8%, rgba(244, 210, 122, 0.07), transparent 70%);
+    background-attachment: fixed;
+  }
 }
 
+/* Panels and buttons in the room's style: flat night surfaces, a warm lamp-amber
+   border and a hard pixel drop shadow. (Class names are from the older Minecraft
+   theme; the components still use them.) */
 @layer components {
   .mc-bevel {
-    border-style: solid;
-    border-width: 4px;
-    border-top-color: rgba(255, 255, 255, 0.35);
-    border-left-color: rgba(255, 255, 255, 0.35);
-    border-right-color: rgba(0, 0, 0, 0.45);
-    border-bottom-color: rgba(0, 0, 0, 0.45);
+    border: 2px solid rgba(244, 210, 122, 0.22);
     border-radius: 0;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  }
+  a.mc-bevel:hover,
+  button.mc-bevel:hover {
+    border-color: rgba(244, 210, 122, 0.6);
   }
   .mc-bevel--pressed {
-    border-top-color: rgba(0, 0, 0, 0.45);
-    border-left-color: rgba(0, 0, 0, 0.45);
-    border-right-color: rgba(255, 255, 255, 0.25);
-    border-bottom-color: rgba(255, 255, 255, 0.25);
     transform: translate(2px, 2px);
-  }
-
-  .tex-dirt {
-    background-color: #4a3222;
-    background-image:
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 6px, transparent 6px 12px),
-      var(--noise);
-  }
-  .tex-stone {
-    background-color: #4a4a4a;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.10) 0 5px, transparent 5px 10px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 5px, transparent 5px 10px),
-      var(--noise);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
   }
   .tex-plank {
-    background-color: #5f4227;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 1px, transparent 1px 14px),
-      repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 40px, rgba(255,255,255,0.05) 40px 42px),
-      var(--noise);
+    background-color: #2e2638;
+  }
+  .tex-stone {
+    background-color: #221f2d;
+  }
+  .tex-dirt {
+    background-color: #2a2636;
   }
   .tex-obsidian {
-    background-color: #14121c;
-    background-image:
-      repeating-linear-gradient(45deg, rgba(120,80,200,0.10) 0 4px, transparent 4px 8px),
-      var(--noise);
+    background-color: #17151f;
   }
-
-  .mc-crack {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg stroke='black' stroke-width='2' fill='none' opacity='0.55'%3E%3Cpath d='M32 0 L30 14 L36 22 L28 34 L34 46 L31 64'/%3E%3Cpath d='M30 14 L16 18 M36 22 L50 16 M28 34 L14 40 M34 46 L49 52'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 100% 100%;
-    transition: opacity 0.12s steps(3);
-  }
-  .group:hover > .mc-crack {
-    opacity: 0.85;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mc-crack { transition: none; }
-  }
-
-  .mc-char {
-    font-size: 26px;
-    line-height: 1;
-    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.4));
-    will-change: left, bottom, transform;
-  }
-
-  @keyframes mc-bump-wiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-3deg); }
-    75% { transform: rotate(3deg); }
-  }
-  .mc-bumped {
-    animation: mc-bump-wiggle 0.4s ease-in-out;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mc-bumped { animation: none; }
-  }
-
-  @keyframes mc-lamp-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
-  }
-  .mc-lamp {
-    animation: mc-lamp-flicker 3s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mc-lamp { animation: none; }
-  }
-}
-
-:root {
-  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='16' height='16' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
 }
 
 html[data-easter="unlocked"] {
@@ -139,33 +73,6 @@ html[data-easter="unlocked"] {
 
 /* --- Room scene overlays (components/room) --- */
 @layer components {
-  .room-fx {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .room-rain {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='28'%3E%3Cpath d='M3 0v6M10 14v6' stroke='%23a8c0ff' stroke-opacity='.45' stroke-width='1.5'/%3E%3C/svg%3E");
-    animation: room-rain 0.5s steps(4) infinite;
-  }
-  @keyframes room-rain {
-    to { background-position: -4px 28px; }
-  }
-  .room-screen {
-    inset: auto;
-    background: radial-gradient(ellipse at center, #7fd4ff, transparent 70%);
-    mix-blend-mode: screen;
-    animation: room-screen 3s steps(3) infinite;
-  }
-  @keyframes room-screen {
-    0%, 100% { opacity: 0.04; }
-    50% { opacity: 0.14; }
-  }
-  .room-lamp {
-    inset: auto;
-    background: radial-gradient(ellipse at center, rgba(255, 217, 138, 0.18), transparent 70%);
-    mix-blend-mode: screen;
-  }
 
   .room-hotspot {
     position: absolute;
@@ -208,21 +115,47 @@ html[data-easter="unlocked"] {
   .room-label--nav {
     opacity: 0.8;
   }
-  .room-label--below {
-    bottom: auto;
-    top: 100%;
-    transform: translate(-50%, 6px);
-  }
-  /* fade the render's square edges into the page background */
-  .room-img {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
-    mask-composite: intersect;
-  }
   .room-hotspot:hover .room-label,
   .room-hotspot:focus-visible .room-label {
     opacity: 1;
+  }
+  /* 3D room (components/room/3d) */
+  .room3d canvas {
+    image-rendering: pixelated;
+  }
+  .room3d-spot {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .room3d-spot.is-nav,
+  .room3d-spot.is-nav .room-label {
+    pointer-events: auto;
+  }
+  .room-poster .room-label--nav,
+  .room3d-spot .room-label {
+    bottom: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @media (max-width: 640px) {
+    .room3d-spot .room-label,
+    .room-poster .room-label,
+    .room3d-tip {
+      font-size: 9px;
+      padding: 0 3px;
+      border-width: 1px;
+    }
+  }
+  .room3d-spot:focus-visible {
+    outline: 2px dashed #f4d27a;
+  }
+  .room3d-tip {
+    bottom: auto;
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 12px));
   }
   .room-notes {
     position: absolute;
@@ -237,6 +170,6 @@ html[data-easter="unlocked"] {
     50% { transform: translate(-50%, -6px); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .room-rain, .room-screen, .room-notes { animation: none; }
+    .room-notes { animation: none; }
   }
 }

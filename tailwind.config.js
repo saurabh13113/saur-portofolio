@@ -21,14 +21,14 @@ module.exports = {
       },
       fontFamily: {
         primary: "var(--font-jetbrainsMono)",
-        mc: ["Monocraft", "var(--font-jetbrainsMono)", "monospace"],
+        mc: ["var(--font-jetbrainsMono)", "monospace"],
       },
     extend: {
       colors: {
         primary: '#1c1c22',
         accent: {
-          DEFAULT: '#00ff99',
-          hover: '#00e187',
+          DEFAULT: '#f4d27a',
+          hover: '#e0b25a',
         },
         grass: { DEFAULT: "#7cb342", dark: "#5b8a3c" },
         dirt: { DEFAULT: "#866043", dark: "#6b4a32" },
@@ -37,7 +37,7 @@ module.exports = {
         redstone: "#d13a2b",
         emerald: "#2ecc71",
         obsidian: "#14121c",
-        xp: "#7cff2f",
+        xp: "#f4d27a",
       },
       keyframes: {
         "accordion-down": {

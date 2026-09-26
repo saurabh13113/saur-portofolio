@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
+import { CAT_REACTIONS as REACTIONS } from "@/components/room/roomObjects";
 
-const REACTIONS = ["Mrow?", "purrrr", "*stretches*", "not now, human"];
 
 export default function InteractiveCat({ style }) {
   const [reaction, setReaction] = useState(null);

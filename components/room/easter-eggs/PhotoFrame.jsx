@@ -1,13 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-// The little photo on the desk: click to pop it out as pixel art, click again for the next one.
-export default function PhotoFrame({ images, style }) {
-  const [index, setIndex] = useState(null);
+// A photo drawn into a tiny canvas and scaled up, so it reads as pixel art.
+export function PixelPhoto({ src }) {
   const canvas = useRef(null);
 
   useEffect(() => {
-    if (index === null) return;
     const img = new Image();
     img.onload = () => {
       const c = canvas.current;
@@ -15,8 +13,15 @@ export default function PhotoFrame({ images, style }) {
       const s = Math.max(c.width / img.width, c.height / img.height); // cover-crop
       c.getContext("2d").drawImage(img, (c.width - img.width * s) / 2, (c.height - img.height * s) / 2, img.width * s, img.height * s);
     };
-    img.src = images[index];
-  }, [images, index]);
+    img.src = src;
+  }, [src]);
+
+  return <canvas ref={canvas} width={32} height={40} className="block w-24 h-[120px]" style={{ imageRendering: "pixelated" }} />;
+}
+
+// The little photo on the desk: click to pop it out, click again for the next one.
+export default function PhotoFrame({ images, style }) {
+  const [index, setIndex] = useState(null);
 
   return (
     <button
@@ -28,11 +33,7 @@ export default function PhotoFrame({ images, style }) {
       style={style}
     >
       <span className="room-label" style={index === null ? undefined : { opacity: 1 }}>
-        {index === null ? (
-          "A photo"
-        ) : (
-          <canvas ref={canvas} width={32} height={40} className="block w-24 h-[120px]" style={{ imageRendering: "pixelated" }} />
-        )}
+        {index === null ? "A photo" : <PixelPhoto src={images[index]} />}
       </span>
     </button>
   );

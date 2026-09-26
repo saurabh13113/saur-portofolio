@@ -59,7 +59,7 @@ export default function Contact() {
 
   return (
     <section className="container mx-auto py-12">
-      <Sign className="mb-8">Book &amp; Quill</Sign>
+      <Sign className="mb-8">Contact</Sign>
 
       <div className="flex flex-col xl:flex-row gap-8">
         <Panel as="form" tex="stone" className="p-8 flex flex-col gap-5 text-[#f4e4c1] xl:w-[60%]" onSubmit={handleSubmit}>
@@ -81,12 +81,12 @@ export default function Contact() {
             </p>
           ) : null}
           <Select value={trade} onValueChange={setTrade}>
-            <SelectTrigger aria-label="Pick a trade" className="mc-bevel bg-obsidian rounded-none">
-              <SelectValue placeholder="Pick a trade" />
+            <SelectTrigger aria-label="Pick a service" className="mc-bevel bg-obsidian rounded-none">
+              <SelectValue placeholder="Pick a service" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Trades</SelectLabel>
+                <SelectLabel>Services</SelectLabel>
                 {services.map((s) => (
                   <SelectItem key={s.num} value={s.num}>{s.title}</SelectItem>
                 ))}

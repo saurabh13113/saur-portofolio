@@ -18,7 +18,7 @@ export default function Work() {
       animate={{ opacity: 1, transition: { delay: 0.4, duration: 0.4 } }}
       className="container mx-auto py-12"
     >
-      <Sign>Builds</Sign>
+      <Sign>Work</Sign>
 
       <div className="flex flex-wrap gap-1 mt-6 p-1 mc-bevel tex-stone w-max max-w-full">
         {CATEGORIES.map((c) => (
@@ -27,7 +27,7 @@ export default function Work() {
             type="button"
             onClick={() => setCat(c)}
             className={`mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
-              cat === c ? "outline outline-2 outline-white" : ""
+              cat === c ? "outline outline-2 outline-[#f4d27a]" : ""
             }`}
           >
             {c}

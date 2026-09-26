@@ -5,7 +5,7 @@ import Panel from "@/components/mc/Panel";
 export default function Services() {
   return (
     <section className="container mx-auto py-12">
-      <Sign className="mb-8">Trades</Sign>
+      <Sign className="mb-8">Services</Sign>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {services.map((s) => (
           <Panel key={s.num} tex="stone" className="p-6 text-[#f4e4c1]">

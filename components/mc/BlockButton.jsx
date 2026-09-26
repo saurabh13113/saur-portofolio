@@ -27,7 +27,6 @@ export default function BlockButton({
       }}
       {...rest}
     >
-      <span className="mc-crack" aria-hidden="true" />
       {children}
     </button>
   );

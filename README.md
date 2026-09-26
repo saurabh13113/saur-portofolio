@@ -33,37 +33,57 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Theme: "Saurabh's Room"
 
-The home page is a single isometric, voxel/pixel-art bedroom at night, with a
-lofi-girl mood. The camera looks down from the top of the near corner, and I'm
-coding at a triple-monitor desk in the far corner. Everything clickable in the
-room leads to part of the portfolio. There's no game engine and no 3D runtime:
-it's one optimized image (`public/assets/room.png`, served as WebP/AVIF by
-`next/image`) with invisible, accessible hotspots and a few CSS effects on top.
+The home page is a real 3D, voxel/pixel-art bedroom with a lofi-girl mood.
+The camera looks down from the top of the near corner, and I'm coding at a
+triple-monitor desk in the far corner. Everything clickable in the room leads
+to part of the portfolio. The inner pages (Work, Resume, Services, Contact)
+use the same cozy night palette with lamp-amber accents.
+
+- **3D room** (`components/room/3d/`): three.js via `@react-three/fiber`,
+  built entirely from boxes in code. It uses a fixed isometric camera and
+  renders at 420px wide, scaled up without smoothing, which gives the pixel look.
+  - **Interaction:** objects glow on hover, and clicking a page object zooms the camera into it before navigating.
+  - **Motion:** typing hands, the cat's tail, scrolling code, rain, lamp flicker, coffee steam, and PC LEDs and piano keys that light up while music plays.
+  - **Day/night:** a light switch by the door flips the room to daytime.
+  - **Shadows:** soft blob shadows sit under the furniture.
+  - **Performance:** static boxes are merged into a few meshes, and rendering pauses while the room is off-screen.
+- **Loading picture and fallback** (`components/room/RoomImage.jsx`): a
+  snapshot of the 3D room (`public/assets/room-poster.png`, 74 KB) taken with
+  the same camera. It shows instantly while three.js downloads (about 175 KB
+  gzipped, loaded after the page is up), so the swap to 3D is seamless. It
+  also stays in place without WebGL or if the 3D room crashes.
 
 ### Room map
 
-| Object in the render | Goes to / does |
+| Object | Goes to / does |
 |---|---|
 | Triple monitors | `/work` |
 | Bookshelf | `/resume` |
-| Dresser books (Algorithms, Data Structures...) | `/resume` (skills) |
+| Dresser books | `/resume` (skills) |
 | Door | `/services` |
 | Me at the desk | `/contact` ("Say hi") |
-| UTM pennant, trophy shelf, poster, backpack, bed, nightstand books, hoodie, beanbag, laundry basket, student ID | Easter-egg tooltips |
+| Light switch by the door | Day / night |
+| Keyboard on the stand by the window | Plays a favorite piece; keys light up (never autoplays) |
+| PC tower | Plays a song on loop |
 | Cat on the window sill | Pet it |
 | Little photo on the desk | Pops my photos out as pixel art |
-| Desk keyboard / PC tower | Play a favorite piece / a song on loop (never autoplays) |
-
-Live effects are pure CSS in `app/globals.css` (`.room-*`): rain on the window,
-the monitors' glow pulsing, and the lamps flickering.
+| UTM pennant, trophy shelf, Abu Dhabi poster, UAE flag, backpack, bed, nightstand books, hoodie, beanbag, laundry basket, student ID, instant coffee, soccer ball, table-tennis paddle, PS4 | Easter-egg tooltips |
 
 ### Editing the room
 
-- Hotspot positions are `[left, top, width, height]` percentages of the
-  square image, in `components/room/Room.jsx`. If the art is regenerated,
-  re-measure them. Hover outlines show where each hotspot sits.
-- Content still lives in `data/portfolio.js` (transcribed from
-  `public/assets/resume.pdf`). Blocky UI primitives are in `components/mc/`.
+- Every clickable object is one entry in `components/room/roomObjects.js`,
+  with its label, link or tooltip, and an `anchor` (the 3D point where its
+  label sits). The picture version places its hotspots on the same anchors.
+- Geometry is in `components/room/3d/Scene.jsx`. `<B p={[x,y,z]} s={[w,h,d]} c="#hex" />`
+  is a box placed by its corner. `<Obj id="...">` groups boxes into one
+  clickable object whose `id` matches a `roomObjects.js` entry. The room is
+  6 × 6 × 2.8 units, with the back corner at the origin: the left wall is
+  x=0 and the right wall is z=0.
+  - Boxes are merged automatically.
+  - Anything that animates or changes between day and night needs `mref`, an emissive `e` colour, or a parent group with `userData={{ live: true }}`.
+- **After changing the scene, regenerate the loading picture:** run `npm run build && npm start`, then run `npm run poster` in a second terminal. The script uses your installed Edge; set `CHROME_PATH` to use another Chrome-based browser.
+- `test/room3d.test.mjs` checks that every label lands on screen, and that the plain-math projection matches the real camera.
+- Content still lives in `data/portfolio.js` (transcribed from `public/assets/resume.pdf`).
 
-Optional assets (the site degrades gracefully without them): `public/fonts/Monocraft.ttf`,
-`public/sfx/{click,break,orb}.mp3`, `public/sfx/{keyboard-piece,speaker-loop}.mp3`.
+Optional assets (the site degrades gracefully without them):
+`public/sfx/{click,orb}.mp3` and `public/sfx/{keyboard-piece,speaker-loop}.mp3`.
