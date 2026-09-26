@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 // A photo drawn into a tiny canvas and scaled up, so it reads as pixel art.
-export function PixelPhoto({ src }) {
+export function PixelPhoto({ src, className = "block w-24 h-[120px]" }) {
   const canvas = useRef(null);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export function PixelPhoto({ src }) {
     img.src = src;
   }, [src]);
 
-  return <canvas ref={canvas} width={32} height={40} className="block w-24 h-[120px]" style={{ imageRendering: "pixelated" }} />;
+  return <canvas ref={canvas} width={32} height={40} className={className} style={{ imageRendering: "pixelated" }} />;
 }
 
 // The little photo on the desk: click to pop it out, click again for the next one.

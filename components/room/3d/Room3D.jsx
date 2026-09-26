@@ -129,7 +129,6 @@ export default function Room3D() {
         onCreated={(s) => (clock.current = s.clock)}
         onPointerMissed={() => setTip(null)}
       >
-        <color attach="background" args={["#1c1c22"]} />
         <FirstFrame onReady={() => setReady(true)} />
         <CameraRig focus={focus} />
         <RoomCtx.Provider value={ctx}>

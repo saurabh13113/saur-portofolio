@@ -5,7 +5,7 @@
 export const ROOM_OBJECTS = [
   { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
   { id: "resume", kind: "nav", label: "Resume", href: "/resume", anchor: [0.2, 2.05, 2.05] },
-  { id: "skills", kind: "nav", label: "Skills", href: "/resume", anchor: [5.55, 1.2, 4.3] },
+  { id: "skills", kind: "nav", label: "Skills", href: "/resume", anchor: [5.55, 1.2, 3.9] },
   { id: "services", kind: "nav", label: "Services", href: "/services", anchor: [0.05, 1.45, 3.35] },
   { id: "contact", kind: "nav", label: "Say hi", href: "/contact", anchor: [1.3, 0.05, 1.5] },
 
@@ -22,8 +22,8 @@ export const ROOM_OBJECTS = [
   { id: "studentid", kind: "egg", label: "Student ID", tooltip: "UTM student card. Access level: caffeine.", anchor: [2.0, 0.85, 0.6] },
   { id: "coffee", kind: "egg", label: "Instant coffee", tooltip: "Instant coffee: fuel of champions (and deadlines).", anchor: [2.45, 1.05, 0.4] },
   { id: "soccer", kind: "egg", label: "Soccer ball", tooltip: "Weekend footy. Still chasing that top-bins finish.", anchor: [3.51, 0.45, 4.66] },
-  { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Table tennis: undefeated in the common room. Allegedly.", anchor: [5.05, 0.95, 4.52] },
-  { id: "ps4", kind: "egg", label: "PS4", tooltip: "PS4 plugged in. FIFA rematch, anyone?", anchor: [5.08, 1.0, 4.25] },
+  { id: "paddle", kind: "egg", label: "Table tennis paddle", tooltip: "Table tennis: undefeated in the common room. Allegedly.", anchor: [5.05, 0.95, 4.12] },
+  { id: "ps4", kind: "egg", label: "PS4", tooltip: "PS4 plugged in. FIFA rematch, anyone?", anchor: [5.08, 1.0, 3.85] },
 
   { id: "lights", kind: "switch", label: "Light switch", anchor: [0.05, 1.5, 3.95] },
   { id: "cat", kind: "cat", label: "Pet the cat", anchor: [4.75, 1.45, 0.1] },

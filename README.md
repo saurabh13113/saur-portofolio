@@ -53,6 +53,20 @@ use the same cozy night palette with lamp-amber accents.
   gzipped, loaded after the page is up), so the swap to 3D is seamless. It
   also stays in place without WebGL or if the 3D room crashes.
 
+- **Sidebar with a 3D me** (`components/room/Avatar.jsx`, `3d/Avatar3D.jsx`):
+  a Minecraft-style voxel version of me, textured like a real skin: curly
+  hair, a big grin, the black blazer and white shirt from my photo, and headphones.
+  - The head turns and the pupils follow your cursor anywhere on the page, and it blinks.
+  - Clicking it makes me wave and say a tip.
+  - Below it are my name, role and social links; the room itself is the navigation.
+  - Without WebGL, it shows a pixelated version of my photo instead.
+- **Work page** (`components/work/WorkCarousel.jsx`): a carousel through every
+  project.
+  - Each slide shows a big number, description, stack, and Live/GitHub links.
+  - It shows the screenshot when one exists in `public/assets/work/` (checked at build time), otherwise a generated cover.
+  - You can browse with the category filters, a numbered strip, prev/next buttons, ←/→ keys, and swiping on phones.
+  - Every project has a shareable link (`/work?project=round1`); the address follows along as you browse, and a "Copy link" button copies it.
+
 ### Room map
 
 | Object | Goes to / does |
@@ -81,7 +95,7 @@ use the same cozy night palette with lamp-amber accents.
   x=0 and the right wall is z=0.
   - Boxes are merged automatically.
   - Anything that animates or changes between day and night needs `mref`, an emissive `e` colour, or a parent group with `userData={{ live: true }}`.
-- **After changing the scene, regenerate the loading picture:** run `npm run build && npm start`, then run `npm run poster` in a second terminal. The script uses your installed Edge; set `CHROME_PATH` to use another Chrome-based browser.
+- **After changing the scene or the home layout, regenerate the snapshots:** run `npm run build && npm start`, then run `npm run poster` in a second terminal. It rewrites `public/assets/room-poster.png` (the loading picture) and `public/og.png` (the link-preview image). The script uses your installed Edge; set `CHROME_PATH` to use another Chrome-based browser.
 - `test/room3d.test.mjs` checks that every label lands on screen, and that the plain-math projection matches the real camera.
 - Content still lives in `data/portfolio.js` (transcribed from `public/assets/resume.pdf`).
 

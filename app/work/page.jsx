@@ -1,47 +1,21 @@
-"use client";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { projects, sortedProjects, filterProjects, CATEGORIES } from "@/data/portfolio";
+import fs from "node:fs";
+import path from "node:path";
+import { projects, sortedProjects } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
-import Chest from "@/components/mc/Chest";
-import ArchiveList from "@/components/mc/ArchiveList";
+import WorkCarousel from "@/components/work/WorkCarousel";
+
+// Checked at build time: only screenshots that actually exist are passed on;
+// projects without one get a generated cover in the carousel.
+const list = sortedProjects(projects).map((p) => ({
+  ...p,
+  image: p.image && fs.existsSync(path.join(process.cwd(), "public", p.image)) ? p.image : null,
+}));
 
 export default function Work() {
-  const [cat, setCat] = useState("All");
-  const list = sortedProjects(filterProjects(projects, cat));
-  const featured = list.filter((p) => p.featured);
-  const archive = list.filter((p) => !p.featured);
-
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0.4, duration: 0.4 } }}
-      className="container mx-auto py-12"
-    >
+    <section className="container mx-auto py-12">
       <Sign>Work</Sign>
-
-      <div className="flex flex-wrap gap-1 mt-6 p-1 mc-bevel tex-stone w-max max-w-full">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCat(c)}
-            className={`mc-bevel tex-dirt font-mc text-xs px-3 py-2 min-h-[44px] text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
-              cat === c ? "outline outline-2 outline-[#f4d27a]" : ""
-            }`}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-        {featured.map((p) => (
-          <Chest key={p.slug} project={p} />
-        ))}
-      </div>
-
-      <ArchiveList projects={archive} />
-    </motion.section>
+      <WorkCarousel projects={list} />
+    </section>
   );
 }

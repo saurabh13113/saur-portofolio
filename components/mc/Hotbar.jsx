@@ -30,10 +30,13 @@ export default function Hotbar() {
   if (pathname === "/") return null;
 
   return (
+    <>
+    {/* spacer so page content can scroll clear of the fixed bar */}
+    <div className="h-24" aria-hidden="true" />
     <nav className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-1 p-1 mc-bevel tex-stone">
       {hotbar.map((s) => {
         const active = s.kind === "route" && s.href === pathname;
-        const cls = `w-14 h-14 mc-bevel tex-dirt flex flex-col items-center justify-center font-mc text-[10px] leading-tight text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
+        const cls = `w-11 h-11 sm:w-14 sm:h-14 mc-bevel tex-dirt flex flex-col items-center justify-center font-mc text-[8px] sm:text-[10px] leading-tight text-[#f4e4c1] focus:outline focus:outline-2 focus:outline-white ${
           active ? "outline outline-2 outline-[#f4d27a]" : ""
         }`;
         const label = s.kind === "sound" ? (muted ? "OFF" : "ON") : s.label;
@@ -73,5 +76,6 @@ export default function Hotbar() {
         );
       })}
     </nav>
+    </>
   );
 }

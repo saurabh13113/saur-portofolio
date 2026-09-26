@@ -64,6 +64,18 @@
   .tex-obsidian {
     background-color: #17151f;
   }
+
+  /* Work carousel: each project slides in when it becomes active */
+  .slide-in {
+    animation: slide-in 0.35s ease-out;
+  }
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .slide-in { animation: none; }
+  }
 }
 
 html[data-easter="unlocked"] {

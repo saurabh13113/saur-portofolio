@@ -10,7 +10,7 @@ const Room3D = dynamic(() => import("@/components/room/3d/Room3D"), {
   loading: () => <RoomImage />,
 });
 
-function hasWebGL() {
+export function hasWebGL() {
   try {
     const c = document.createElement("canvas");
     return Boolean(c.getContext("webgl2") || c.getContext("webgl"));
