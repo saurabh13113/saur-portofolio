@@ -2,6 +2,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import Sidebar from "@/components/room/Sidebar";
+import SiteNav from "@/components/room/SiteNav";
 import { profile, SITE } from "@/data/portfolio";
 import KonamiUnlock from "@/components/room/easter-eggs/KonamiUnlock";
 import ConsoleEasterEgg from "@/components/room/easter-eggs/ConsoleEasterEgg";
@@ -52,7 +53,10 @@ export default function RootLayout({ children }) {
         {/* sidebar (3D me, name, socials) beside every page; the page fills the rest */}
         <div className="mx-auto max-w-[1800px] px-4 lg:px-8 pt-3 grid gap-4 lg:gap-6 lg:grid-cols-[260px_1fr]">
           <Sidebar />
-          <main className="min-w-0">{children}</main>
+          <main className="min-w-0">
+            <SiteNav />
+            {children}
+          </main>
         </div>
         <KonamiUnlock />
         <ConsoleEasterEgg />

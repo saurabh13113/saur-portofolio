@@ -17,7 +17,7 @@ export default function Sidebar() {
   const avatarCls = "w-[110px] shrink-0 lg:w-[260px]";
   const Name = home ? "h1" : "p"; // inner pages have their own h1
   return (
-    <aside className="pt-8 lg:pt-0 flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-[calc(100vh-0.75rem)] lg:justify-center">
+    <aside className={`${home ? "pt-8" : "pt-12"} lg:pt-0 flex flex-row lg:flex-col items-center lg:items-start gap-4 lg:sticky lg:top-0 lg:h-[calc(100vh-0.75rem)] lg:justify-center`}>
       {/* same tree on every page so the avatar's canvas survives navigation */}
       <div className={`relative ${avatarCls}`}>
         <Avatar page={page} bubble={home ? null : "Click me to go back home!"} />
@@ -28,6 +28,9 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2">
         <Name className="font-mc text-2xl lg:text-4xl text-[#f4e4c1] leading-tight">{profile.name}</Name>
         <p className="font-mc text-sm lg:text-base text-[#f4d27a]">{profile.role}</p>
+        <p className="text-xs text-white/70 leading-snug">{profile.pitch}</p>
+        <p className="text-xs text-emerald leading-snug">● {profile.status}</p>
+        <p className="hidden lg:block text-xs text-white/60 leading-snug">{profile.highlights}</p>
         <div className="flex gap-2 mt-1">
           {profile.socials.map((s) => {
             const Icon = socialIcon(s.key);

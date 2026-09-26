@@ -5,15 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaLinkedin } from "react-icons/fa";
 import { profile, services } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
 import BlockButton from "@/components/mc/BlockButton";
 
 const info = [
-  { icon: <FaPhoneAlt />, title: "Phone", value: profile.phone, href: `tel:${profile.phone.replace(/[^+\d]/g, "")}` },
   { icon: <FaEnvelope />, title: "Email", value: profile.email, href: `mailto:${profile.email}` },
+  { icon: <FaLinkedin />, title: "LinkedIn", value: "in/saurabh-nair", href: profile.socials.find((s) => s.key === "linkedin").href },
   { icon: <FaMapMarkerAlt />, title: "Location", value: profile.location },
 ];
 
@@ -79,7 +79,7 @@ export default function Contact() {
   }
 
   return (
-    <section className="container mx-auto py-12">
+    <section className="container mx-auto py-8">
       <Sign className="mb-8">Contact</Sign>
 
       <div className="flex flex-col xl:flex-row gap-8">
@@ -152,7 +152,7 @@ export default function Contact() {
                 <span>
                   <span className="block text-white/60 font-primary text-xs">{it.title}</span>
                   {it.href ? (
-                    <a href={it.href} className="font-mc hover:text-[#f4d27a] underline-offset-4 hover:underline">{it.value}</a>
+                    <a href={it.href} {...(it.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})} className="font-mc hover:text-[#f4d27a] underline-offset-4 hover:underline">{it.value}</a>
                   ) : (
                     <span className="font-mc">{it.value}</span>
                   )}

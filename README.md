@@ -76,7 +76,7 @@ use the same cozy night palette with lamp-amber accents.
 | Triple monitors | `/work` |
 | Bookshelf | `/resume` |
 | Dresser books | `/resume` (skills) |
-| Door | `/services` |
+| Door | `/services` ("What I do") |
 | Me at the desk | `/contact` ("Say hi") |
 | Light switch by the door | Day / night |
 | Keyboard on the stand by the window | Plays a favorite piece; keys light up (never autoplays) |

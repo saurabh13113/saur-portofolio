@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { experience, education, skills, profile } from "@/data/portfolio";
 import Sign from "@/components/mc/Sign";
 import Panel from "@/components/mc/Panel";
-import XpBar from "@/components/mc/XpBar";
 import { techIcon } from "@/components/mc/icons";
 import { FiDownload } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -19,7 +18,7 @@ export default function Resume() {
   }, []);
 
   return (
-    <section className="container mx-auto py-12">
+    <section className="container mx-auto py-8">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <Sign>Resume</Sign>
         <a href={profile.resumePdf} download="Saurabh_Nair_Resume.pdf" className="mc-bevel tex-plank font-mc px-4 py-3 text-[#f4e4c1] inline-flex items-center gap-2 focus:outline focus:outline-2 focus:outline-white">
@@ -83,23 +82,25 @@ export default function Resume() {
             {skills.map((g) => (
               <div key={g.group}>
                 <h3 className="font-mc text-lg text-[#f4e4c1] mb-3">{g.group}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-                  {g.items.map((it) => {
-                    const Ic = techIcon(it.name);
-                    return (
-                      <div key={it.name} className="flex items-center gap-2">
-                        {Ic ? (
-                          <span className="text-emerald text-lg shrink-0" aria-hidden="true">
-                            <Ic />
-                          </span>
-                        ) : null}
-                        <div className="flex-1">
-                          <XpBar label={it.name} value={it.level} max={100} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                {[
+                  ["Proficient", g.proficient, "text-[#a8f0c0]"],
+                  ["Familiar", g.familiar, "text-[#f4e4c1]/70"],
+                ].map(([tier, names, color]) => (
+                  <div key={tier} className="flex flex-col sm:flex-row sm:items-start gap-2 mb-2">
+                    <span className="font-mc text-xs text-white/50 sm:w-24 sm:pt-1.5 shrink-0">{tier}</span>
+                    <ul className="flex flex-wrap gap-2">
+                      {names.map((name) => {
+                        const Ic = techIcon(name);
+                        return (
+                          <li key={name} className={`mc-bevel tex-obsidian px-2 py-1 text-xs font-mc inline-flex items-center gap-1 ${color}`}>
+                            {Ic ? <Ic aria-hidden="true" /> : null}
+                            {name}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
               </div>
             ))}
           </TabsContent>
@@ -112,7 +113,6 @@ export default function Resume() {
                 <li><span className="text-white/60">Location:</span> {profile.location}</li>
                 <li><span className="text-white/60">Website:</span> {profile.website}</li>
                 <li><span className="text-white/60">Email:</span> {profile.email}</li>
-                <li><span className="text-white/60">Phone:</span> {profile.phone}</li>
               </ul>
               <p className="mt-4 text-white/80 font-primary text-sm max-w-[70ch]">{profile.tagline}</p>
             </Panel>

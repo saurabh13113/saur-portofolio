@@ -6,7 +6,7 @@ export const metadata = { title: "Page not found", alternates: { canonical: null
 // In-theme 404: the sidebar (and the avatar's "go back home" bubble) stays beside it.
 export default function NotFound() {
   return (
-    <section className="container mx-auto py-12">
+    <section className="container mx-auto py-8">
       <Sign className="mb-6">404</Sign>
       <p className="font-mc text-lg text-[#f4e4c1]">You wandered out of the room.</p>
       <p className="text-white/70 text-sm mt-2">This page doesn&apos;t exist (or it moved).</p>

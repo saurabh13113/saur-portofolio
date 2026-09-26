@@ -206,8 +206,8 @@ const TIPS = {
     "Click the family photo above my monitors.",
   ],
   "/work": ["Here's what I've built!", "Use ← → to flip through projects.", "Every project has a shareable link."],
-  "/resume": ["The short version of my story.", "The full PDF is top right.", "Check the Skills tab for the XP bars."],
-  "/services": ["Need something built? I can help.", "Like what you see? Say hi on Contact."],
+  "/resume": ["The short version of my story.", "The full PDF is top right.", "Skills: what I'm proficient in vs. still learning."],
+  "/services": ["Here's how I can help your team.", "Each card links to where I've done it.", "Like what you see? Say hi on Contact."],
   "/contact": ["Drop me a line! 👋", "I read every message.", "I'll type along while you write ✍️"],
 };
 
@@ -308,7 +308,7 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
         <button type="button" onClick={greet} aria-label="Say hi to Saurabh" className="absolute inset-0 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
       )}
       {bubble && !tip ? (
-        <div aria-hidden="true" className={SPEECH}>
+        <div aria-hidden="true" className={`${SPEECH} max-lg:max-w-[110px]`}>
           {bubble}
         </div>
       ) : null}

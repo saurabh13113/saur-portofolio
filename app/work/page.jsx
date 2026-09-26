@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function Work() {
   return (
-    <section className="container mx-auto py-12">
+    <section className="container mx-auto py-8">
       <Sign>Work</Sign>
       <WorkCarousel projects={list} />
     </section>

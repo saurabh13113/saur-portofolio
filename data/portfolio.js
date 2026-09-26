@@ -5,6 +5,10 @@
 export const profile = {
   name: "Saurabh Nair",
   role: "Software Developer",
+  // shown under my name in the sidebar: the 10-second version for recruiters
+  pitch: "CS + Econ @ UofT · ex-Bayer, Emirates Steel",
+  status: "Open to new-grad SWE roles (2027)",
+  highlights: "🏆 TMU Solution Hacks '25 winner · Dean's List ×4",
   tagline:
     "CS & Economics double major at the University of Toronto. From Abu Dhabi 🇦🇪, building in Toronto.",
   location: "Toronto, ON",
@@ -177,7 +181,7 @@ export const experience = [
     start: "September 2024",
     end: "May 2025",
     bullets: [
-      "Built, deployed and remotely maintained backend systems for a children's educational mobile app; proactive monitoring and refactoring took uptime to 90%, supporting investor demos.",
+      "Built, deployed and remotely maintained backend systems for a children's educational mobile app; proactive monitoring and refactoring kept it stable through investor demos.",
       "Integrated a PlayHT-powered voice-cloning feature in Python for dynamic character dialogue — +18% average session duration.",
     ],
   },
@@ -186,7 +190,7 @@ export const experience = [
     org: "University of Toronto",
     location: "Mississauga, ON",
     start: "September 2024",
-    end: "May 2025",
+    end: "Present",
     bullets: [
       "TA'd CSC236 (Theory of Computation), ECO225 (Data Tools for Economics) and CSC263 (Data Structures & Algorithms).",
       "Graded assignments, quizzes and exams and held office hours for 150+ students, lifting engagement and course-satisfaction scores.",
@@ -200,7 +204,7 @@ export const experience = [
     end: "August 2024",
     bullets: [
       "Built and deployed predictive-maintenance models on time-series sensor data — −15% unplanned downtime, saving hundreds of production hours a year.",
-      "Engineered a real-time consumption dashboard giving plant managers actionable insight — ~$1.2M/yr estimated raw-material savings.",
+      "Engineered a real-time consumption dashboard giving plant managers actionable insight — an estimated $1.2M annual reduction in raw-material costs.",
       "Feature engineering and hyperparameter tuning improved model precision by 12% across multiple production lines.",
     ],
   },
@@ -220,34 +224,33 @@ export const education = [
   },
 ];
 
+// Two honest tiers instead of made-up percentages: proficient = used in a job or
+// a shipped project and comfortable being quizzed on; familiar = have used, would ramp up.
 export const skills = [
-  { group: "Languages", items: [
-    { name: "Python", level: 92 }, { name: "Java", level: 88 }, { name: "JavaScript / TypeScript", level: 88 },
-    { name: "C", level: 78 }, { name: "R", level: 72 }, { name: "SQL (PostgreSQL / MySQL)", level: 80 },
-    { name: "Stata", level: 65 }, { name: "Bash / Shell", level: 70 }, { name: "HTML / CSS", level: 85 },
-  ]},
-  { group: "Frameworks", items: [
-    { name: "React", level: 88 }, { name: "Next.js", level: 88 }, { name: "Node.js", level: 82 },
-    { name: "Spring Boot", level: 78 }, { name: "Flask", level: 76 }, { name: "Hibernate / JPA", level: 70 },
-    { name: "TailwindCSS", level: 88 }, { name: "Material-UI", level: 75 },
-  ]},
-  { group: "Tools", items: [
-    { name: "Git", level: 90 }, { name: "Docker", level: 78 }, { name: "Jenkins", level: 75 },
-    { name: "AWS", level: 74 }, { name: "GCP", level: 68 }, { name: "Linux", level: 82 },
-    { name: "Firebase", level: 80 }, { name: "Vercel", level: 85 }, { name: "Railway", level: 72 },
-    { name: "Maven", level: 68 }, { name: "Postman", level: 78 },
-  ]},
-  { group: "Libraries", items: [
-    { name: "Pandas", level: 85 }, { name: "SciKit-Learn", level: 80 }, { name: "OpenCV", level: 70 },
-    { name: "MediaPipe", level: 68 }, { name: "RoboFlow", level: 66 },
-  ]},
+  { group: "Languages",
+    proficient: ["Python", "Java", "JavaScript / TypeScript", "SQL (PostgreSQL / MySQL)", "C", "HTML / CSS"],
+    familiar: ["R", "Stata", "Bash / Shell"] },
+  { group: "Frameworks",
+    proficient: ["React", "Next.js", "Node.js", "Spring Boot", "Flask", "TailwindCSS"],
+    familiar: ["Hibernate / JPA", "Material-UI"] },
+  { group: "Tools",
+    proficient: ["Git", "Docker", "Jenkins", "AWS", "Linux", "Firebase", "Vercel", "Postman"],
+    familiar: ["GCP", "Railway", "Maven", "JupyterHub"] },
+  { group: "Libraries",
+    proficient: ["Pandas", "SciKit-Learn"],
+    familiar: ["OpenCV", "MediaPipe", "RoboFlow"] },
 ];
 
+// "What I do" (/services): each card backed by something I actually shipped.
 export const services = [
-  { num: "01", title: "Full-Stack Web Apps", description: "Next.js / React / Node.js apps with auth, a database and a deploy pipeline — end to end." },
-  { num: "02", title: "Backend & APIs", description: "Spring Boot or Flask services: REST APIs, data modeling, integrations and monitoring." },
-  { num: "03", title: "ML & Data", description: "Predictive models, feature engineering and dashboards that turn raw data into decisions." },
-  { num: "04", title: "DevOps & Cloud Automation", description: "Jenkins / Docker / AWS / GCP pipelines that make releases repeatable instead of manual." },
+  { num: "01", title: "Full-Stack Web Apps", description: "Next.js / React / Node.js apps with auth, a database and a deploy pipeline — end to end.",
+    proof: { text: "Feynomenon: AI tutor, winner at TMU Solution Hacks '25", href: "/work?project=feynomenon" } },
+  { num: "02", title: "Backend & APIs", description: "Spring Boot or Flask services: REST APIs, data modeling, integrations and monitoring.",
+    proof: { text: "Kaytoons: backend + voice-cloning feature, +18% session time", href: "/resume" } },
+  { num: "03", title: "ML & Data", description: "Predictive models, feature engineering and dashboards that turn raw data into decisions.",
+    proof: { text: "Emirates Steel: −15% unplanned downtime, ~$1.2M/yr in savings", href: "/resume" } },
+  { num: "04", title: "DevOps & Cloud Automation", description: "Jenkins / Docker / AWS / GCP pipelines that make releases repeatable instead of manual.",
+    proof: { text: "Bayer: Jenkins + AWS patch pipeline, −35% release-prep time", href: "/resume" } },
 ];
 
 export function filterProjects(list, cat) {

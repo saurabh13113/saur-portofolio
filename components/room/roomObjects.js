@@ -14,16 +14,22 @@ export const PLAYLIST = [
   { title: "Minecraft – C418", src: "/music/minecraft.mp3" },
 ];
 
-// The family photo on the wall opens this carousel. Drop pictures in public/assets/family/.
+// The family photo on the wall opens this carousel ("The people that made me me"),
+// oldest first. Photos live in public/assets/family/.
 export const FAMILY = [
-  { src: "/assets/photo.jpg", caption: "Me" },
+  { src: "/assets/family/family-1.jpg", caption: "Where it all started" },
+  { src: "/assets/family/family-2.jpg", caption: "Top of the world, August 2015" },
+  { src: "/assets/family/family-3.jpg", caption: "Sunny days out together" },
+  { src: "/assets/family/family-4.jpg", caption: "Mountains and lakes" },
+  { src: "/assets/family/family-5.jpeg", caption: "Monterey, California" },
+  { src: "/assets/family/family-6.jpeg", caption: "All dressed up" },
 ];
 
 export const ROOM_OBJECTS = [
   { id: "work", kind: "nav", label: "Work", href: "/work", anchor: [1.2, 1.55, 0.15] },
   { id: "resume", kind: "nav", label: "Resume", href: "/resume", anchor: [0.2, 2.05, 2.05] },
   { id: "skills", kind: "nav", label: "Skills", href: "/resume?tab=skills", anchor: [5.55, 1.2, 3.9] },
-  { id: "services", kind: "nav", label: "Services", href: "/services", anchor: [0.05, 1.45, 3.35] },
+  { id: "services", kind: "nav", label: "What I do", href: "/services", anchor: [0.05, 1.45, 3.35] },
   { id: "contact", kind: "nav", label: "Say hi", href: "/contact", anchor: [1.3, 0.05, 1.5] },
 
   { id: "pennant", kind: "egg", label: "UTM pennant", tooltip: "CS & Economics @ University of Toronto", anchor: [0.02, 2.65, 1.45] },
