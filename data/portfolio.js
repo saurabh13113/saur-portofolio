@@ -19,7 +19,6 @@ export const profile = {
   socials: [
     { key: "github", href: "https://github.com/saurabh13113" },
     { key: "linkedin", href: "https://www.linkedin.com/in/saurabh-nair" },
-    { key: "email", href: "mailto:saurabhnair13113@gmail.com" },
   ],
 };
 
