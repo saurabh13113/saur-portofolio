@@ -35,8 +35,8 @@ const BODY_FRONT = ["KqQQQQqK", "KkQQQQkK", "KKkQQkKK", "KKKqqKKK", "KKKKgKKK", 
 const BODY_BACK = ["kKKKKKKk", ...Array(9).fill("KKKKKKKK"), "kkkkkkkk", "JJJJJJJJ"];
 const BODY_SIDE = ["kKKK", ...Array(9).fill("KKKK"), "kkkk", "JJJJ"];
 const ARM = ["kKKk", ...Array(8).fill("KKKK"), "QQQQ", "SSSS", "SSSs"]; // blazer sleeve, shirt cuff, hand
-// my green crewneck with the little gold antlers on the chest, like the hackathon photos
-const SWEATER_FRONT = ["VvvSSvvV", "VVVvvVVV", "VVVVVVVV", "VVYVVYVV", "VVVYYVVV", ...Array(5).fill("VVVVVVVV"), "vvvvvvvv", "JJJJJJJJ"];
+// my green crewneck with a small gold antler logo on the right chest, like the hackathon photos
+const SWEATER_FRONT = ["VvvSSvvV", "VVVvvVVV", "VYVYVVVV", "VVYVVVVV", ...Array(6).fill("VVVVVVVV"), "vvvvvvvv", "JJJJJJJJ"];
 const SWEATER_BACK = ["VvvvvvvV", ...Array(9).fill("VVVVVVVV"), "vvvvvvvv", "JJJJJJJJ"];
 const SWEATER_SIDE = ["vVVV", ...Array(9).fill("VVVV"), "vvvv", "JJJJ"];
 const SWEATER_ARM = [...Array(9).fill("VVVV"), "vvvv", "SSSS", "SSSs"];

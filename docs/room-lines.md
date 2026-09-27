@@ -90,7 +90,7 @@ Mine: FIFA or minecraft, keeps me relaxed
 **16. Messi jersey**
 Now: Argentina #10, framed. The GOAT debate is closed.
 Prompt: Why Messi? A favourite moment?
-Mine: That hatrick vs france in 22 wc final, unmatched.
+Mine: That performance vs france in 22 wc final, unmatched.
 
 **17. Bleach poster**
 Now: Bankai! Ichigo & Zangetsu, all-time favourite anime.

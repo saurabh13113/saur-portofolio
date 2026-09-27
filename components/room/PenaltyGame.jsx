@@ -43,7 +43,7 @@ export default function PenaltyGame({ open, onClose }) {
     busy.current = true;
     const dive = AIMS[Math.floor(Math.random() * 3)][0]; // the keeper guesses
     const goal = dive !== aim;
-    setLast({ aim, dive, goal });
+    setLast({ aim, dive, goal, n: shots.length });
     setTimeout(() => {
       setShots((s) => {
         const next = [...s, goal];
@@ -92,15 +92,13 @@ export default function PenaltyGame({ open, onClose }) {
         {/* the pitch: goal, keeper, ball */}
         <div className="relative mt-3 h-56 overflow-hidden bg-[#2f7d3b] bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.05)_0_24px,transparent_24px_48px)]">
           <div className="absolute left-[6%] right-[6%] top-5 h-24 border-4 border-b-0 border-white bg-[repeating-linear-gradient(0deg,rgba(255,255,255,0.18)_0_1px,transparent_1px_8px),repeating-linear-gradient(90deg,rgba(255,255,255,0.18)_0_1px,transparent_1px_8px)]" />
-          <div
-            aria-hidden="true"
-            className="absolute top-12 w-8 h-14 -translate-x-1/2 bg-[#f4d27a] border-2 border-[#1c1c22] transition-all duration-500"
+          <Keeper
+            className="absolute top-10 w-12 h-16 -translate-x-1/2 transition-all duration-500"
             style={{ left: last ? x(last.dive) : "50%", rotate: last && last.dive !== "middle" ? (last.dive === "left" ? "-50deg" : "50deg") : "0deg" }}
           />
-          <div
-            aria-hidden="true"
-            className="absolute w-5 h-5 -translate-x-1/2 bg-white border-2 border-[#1c1c22] transition-all duration-500"
-            style={last ? { left: x(last.aim), top: last.goal ? "36px" : "64px" } : { left: "50%", top: "180px" }}
+          <Ball
+            className="absolute w-6 h-6 -translate-x-1/2 transition-all duration-500 drop-shadow-[0_2px_1px_rgba(0,0,0,0.4)]"
+            style={last ? { left: x(last.aim), top: last.goal ? "34px" : "62px", rotate: `${540 * (last.n + 1)}deg` } : { left: "50%", top: "150px" }}
           />
           <p role="status" className="absolute inset-x-0 bottom-2 text-center font-mc text-lg drop-shadow">
             {done ? `${goals}/${SHOTS}. ${goals >= 4 ? "Top bins! 🏆" : goals >= 3 ? "Not bad!" : "The keeper's on fire."}` : last ? (last.goal ? "GOAL!" : "Saved!") : "Pick a corner"}
@@ -129,6 +127,35 @@ export default function PenaltyGame({ open, onClose }) {
         <p className="text-[11px] text-white/50 mt-2 text-center">or use ← ↓ →</p>
       </div>
     </dialog>
+  );
+}
+
+// Pixel-art sprites (1 unit = 1 pixel): a keeper in kit with gloves up, and a
+// ball with a pentagon patch.
+const px = (rects) => rects.map(([x, y, w, h, c], i) => <rect key={i} x={x} y={y} width={w} height={h} fill={c} />);
+const KIT = "#e8622c", KIT_D = "#b8461c", SKIN = "#c68a5c", HAIR = "#1c1c22", GLOVE = "#f4d27a";
+function Keeper(props) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 12 16" shapeRendering="crispEdges" {...props}>
+      {px([
+        [4, 0, 4, 1, HAIR], [4, 1, 4, 3, SKIN], [5, 2, 1, 1, HAIR], [7, 2, 1, 1, HAIR], // head
+        [0, 1, 2, 2, GLOVE], [1, 3, 2, 2, KIT], [10, 1, 2, 2, GLOVE], [9, 3, 2, 2, KIT], // arms up
+        [3, 4, 6, 6, KIT], [3, 4, 6, 1, KIT_D], [5, 6, 2, 2, "#ffffff"], // jersey, number patch
+        [3, 10, 6, 2, "#1c1c22"], // shorts
+        [3, 12, 2, 3, SKIN], [7, 12, 2, 3, SKIN], [3, 14, 2, 1, KIT], [7, 14, 2, 1, KIT], // legs, socks
+        [2, 15, 3, 1, "#111111"], [7, 15, 3, 1, "#111111"], // boots
+      ])}
+    </svg>
+  );
+}
+function Ball(props) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 12 12" {...props}>
+      <circle cx="6" cy="6" r="5.5" fill="#f5f5f5" stroke="#1c1c22" strokeWidth="0.8" />
+      <path d="M6 3.6 8.3 5.3 7.4 8 4.6 8 3.7 5.3Z" fill="#1c1c22" />
+      <path d="M6 3.6V1M8.3 5.3l2.3-.9M7.4 8l1.4 2.2M4.6 8 3.2 10.2M3.7 5.3l-2.3-.9" stroke="#1c1c22" strokeWidth="0.6" />
+      <circle cx="4" cy="3.5" r="1" fill="#ffffff" opacity="0.8" />
+    </svg>
   );
 }
 
