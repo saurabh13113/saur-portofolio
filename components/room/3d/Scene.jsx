@@ -44,10 +44,12 @@ function Shell() {
 // The view out of the window: a flat backdrop sitting just behind the glass
 // (a diorama trick; anything deeper would show up outside the room).
 // Rain or snow falls only when it's actually raining or snowing in Toronto
-// (weather from Room3D); crescent = a crescent moon for Eid.
+// (weather from Room3D); crescent = a crescent moon for Eid. During a storm,
+// lightningAt (a ref, set by Room3D on each strike) briefly flashes the sky pane.
 const dropX = (i) => 3.66 + ((i * 0.37) % 1.48);
-function WindowView({ reduce, day, weather, crescent }) {
+function WindowView({ reduce, day, weather, crescent, lightningAt }) {
   const drops = useRef([]);
+  const sky = useRef();
   const snow = weather === "snow";
   const grey = day && weather !== "clear"; // overcast: no sun, and rain dark enough to see
   useFrame(({ clock }, dt) => {
@@ -59,11 +61,16 @@ function WindowView({ reduce, day, weather, crescent }) {
       if (snow) m.position.x = dropX(i) + 0.03 * Math.sin(t * 1.5 + i);
       if (m.position.y < 1.05) m.position.y = 2.25;
     });
+    if (weather === "storm" && sky.current) {
+      const since = t - (lightningAt?.current ?? -99);
+      const flash = since >= 0 && since < 0.15 ? 1 - since / 0.15 : 0;
+      sky.current.material.emissiveIntensity = 1 + flash * 8;
+    }
   });
   const towers = [[3.62, 0.34, 0.5], [3.98, 0.28, 0.75], [4.28, 0.36, 0.4], [4.66, 0.3, 0.85], [4.98, 0.22, 0.55]];
   return (
     <group userData={{ live: true }}>
-      <B p={[3.6, 1.0, -0.2]} s={[1.6, 1.3, 0.02]} c={grey ? "#aab4c0" : day ? "#8ec5ff" : "#0e1735"} e={grey ? "#8e99a6" : day ? "#7ab8f0" : "#111d48"} />
+      <B mref={(m) => (sky.current = m)} p={[3.6, 1.0, -0.2]} s={[1.6, 1.3, 0.02]} c={grey ? "#aab4c0" : day ? "#8ec5ff" : "#0e1735"} e={grey ? "#8e99a6" : day ? "#7ab8f0" : "#111d48"} />
       {grey ? null : day ? (
         <B p={[4.75, 1.9, -0.175]} s={[0.18, 0.18, 0.01]} c="#fff1a8" e="#ffe27a" />
       ) : (
@@ -707,7 +714,7 @@ function Shadows() {
   );
 }
 
-export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day, weather = "clear", deco = {}, acts, lampOn = true }) {
+export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, day, weather = "clear", deco = {}, acts, lampOn = true, lightningAt }) {
   return (
     <>
       <ambientLight color={day ? "#fff4e0" : "#8088c0"} intensity={day ? 1.5 : 0.75} />
@@ -715,7 +722,7 @@ export default function Scene({ reduce, musicPlaying, songPlaying, catJumpAt, da
       <directionalLight color={day ? "#ffe7b0" : "#6d8cff"} intensity={day ? 1.8 : 0.5} position={[4.4, 3, -3]} />
       <Merge>
         <Shell />
-        <WindowView reduce={reduce} day={day} weather={weather} crescent={deco.lantern} />
+        <WindowView reduce={reduce} day={day} weather={weather} crescent={deco.lantern} lightningAt={lightningAt} />
         <Window catJumpAt={catJumpAt} reduce={reduce} day={day} />
         <Decorations deco={deco} reduce={reduce} />
         <Piano playing={musicPlaying} reduce={reduce} />

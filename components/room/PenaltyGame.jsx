@@ -158,16 +158,3 @@ function Ball(props) {
     </svg>
   );
 }
-
-// Picture-fallback hotspot for the game.
-export function GameHotspot({ label, style }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button type="button" aria-label={label} onClick={() => setOpen(true)} className="room-hotspot" style={style}>
-        <span className="room-label">{label}</span>
-      </button>
-      <PenaltyGame open={open} onClose={() => setOpen(false)} />
-    </>
-  );
-}

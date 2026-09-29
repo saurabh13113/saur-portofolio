@@ -10,7 +10,7 @@ import { makeCamera } from "./camera";
 import { toScreen, TARGET } from "@/components/room/projection";
 import { ROOM_OBJECTS, CAT_REACTIONS, PHOTOS } from "@/components/room/roomObjects";
 import FamilyAlbum from "@/components/room/FamilyAlbum";
-import PenaltyGame from "@/components/room/PenaltyGame";
+import PS4Games from "@/components/room/PS4Games";
 import { PixelPhoto } from "@/components/room/easter-eggs/PhotoFrame";
 import { useToggleAudio } from "@/hooks/useToggleAudio";
 import { useMusic } from "@/hooks/useMusic";
@@ -30,7 +30,7 @@ function startsAsDay() {
   return h >= 7 && h < 19;
 }
 
-// ?weather=rain|snow|clear and ?date=YYYY-MM-DD override the real ones (testing, and
+// ?weather=rain|snow|storm|clear and ?date=YYYY-MM-DD override the real ones (testing, and
 // npm run poster keeps the loading picture neutral).
 const param = (k) => new URLSearchParams(window.location.search).get(k);
 
@@ -81,6 +81,8 @@ export default function Room3D({ onReady }) {
   const [lampOn, setLampOn] = useState(true);
   const acts = useRef({}); // id -> clock time it was last clicked (the scene animates from it)
   const catJumpAt = useRef(null);
+  const lightningAt = useRef(null);
+  const thunder = useRef(null);
   const clock = useRef(null);
   const tipTimer = useRef(null);
   const reduce = useMemo(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches, []);
@@ -158,6 +160,23 @@ export default function Room3D({ onReady }) {
       .catch(() => {});
   }, []);
 
+  // During a storm: a lightning strike every 4-10s, each one flashing the
+  // window (Scene reads lightningAt) and playing a thunder clap (optional
+  // asset — public/sfx/thunder.mp3; silently does nothing if it's missing).
+  useEffect(() => {
+    if (weather !== "storm") return;
+    let timer;
+    const strike = () => {
+      lightningAt.current = clock.current?.elapsedTime ?? 0;
+      if (!thunder.current) thunder.current = new Audio("/sfx/thunder.mp3");
+      thunder.current.currentTime = 0;
+      thunder.current.play().catch(() => {});
+      timer = setTimeout(strike, 4000 + Math.random() * 6000);
+    };
+    timer = setTimeout(strike, 1500 + Math.random() * 3000);
+    return () => clearTimeout(timer);
+  }, [weather]);
+
   const ctx = useMemo(() => ({ hovered, setHovered, activate }), [hovered, activate]);
 
   return (
@@ -174,7 +193,7 @@ export default function Room3D({ onReady }) {
         <FirstFrame onReady={() => onReady?.()} />
         <CameraRig focus={focus} />
         <RoomCtx.Provider value={ctx}>
-          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} weather={weather} deco={deco} acts={acts} lampOn={lampOn} />
+          <Scene reduce={reduce} musicPlaying={music.playing} songPlaying={song.playing} catJumpAt={catJumpAt} day={day} weather={weather} deco={deco} acts={acts} lampOn={lampOn} lightningAt={lightningAt} />
         </RoomCtx.Provider>
       </Canvas>
 
@@ -211,7 +230,7 @@ export default function Room3D({ onReady }) {
       ) : null}
 
       <FamilyAlbum open={album} onClose={() => setAlbum(false)} />
-      <PenaltyGame open={game} onClose={() => setGame(false)} />
+      <PS4Games open={game} onClose={() => setGame(false)} />
     </div>
   );
 }

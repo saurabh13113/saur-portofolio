@@ -2,12 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { weatherKind, decorations } from "../components/room/season.js";
 
-test("weather codes map to rain, snow or clear", () => {
+test("weather codes map to rain, snow, storm or clear", () => {
   assert.equal(weatherKind(0), "clear");
   assert.equal(weatherKind(3), "clear");
   assert.equal(weatherKind(61), "rain");
   assert.equal(weatherKind(81), "rain");
-  assert.equal(weatherKind(95), "rain");
+  assert.equal(weatherKind(95), "storm");
+  assert.equal(weatherKind(99), "storm");
   assert.equal(weatherKind(73), "snow");
   assert.equal(weatherKind(86), "snow");
 });

@@ -5,7 +5,7 @@ import InteractiveCat from "@/components/room/easter-eggs/InteractiveCat";
 import PhotoFrame from "@/components/room/easter-eggs/PhotoFrame";
 import AudioObject, { SpeakerObject } from "@/components/room/easter-eggs/AudioObject";
 import { AlbumHotspot } from "@/components/room/FamilyAlbum";
-import { GameHotspot } from "@/components/room/PenaltyGame";
+import { GameHotspot } from "@/components/room/PS4Games";
 import { ROOM_OBJECTS, PHOTOS } from "@/components/room/roomObjects";
 import { toScreen } from "@/components/room/projection";
 

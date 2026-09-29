@@ -7,7 +7,8 @@ export const WEATHER_URL = "https://api.open-meteo.com/v1/forecast?latitude=43.6
 // WMO weather code (what Open-Meteo returns) -> what falls past the window.
 export function weatherKind(code) {
   if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
-  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) return "rain";
+  if (code >= 95) return "storm";
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return "rain";
   return "clear";
 }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { validateContact } from "@/lib/validateContact";
+import { isRateLimited } from "@/lib/rateLimit";
 import { profile } from "@/data/portfolio";
 
 // Sender: Resend's shared test address works only when sending to the Resend
@@ -9,6 +10,11 @@ import { profile } from "@/data/portfolio";
 const FROM = process.env.CONTACT_FROM ?? "Portfolio Contact <onboarding@resend.dev>";
 
 export async function POST(request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false, errors: { form: "Too many messages — try again in a bit." } }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => null);
 
   // Honeypot: the form has a hidden "company" field people never see. Bots fill
