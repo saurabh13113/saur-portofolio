@@ -37,7 +37,6 @@ export const ROOM_OBJECTS = [
   { id: "bed", kind: "egg", label: "The bed", tooltip: "Night owl always, 12 am onwards is my primetime", anchor: [1.3, 0.7, 4.9] },
   { id: "nightstand", kind: "egg", label: "Nightstand books", tooltip: "Currently reading some Wolverine comics", anchor: [0.22, 0.85, 4.05] },
   { id: "hoodie", kind: "egg", label: "Hoodie on the hook", tooltip: "My green Tom & Jerry hoodie, the one thing that is as comfy as 6 years ago.", anchor: [0.1, 1.75, 2.72] },
-  { id: "tvstand", kind: "egg", label: "TV stand", tooltip: "Where the PS4 lives now, away from the skills dresser.", anchor: [5.375, 0.55, 2.65] },
   { id: "laundry", kind: "egg", label: "Laundry basket", tooltip: "Sometimes you forget to shower or two honestly.", anchor: [5.6, 0.65, 0.4] },
   { id: "studentid", kind: "egg", label: "Student ID", tooltip: "UTM has been my home for 4 years, the deer on campus are my bros now.", anchor: [2.0, 0.85, 0.6] },
   { id: "coffee", kind: "egg", label: "Coffee", tooltip: "I love a good iced coffee, french vanilla from Tims is my G", anchor: [2.45, 1.05, 0.4] },
