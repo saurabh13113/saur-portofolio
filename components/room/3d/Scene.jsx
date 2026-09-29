@@ -64,7 +64,11 @@ function WindowView({ reduce, day, weather, crescent, lightningAt }) {
     if (weather === "storm" && sky.current) {
       const since = t - (lightningAt?.current ?? -99);
       const flash = since >= 0 && since < 0.15 ? 1 - since / 0.15 : 0;
-      sky.current.material.emissiveIntensity = 1 + flash * 8;
+      // the night sky's emissive is a near-black navy, so a flash needs a real
+      // colour swap toward white — pumping intensity alone stays dark
+      const base = grey ? "#8e99a6" : day ? "#7ab8f0" : "#111d48";
+      sky.current.material.emissive.set(flash > 0 ? "#eaf6ff" : base);
+      sky.current.material.emissiveIntensity = flash > 0 ? flash * 4 : 1;
     }
   });
   const towers = [[3.62, 0.34, 0.5], [3.98, 0.28, 0.75], [4.28, 0.36, 0.4], [4.66, 0.3, 0.85], [4.98, 0.22, 0.55]];
