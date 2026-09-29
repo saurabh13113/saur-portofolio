@@ -540,7 +540,6 @@ function BedCorner({ reduce, day }) {
 
 function RightSide({ acts, reduce }) {
   const ball = useRef();
-  const bag = useRef();
   const pong = useRef();
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
@@ -551,11 +550,6 @@ function RightSide({ acts, reduce }) {
       ball.current.position.x = 3.51 + dx;
       ball.current.position.y = 0.11 + (k < 0.12 ? Math.sin((k / 0.12) * Math.PI) * 0.1 : 0);
       ball.current.rotation.z = -dx / 0.11;
-    }
-    // beanbag: a squish when you flop onto it
-    if (bag.current) {
-      const k = since(acts, "beanbag", t) / 0.6;
-      bag.current.scale.y = k < 1 && !reduce ? 1 - 0.18 * Math.sin(Math.PI * k) : 1;
     }
     // ping-pong ball: bounces on the dresser and settles
     if (pong.current) {
@@ -585,15 +579,10 @@ function RightSide({ acts, reduce }) {
         <B p={[5.43, 0.42, 0.23]} s={[0.36, 0.06, 0.32]} c="#d8d8dc" />
         <B p={[5.5, 0.48, 0.3]} s={[0.12, 0.03, 0.1]} c="#1f2a44" />
       </Obj>
-      <Obj id="beanbag">
-        <group ref={bag} userData={{ live: true }}>
-          <B p={[5.05, 0, 2.4]} s={[0.8, 0.25, 0.8]} c="#23443a" />
-          <B p={[5.1, 0.25, 2.45]} s={[0.7, 0.2, 0.7]} c="#23443a" />
-          <B p={[5.55, 0.25, 2.45]} s={[0.32, 0.42, 0.7]} c="#1f3d34" />
-          <B p={[5.2, 0.45, 2.55]} s={[0.4, 0.08, 0.5]} c="#23443a" />
-          <B p={[5.26, 0.53, 2.7]} s={[0.14, 0.04, 0.09]} c="#1a1a1f" />
-          <B p={[5.3, 0.57, 2.7]} s={[0.06, 0.004, 0.01]} c={C.blue} e={C.blue} />
-        </group>
+      <Obj id="tvstand">
+        <B p={[5.0, 0, 2.3]} s={[0.75, 0.4, 0.7]} c={C.darkWood} />
+        <B p={[5.02, 0.18, 2.681]} s={[0.71, 0.012, 0.005]} c="#2a1a10" />
+        <B p={[5.3, 0.18, 2.681]} s={[0.02, 0.14, 0.006]} c="#999999" />
       </Obj>
       {/* football: pivots at its centre so it can roll */}
       <Obj id="soccer">
@@ -604,7 +593,7 @@ function RightSide({ acts, reduce }) {
           <B p={[-0.04, -0.04, 0.111]} s={[0.08, 0.08, 0.002]} c="#111111" />
         </group>
       </Obj>
-      {/* dresser: skills books, PS4, paddle, bottle, cube */}
+      {/* dresser: skills books, paddle, bottle, cube */}
       <Obj id="skills">
         <B p={[4.9, 0, 3.7]} s={[1.0, 0.82, 0.55]} c="#6b4428" />
         {[0.27, 0.54].map((y) => (
@@ -618,9 +607,10 @@ function RightSide({ acts, reduce }) {
         <B p={[5.781, 0.9, 4.101]} s={[0.078, 0.002, 0.078]} c="#f2d024" />
         <B p={[5.861, 0.83, 4.11]} s={[0.002, 0.06, 0.06]} c="#2e7bd8" />
       </Obj>
+      {/* PS4: on its own stand, away from the skills dresser */}
       <Obj id="ps4">
-        <B p={[4.93, 0.82, 3.73]} s={[0.3, 0.05, 0.25]} c="#18181c" />
-        <B p={[4.93, 0.845, 3.981]} s={[0.3, 0.006, 0.002]} c={C.blue} e={C.blue} />
+        <B p={[5.15, 0.4, 2.45]} s={[0.3, 0.05, 0.25]} c="#18181c" />
+        <B p={[5.15, 0.425, 2.701]} s={[0.3, 0.006, 0.002]} c={C.blue} e={C.blue} />
       </Obj>
       <Obj id="paddle">
         <B p={[4.95, 0.82, 4.02]} s={[0.17, 0.012, 0.15]} c="#c62828" />

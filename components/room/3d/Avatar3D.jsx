@@ -78,7 +78,7 @@ function Part({ size, position, faces, see = false }) {
 
 const flat = (color) => <meshLambertMaterial color={color} />;
 // Speech bubbles sit just above the avatar (left-aligned on phones, where the avatar hugs the edge).
-const SPEECH = "room-label absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 whitespace-normal w-max max-w-[240px]";
+const SPEECH = "room-label absolute left-0 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-auto -translate-y-full opacity-100 whitespace-normal w-max max-w-[240px] max-lg:max-w-[110px]";
 const clamp = (v) => Math.max(-1, Math.min(1, v));
 
 // outfit: "blazer" | "sweater"; phones: headphones on (while the desk speaker plays)
@@ -332,7 +332,7 @@ export default function Avatar3D({ bubble = null, page = "/" }) {
         <button type="button" onClick={greet} aria-label="Say hi to Saurabh" className="absolute inset-0 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4d27a]" />
       )}
       {bubble && !tip ? (
-        <div aria-hidden="true" className={`${SPEECH} max-lg:max-w-[110px]`}>
+        <div aria-hidden="true" className={SPEECH}>
           {bubble}
         </div>
       ) : null}
