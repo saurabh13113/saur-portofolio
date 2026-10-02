@@ -18,7 +18,7 @@ export const profile = {
   resumePdf: "/assets/resume.pdf",
   socials: [
     { key: "github", href: "https://github.com/saurabh13113" },
-    { key: "linkedin", href: "https://www.linkedin.com/in/saurabh-nair" },
+    { key: "linkedin", href: "https://www.linkedin.com/in/saurabhnair13113" },
   ],
 };
 
