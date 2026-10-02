@@ -14,7 +14,7 @@ import { track } from "@vercel/analytics";
 
 const info = [
   { icon: <FaEnvelope />, title: "Email", value: profile.email, href: `mailto:${profile.email}` },
-  { icon: <FaLinkedin />, title: "LinkedIn", value: "in/saurabh-nair", href: profile.socials.find((s) => s.key === "linkedin").href },
+  { icon: <FaLinkedin />, title: "LinkedIn", value: "in/saurabhnair13113", href: profile.socials.find((s) => s.key === "linkedin").href },
   { icon: <FaMapMarkerAlt />, title: "Location", value: profile.location },
 ];
 
